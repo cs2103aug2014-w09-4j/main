@@ -8,14 +8,12 @@ public class Logic {
 			Task newtask = new Task();
 			newtask.setTaskName(description);
 			common.task.add(newtask);
-			Writer.store();
 		}
 		else if(command.equals("delete")){
 			String description = common.getDescription();
 			Task deleteTask = new Task();
 			deleteTask.setTaskName(description);
 			common.task.remove(deleteTask);
-			Writer.store();
 		}
 		else if(command.equals("update")){
 			String description = common.getDescription();
@@ -26,7 +24,15 @@ public class Logic {
 			newTask.setTaskName(newDescription);
 			common.task.remove(deleteTask);
 			common.task.add(newTask);
-			Writer.store();
+		}
+		else if(command.equals("done")){
+			String description = common.getDescription();
+			for(int i = 0; i < common.task.size(); i++){
+				String compare = common.task.getTaskName();
+				if(description.equals(compare);
+				common.task.setStatus(true);
+				}
+			}
 		}
 	}
 }
