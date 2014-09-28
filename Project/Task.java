@@ -8,7 +8,7 @@ public class Task(){
 		return this.taskName;
 	}
 
-	public String setTaskName(String taskName){
+	public void setTaskName(String taskName){
 		this.taskName = taskName;
 	}
 	
@@ -16,7 +16,7 @@ public class Task(){
 		return this.status;
 	}
 
-	public boolean setStatus(boolean status){
+	public void setStatus(boolean status){
 		this.status = status;
 	}
 }
