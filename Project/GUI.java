@@ -40,6 +40,9 @@ import javax.swing.JTextField;
 
 
 /**
+ * This class creates a Graphical User Interface which user can interact with by
+ * typing in the text field and receive feedback depending on the input.
+ * 
  * @author Wang YanHao
  *
  */
@@ -75,6 +78,10 @@ public class GUI{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				String inputCommand = input.getText();
+				input.setText("");
+				
+				// input later will be passed into reader and logic
+				
 				output.setText(inputCommand);
 			}
 		});
