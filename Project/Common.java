@@ -15,7 +15,7 @@ public class Common {
 		return this.command;
 	}
 	
-	public String setCommand(String command){
+	public void setCommand(String command){
 		this.command = command;
 	}
 
@@ -23,7 +23,7 @@ public class Common {
 		return this.input;
 	}
 	
-	public String setInput(String input){
+	public void setInput(String input){
 		this.input = input;
 	}
 	
@@ -31,7 +31,7 @@ public class Common {
 		return this.description;
 	}
 	
-	public String setDescription(String description){
+	public void setDescription(String description){
 		this.description = description;
 	}
 	
@@ -39,7 +39,7 @@ public class Common {
 		return this.newDescription;
 	}
 	
-	public String setNewDescription(String newDescription){
+	public void setNewDescription(String newDescription){
 		this.newDescription = newDescription;
 	}
 
