@@ -1,5 +1,3 @@
-package Project;
-
 /* 
 ---------------------------------------------------------------------------------- STORAGE CLASS ----------------------------------------------------------------------------------
 
@@ -17,14 +15,18 @@ It has the following operations:
 NOTE: changes made to task list will be saved during addTask and removeTask function calls as saveTasksIntoFile is called at end of both operations.
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
+package Project;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.Type;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -32,37 +34,35 @@ import com.google.gson.reflect.TypeToken;
 
 public class Storage {
 	
-	private ArrayList<Task> tasks;
 	private File file;
 	
-	public Storage() {
+	public Storage() throws JsonSyntaxException, IOException {
 		this.file = new File("Tasks.txt");
 		if(this.file.exists()) {
-			tasks = loadTasksFromFile(file);
+			Common.task = loadTasksFromFile(file);
 		} else {
 			file.createNewFile();
-			tasks = new ArrayList<Task>();
+			Common.task = new ArrayList<Task>();
 		}
 	}
 	
-	private void addTask(Task newTask) {
-		this.tasks.add(newTask);
+	public void addTask(Task newTask) throws FileNotFoundException, UnsupportedEncodingException {
+		Common.task.add(newTask);
 		saveTasksIntoFile(file);
 	}
 	
-	private Task removeTask(Task task) {
-		this.tasks.remove(task);
+	public void removeTask(Task task) throws FileNotFoundException, UnsupportedEncodingException {
+		Common.task.remove(task);
 		saveTasksIntoFile(file);
 	}
 	
-	private Task getTask(Task task) {
-		int indexOfTask = this.tasks.getIndexOf(task);
-		return this.tasks.get(indexOfTask);
+	public Task getTask(Task task) {
+		int indexOfTask = Common.task.indexOf(task);
+		return Common.task.get(indexOfTask);
 	}
 	
-	private ArrayList<Task> loadTasksFromFile(File fileName) {
+	private ArrayList<Task> loadTasksFromFile(File fileName) throws IOException, JsonSyntaxException {
 		Gson gson = new Gson();
-		ArrayList<Task> temp = new ArrayList<Task>();
 		String jsonTasks = "";
 		BufferedReader reader = new BufferedReader(new FileReader(fileName));
 		String line = null;
@@ -72,12 +72,13 @@ public class Storage {
 		Type type = new TypeToken<ArrayList<Task>>() {
         	}.getType();
         ArrayList<Task> taskList = gson.fromJson(jsonTasks, type);
+        reader.close();
         return taskList;
 	}
 	
-	private void saveTasksIntoFile(File fileName) {
+	private void saveTasksIntoFile(File fileName) throws FileNotFoundException, UnsupportedEncodingException {
 		Gson gson = new Gson();
-		String jsonTasks = gson.toJson(this.tasks);
+		String jsonTasks = gson.toJson(Common.task);
 		PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 		writer.println(jsonTasks);
 		writer.close();
