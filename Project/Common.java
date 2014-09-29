@@ -12,8 +12,7 @@ public class Common {
 	
 	private static String newDescription;
 	
-	
-	public static ArrayList<Task> task = new ArrayList<Task>();
+	public static ArrayList<Task> task;
 	
 	public static String getCommand(){
 		return command;

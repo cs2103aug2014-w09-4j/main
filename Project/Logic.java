@@ -1,10 +1,12 @@
 package Project;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 public class Logic {
 	
-	public String userCommands(){
+	public String userCommands() throws FileNotFoundException, UnsupportedEncodingException{
 		String command = Common.getCommand();
 		
 		if(command.equals("add")){
@@ -30,35 +32,35 @@ public class Logic {
 		}
 	}
 
-	private String updateTask() {
+	private String updateTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		String newDescription = Common.getNewDescription();
 		Task deleteTask = new Task();
 		Task newTask = new Task();
 		deleteTask.setTaskName(description);
 		newTask.setTaskName(newDescription);
-		Common.task.remove(deleteTask);
-		Common.task.add(newTask);
+		Storage.removeTask(deleteTask);
+		Storage.addTask(newTask);
 		
 		// dummy
 		return "update task successfully from " + deleteTask.getTaskName() + " to " + newTask.getTaskName();
 	}
 
-	private String deleteTask() {
+	private String deleteTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		Task deleteTask = new Task();
 		deleteTask.setTaskName(description);
-		Common.task.remove(deleteTask);
+		Storage.removeTask(deleteTask);
 		
 		// dummy
 		return "delete task " + deleteTask.getTaskName() + " successfully";
 	}
 
-	private String addTask() {
+	private String addTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		Task newTask = new Task();
 		newTask.setTaskName(description);
-		Common.task.add(newTask);
+		Storage.addTask(newTask);
 		
 		// dummy
 		return "add task " + newTask.getTaskName() + " successfully";

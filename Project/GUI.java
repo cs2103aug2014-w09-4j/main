@@ -32,11 +32,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import com.google.gson.JsonSyntaxException;
 
 
 /**
@@ -83,7 +88,13 @@ public class GUI{
 				// inputCommand is passed into parser and logic
 				Common.setInput(inputCommand);
 				(new Parser()).parse();
-				String outputFeedBack = (new Logic()).userCommands();
+				String outputFeedBack = null;
+				try {
+					outputFeedBack = (new Logic()).userCommands();
+				} catch (FileNotFoundException | UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				output.setText(outputFeedBack);
 			}
@@ -95,7 +106,8 @@ public class GUI{
 		return pane;
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JsonSyntaxException, IOException {
+		Common.task = Storage.loadTasksFromFile();
 		new GUI();
 	}
 }
