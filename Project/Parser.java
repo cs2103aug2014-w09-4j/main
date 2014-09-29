@@ -1,12 +1,12 @@
-import java.util.*;
+package Project;
 
-public class Parser(){
+public class Parser {
 	
 	public void parse(){
 		
-		String[] parts = string.split(" ");
+		String[] parts = Common.getInput().split(" ");
 		
-		common.setCommand(parts[0]);
+		Common.setCommand(parts[0]);
 		parts[0] = "";
 		
 		String description = "";
@@ -17,10 +17,9 @@ public class Parser(){
 		
 		description = description.trim();
 		
-		common.setDescription(description);
+		Common.setDescription(description);
 		
 	}
-
 
 }
 

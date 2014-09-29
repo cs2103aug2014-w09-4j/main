@@ -1,47 +1,50 @@
+package Project;
+
+import java.util.ArrayList;
+
 public class Common {
 
-	private String command;
+	private static String command;
 	
-	private String input;
+	private static String input;
 	
-	private String description;
+	private static String description;
 	
-	private String newDescription;
+	private static String newDescription;
 	
 	
-	public ArrayList<Task> task = new ArrayList<Task>();
+	public static ArrayList<Task> task = new ArrayList<Task>();
 	
-	public String getCommand(){
-		return this.command;
+	public static String getCommand(){
+		return command;
 	}
 	
-	public void setCommand(String command){
-		this.command = command;
-	}
-
-	public String getInput(){
-		return this.input;
-	}
-	
-	public void setInput(String input){
-		this.input = input;
-	}
-	
-	public String getDescription(){
-		return this.description;
-	}
-	
-	public void setDescription(String description){
-		this.description = description;
-	}
-	
-	public String getNewDescription(){
-		return this.newDescription;
-	}
-	
-	public void setNewDescription(String newDescription){
-		this.newDescription = newDescription;
+	public static void setCommand(String newCommand){
+		command = newCommand;
 	}
 
+	public static String getInput(){
+		return input;
+	}
+	
+	public static void setInput(String newInput){
+		input = newInput;
+	}
+	
+	public static String getDescription(){
+		return description;
+	}
+	
+	public static void setDescription(String newDescription){
+		description = newDescription;
+	}
+	
+	public static String getNewDescription(){
+		return newDescription;
+	}
+	
+	public static void setNewDescription(String newNewDescription){
+		newDescription = newNewDescription;
+	}
 
 }

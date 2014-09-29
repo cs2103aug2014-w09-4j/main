@@ -80,9 +80,12 @@ public class GUI{
 				String inputCommand = input.getText();
 				input.setText("");
 				
-				// input later will be passed into reader and logic
+				// inputCommand is passed into parser and logic
+				Common.setInput(inputCommand);
+				(new Parser()).parse();
+				String outputFeedBack = (new Logic()).userCommands();
 				
-				output.setText(inputCommand);
+				output.setText(outputFeedBack);
 			}
 		});
 

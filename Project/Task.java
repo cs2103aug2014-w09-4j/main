@@ -1,5 +1,6 @@
+package Project;
 
-public class Task(){
+public class Task{
 	private String taskName;
 	private String date;
 	private boolean status;
