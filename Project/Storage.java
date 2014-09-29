@@ -31,33 +31,32 @@ import com.google.gson.reflect.TypeToken;
 
 
 public class Storage {
-	
-	private ArrayList<Task> tasks;
+
 	private File file;
 	
 	public Storage() {
 		this.file = new File("Tasks.txt");
 		if(this.file.exists()) {
-			tasks = loadTasksFromFile(file);
+			Common.task = loadTasksFromFile(file);
 		} else {
 			file.createNewFile();
-			tasks = new ArrayList<Task>();
+			Common.task = new ArrayList<Task>();
 		}
 	}
 	
 	private void addTask(Task newTask) {
-		this.tasks.add(newTask);
+		Common.task.add(newTask);
 		saveTasksIntoFile(file);
 	}
 	
 	private Task removeTask(Task task) {
-		this.tasks.remove(task);
+		Common.task.remove(task);
 		saveTasksIntoFile(file);
 	}
 	
 	private Task getTask(Task task) {
-		int indexOfTask = this.tasks.getIndexOf(task);
-		return this.tasks.get(indexOfTask);
+		int indexOfTask = Common.task.getIndexOf(task);
+		return Common.task.get(indexOfTask);
 	}
 	
 	private ArrayList<Task> loadTasksFromFile(File fileName) {
@@ -77,7 +76,7 @@ public class Storage {
 	
 	private void saveTasksIntoFile(File fileName) {
 		Gson gson = new Gson();
-		String jsonTasks = gson.toJson(this.tasks);
+		String jsonTasks = gson.toJson(Common.task);
 		PrintWriter writer = new PrintWriter(fileName, "UTF-8");
 		writer.println(jsonTasks);
 		writer.close();
