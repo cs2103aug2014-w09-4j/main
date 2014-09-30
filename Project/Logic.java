@@ -31,7 +31,8 @@ public class Logic {
 			return "invalid msg";
 		}
 	}
-
+	
+	//updateTask replaces the existing task details with new task details 
 	private String updateTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		String newDescription = Common.getNewDescription();
@@ -45,7 +46,7 @@ public class Logic {
 		// dummy
 		return "update task successfully from " + deleteTask.getTaskName() + " to " + newTask.getTaskName();
 	}
-
+	//deleteTask removes the task from the existing tasks list
 	private String deleteTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		Task deleteTask = new Task();
@@ -55,7 +56,8 @@ public class Logic {
 		// dummy
 		return "delete task " + deleteTask.getTaskName() + " successfully";
 	}
-
+	
+	//addTask adds the task into the existing tasks list 
 	private String addTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		Task newTask = new Task();
