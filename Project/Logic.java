@@ -4,52 +4,89 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+
+/**
+ * Logic class will retrieve user input from Common class, 
+ * perform various actions based on different commands,
+ * and return a String feedback to GUI class.
+ */
 public class Logic {
+	private static final String COMMAND_ADD = "add";
+	private static final String COMMAND_DELETE = "delete";
+	private static final String COMMAND_DISPLAY = "display";
+	private static final String COMMAND_UPDATE = "update";
+	private static final String COMMAND_COMPLETE = "complete";
+	private static final String COMMAND_SEARCH = "search";
 	
-	public String userCommands() throws FileNotFoundException, UnsupportedEncodingException{
-		String command = Common.getCommand();
+	
+	public String executeUserCommand() throws FileNotFoundException, UnsupportedEncodingException{
+		String command = (Common.getCommand()).toLowerCase();
 		
-		if(command.equals("add")){
-			return addTask();
+		switch (command) {
+			case COMMAND_ADD:
+				return addTask();
+			case COMMAND_DELETE:
+				return deleteTask();
+			case COMMAND_UPDATE:
+				return updateTask();
+				
+			// The method "Display all tasks" is not in the user menu, 
+			// but I created this method to test the GUI output format
+			case COMMAND_DISPLAY:
+				return displayTask();
+				
+			case COMMAND_COMPLETE:
+				
+			case COMMAND_SEARCH:
+			
+			default:
+				return "invalid msg";
 		}
-		else if(command.equals("delete")){
-			return deleteTask();
-		}
-		else if(command.equals("update")){
-			return updateTask();
-		}
-		/*else if(command.equals("done")){
-			String description = Common.getDescription();
-			for(int i = 0; i < Common.task.size(); i++){
-				String compare = Common.task.getTaskName();
-				if(description.equals(compare)) {
-					Common.task.setStatus(true);
-				}
-			}
-		}*/
-		else {
-			return "invalid msg";
-		}
+			
 	}
 	
-	//updateTask replaces the existing task details with new task details 
+	
+	private String displayTask() {
+		String returnStatement = "<html>";
+		
+		if (Common.task.isEmpty()) {
+			returnStatement += "File is empty!"; 
+		} else {
+			returnStatement += ("1. " + Common.task.get(0));
+			for (int i=2; i<Common.task.size(); i++) {
+				returnStatement += ("<br>" + i + ". " + Common.task.get(i-1) + "</br>");
+			}
+		}
+		returnStatement += "</html>";
+		
+		return returnStatement;
+	}
+
+
+	// updateTask replaces the existing task details with new task details 
 	private String updateTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		String newDescription = Common.getNewDescription();
+		
 		Task deleteTask = new Task();
 		Task newTask = new Task();
+		
 		deleteTask.setTaskName(description);
 		newTask.setTaskName(newDescription);
+		
 		Storage.removeTask(deleteTask);
 		Storage.addTask(newTask);
 		
 		// dummy
 		return "update task successfully from " + deleteTask.getTaskName() + " to " + newTask.getTaskName();
 	}
-	//deleteTask removes the task from the existing tasks list
+	
+	
+	// deleteTask removes the task from the existing tasks list
 	private String deleteTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		Task deleteTask = new Task();
+		
 		deleteTask.setTaskName(description);
 		Storage.removeTask(deleteTask);
 		
@@ -57,10 +94,12 @@ public class Logic {
 		return "delete task " + deleteTask.getTaskName() + " successfully";
 	}
 	
-	//addTask adds the task into the existing tasks list 
+	
+	// addTask adds the task into the existing tasks list 
 	private String addTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		Task newTask = new Task();
+		
 		newTask.setTaskName(description);
 		Storage.addTask(newTask);
 		

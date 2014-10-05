@@ -90,7 +90,7 @@ public class GUI{
 				(new Parser()).parse();
 				String outputFeedBack = null;
 				try {
-					outputFeedBack = (new Logic()).userCommands();
+					outputFeedBack = (new Logic()).executeUserCommand();
 				} catch (FileNotFoundException | UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
