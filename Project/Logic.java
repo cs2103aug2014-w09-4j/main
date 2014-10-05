@@ -52,9 +52,9 @@ public class Logic {
 		if (Common.task.isEmpty()) {
 			returnStatement += "File is empty!"; 
 		} else {
-			returnStatement += ("1. " + Common.task.get(0));
+			returnStatement += ("1. " + Common.task.get(0).displayTaskDetails());
 			for (int i=2; i<Common.task.size(); i++) {
-				returnStatement += ("<br>" + i + ". " + Common.task.get(i-1) + "</br>");
+				returnStatement += ("<br>" + i + ". " + Common.task.get(i-1).displayTaskDetails() + "</br>");
 			}
 		}
 		returnStatement += "</html>";
@@ -62,7 +62,7 @@ public class Logic {
 		return returnStatement;
 	}
 
-
+	
 	// updateTask replaces the existing task details with new task details 
 	private String updateTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
