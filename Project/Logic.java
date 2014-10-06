@@ -57,8 +57,8 @@ public class Logic {
 			returnStatement += "File is empty!"; 
 		} else {
 			returnStatement += ("1. " + Common.task.get(0).displayTaskDetails());
-			for (int i=2; i<Common.task.size(); i++) {
-				returnStatement += ("<br>" + i + ". " + Common.task.get(i-1).displayTaskDetails() + "</br>");
+			for (int i=1; i<Common.task.size(); i++) {
+				returnStatement += ("<br>" + (i+1) + ". " + Common.task.get(i).displayTaskDetails() + "</br>");
 			}
 		}
 		returnStatement += "</html>";
@@ -72,30 +72,26 @@ public class Logic {
 		String description = Common.getDescription();
 		String newDescription = Common.getNewDescription();
 		
-		Task deleteTask = new Task();
-		Task newTask = new Task();
+		Storage.removeTask(description);
 		
-		deleteTask.setTaskName(description);
+		Task newTask = new Task();
 		newTask.setTaskName(newDescription);
 		
-		Storage.removeTask(deleteTask);
 		Storage.addTask(newTask);
 		
 		// dummy
-		return "update task successfully from " + deleteTask.getTaskName() + " to " + newTask.getTaskName();
+		return "update task successfully from " + description + " to " + newTask.getTaskName();
 	}
 	
 	
 	// deleteTask removes the task from the existing tasks list
 	private String deleteTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
-		Task deleteTask = new Task();
 		
-		deleteTask.setTaskName(description);
-		Storage.removeTask(deleteTask);
+		Storage.removeTask(description);
 		
 		// dummy
-		return "delete task " + deleteTask.getTaskName() + " successfully";
+		return "delete task " + description + " successfully";
 	}
 	
 	

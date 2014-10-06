@@ -38,14 +38,31 @@ public class Storage {
 		saveTasksIntoFile();
 	}
 	
-	public static void removeTask(Task task) throws FileNotFoundException, UnsupportedEncodingException {
-		Common.task.remove(task);
+	public static void removeTask(String description) throws FileNotFoundException, UnsupportedEncodingException {
+		int indexOfTask = searchTask(description);
+		if(indexOfTask != -1) {
+			Common.task.remove(indexOfTask);
+		} else {
+		}
 		saveTasksIntoFile();
 	}
+
+	private static int searchTask(String description) {
+		int indexOfTask = -1;
+		for(int i = 0; i < Common.task.size(); i++) {
+			if(Common.task.get(i).getTaskName().equals(description)) {
+				indexOfTask = i;
+			}
+		}
+		return indexOfTask;
+	}
 	
-	public static Task getTask(Task task) {
-		int indexOfTask = Common.task.indexOf(task);
-		return Common.task.get(indexOfTask);
+	public static Task getTask(String description) {
+		int indexOfTask = searchTask(description);
+		if(indexOfTask != -1) {
+			return Common.task.get(indexOfTask);
+		}
+		return null;
 	}	
 	
 	public static ArrayList<Task> loadTasksFromFile() throws IOException, JsonSyntaxException {
