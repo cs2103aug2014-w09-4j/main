@@ -27,7 +27,9 @@
 package Project;
 
 import java.awt.Component;
-import java.awt.GridLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -39,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.google.gson.JsonSyntaxException;
@@ -52,7 +55,7 @@ import com.google.gson.JsonSyntaxException;
  *
  */
 public class GUI{
-	private final String APP_NAME = "TBA";
+	private final String APP_NAME = "Taskerino";
 	
 	public GUI() {
 		JFrame frame = new JFrame(APP_NAME);
@@ -75,10 +78,16 @@ public class GUI{
 	private Component createComponents(){
 		final JTextField input = new JTextField();
 		final JLabel output = new JLabel();
+		final JScrollPane scrollPane = new JScrollPane();
+
+		JPanel panel = new JPanel();
+		GridBagLayout layout = new GridBagLayout();
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		panel.add(input);
+		panel.add(scrollPane);
 		
-		JPanel pane = new JPanel();
-		pane.setLayout(new GridLayout(4, 1));
-		
+		// add action listener for event when user presses "enter" in keyboard
 		input.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -92,7 +101,7 @@ public class GUI{
 				try {
 					outputFeedBack = (new Logic()).executeUserCommand();
 				} catch (FileNotFoundException | UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
+					// handle the exceptions
 					e.printStackTrace();
 				}
 				
@@ -100,10 +109,28 @@ public class GUI{
 			}
 		});
 
-		pane.add(input);
-		pane.add(output);
+		scrollPane.getViewport().add(output);
 		
-		return pane;
+		panel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		panel.setLayout(layout);
+		
+		gbc.fill = GridBagConstraints.BOTH; 
+		
+		// set dimension for input text field
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 0;
+		layout.setConstraints(input, gbc);
+		
+		// set dimension for output label
+		gbc.weightx = 1.0;
+		gbc.weighty = 3.0;
+		gbc.gridheight = 3;
+		gbc.gridwidth = 0;
+		layout.setConstraints(scrollPane, gbc);
+		
+		return panel;
 	}
 	
 	public static void main(String[] args) throws JsonSyntaxException, IOException {
