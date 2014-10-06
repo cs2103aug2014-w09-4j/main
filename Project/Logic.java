@@ -17,6 +17,7 @@ public class Logic {
 	private static final String COMMAND_UPDATE = "update";
 	private static final String COMMAND_COMPLETE = "complete";
 	private static final String COMMAND_SEARCH = "search";
+	private static final String COMMAND_EXIT = "exit";
 	
 	
 	public String executeUserCommand() throws FileNotFoundException, UnsupportedEncodingException{
@@ -38,7 +39,10 @@ public class Logic {
 			case COMMAND_COMPLETE:
 				
 			case COMMAND_SEARCH:
-			
+				
+			case COMMAND_EXIT:
+				System.exit(0);
+				
 			default:
 				return "invalid msg";
 		}
