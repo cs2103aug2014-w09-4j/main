@@ -14,7 +14,7 @@ public class Logic {
 	private static final String COMMAND_ADD = "add";
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_DISPLAY = "display";
-	private static final String COMMAND_UPDATE = "update";
+	private static final String COMMAND_CHANGE = "change";
 	private static final String COMMAND_COMPLETE = "complete";
 	private static final String COMMAND_SEARCH = "search";
 	private static final String COMMAND_EXIT = "exit";
@@ -28,8 +28,8 @@ public class Logic {
 				return addTask();
 			case COMMAND_DELETE:
 				return deleteTask();
-			case COMMAND_UPDATE:
-				return updateTask();
+			case COMMAND_CHANGE:
+				return changeTask();
 				
 			// The method "Display all tasks" is not in the user menu, 
 			// but I created this method to test the GUI output format
@@ -68,19 +68,16 @@ public class Logic {
 
 	
 	// updateTask replaces the existing task details with new task details 
-	private String updateTask() throws FileNotFoundException, UnsupportedEncodingException {
+	private String changeTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		String newDescription = Common.getNewDescription();
 		
-		Storage.removeTask(description);
-		
-		Task newTask = new Task();
-		newTask.setTaskName(newDescription);
-		
-		Storage.addTask(newTask);
-		
-		// dummy
-		return "update task successfully from " + description + " to " + newTask.getTaskName();
+		try {
+			Storage.updateTask(description, newDescription);
+			return "update task successfully from " + description + " to " + newDescription;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return "Task with name: " + description + " not found!";
+		}
 	}
 	
 	
@@ -91,7 +88,7 @@ public class Logic {
 			Storage.removeTask(description);
 			return "delete task " + description + " successfully";
 		} catch (ArrayIndexOutOfBoundsException e) {
-			return "Task with file name: " + description + " not found!";
+			return "Task with name: " + description + " not found!";
 		}
 	}
 	

@@ -43,6 +43,13 @@ public class Storage {
 		Common.task.remove(indexOfTask);
 		saveTasksIntoFile();
 	}
+	
+	public static void updateTask(String description, String newDescription) throws FileNotFoundException, UnsupportedEncodingException {
+		int indexOfTask = searchTask(description);
+		Task taskToBeUpdated = Common.task.get(indexOfTask);
+		taskToBeUpdated.setTaskName(newDescription);
+		saveTasksIntoFile();
+	}
 
 	private static int searchTask(String description) {
 		int indexOfTask = -1;
