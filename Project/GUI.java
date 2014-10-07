@@ -102,7 +102,7 @@ public class GUI{
 				userInputArea.setText("");
 				
 				// inputCommand is passed into parser and logic
-				Common.setInput(inputCommand);
+				Data.setInput(inputCommand);
 				(new Parser()).parse();
 				String outputFeedBack = null;
 				try {
