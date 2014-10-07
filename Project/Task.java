@@ -2,6 +2,7 @@ package Project;
 
 public class Task{
 	private String taskName;
+	private String newTaskName;
 	private String date;
 	private boolean status;
 	
@@ -11,6 +12,14 @@ public class Task{
 
 	public void setTaskName(String taskName){
 		this.taskName = taskName;
+	}
+	
+	public String newTaskName(){
+		return this.newTaskName;
+	}
+
+	public void setNewTaskName(String newTaskName){
+		this.newTaskName = newTaskName;
 	}
 	
 	public boolean getStatus(){
