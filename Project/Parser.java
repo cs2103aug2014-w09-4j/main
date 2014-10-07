@@ -29,12 +29,11 @@ public class Parser {
 					
 					for (int k = 0; k < i; k++){
 						
-						description = description + parts[i];
+						description = description + parts[k];
 						
 					}
 					
 					description = description.trim();
-					
 					
 					Common.setDescription(description);
 
