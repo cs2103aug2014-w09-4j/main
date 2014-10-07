@@ -33,6 +33,9 @@ public class Parser {
 						
 					}
 					
+					description = description.trim();
+					
+					
 					Common.setDescription(description);
 
 					break;		
