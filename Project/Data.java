@@ -2,7 +2,7 @@ package Project;
 
 import java.util.ArrayList;
 
-public class Common {
+public class Data {
 
 	private static String command;
 	

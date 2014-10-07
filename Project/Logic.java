@@ -21,7 +21,7 @@ public class Logic {
 	
 	
 	public String executeUserCommand() throws FileNotFoundException, UnsupportedEncodingException{
-		String command = (Common.getCommand()).toLowerCase();
+		String command = (Data.getCommand()).toLowerCase();
 		
 		switch (command) {
 			case COMMAND_ADD:
@@ -53,12 +53,12 @@ public class Logic {
 	private String displayTask() {
 		String returnStatement = "<html>";
 		
-		if (Common.task.isEmpty()) {
+		if (Data.task.isEmpty()) {
 			returnStatement += "File is empty!"; 
 		} else {
-			returnStatement += ("1. " + Common.task.get(0).displayTaskDetails());
-			for (int i=1; i<Common.task.size(); i++) {
-				returnStatement += ("<br>" + (i+1) + ". " + Common.task.get(i).displayTaskDetails() + "</br>");
+			returnStatement += ("1. " + Data.task.get(0).displayTaskDetails());
+			for (int i = 1; i < Data.task.size(); i++) {
+				returnStatement += ("<br>" + (i+1) + ". " + Data.task.get(i).displayTaskDetails() + "</br>");
 			}
 		}
 		returnStatement += "</html>";
@@ -69,8 +69,8 @@ public class Logic {
 	
 	// changeTask replaces the existing task details with new task details 
 	private String changeTask() throws FileNotFoundException, UnsupportedEncodingException {
-		String description = Common.getDescription();
-		String newDescription = Common.getNewDescription();
+		String description = Data.getDescription();
+		String newDescription = Data.getNewDescription();
 		
 		try {
 			Storage.updateTask(description, newDescription);
@@ -83,7 +83,7 @@ public class Logic {
 	
 	// deleteTask removes the task from the existing tasks list
 	private String deleteTask() throws FileNotFoundException, UnsupportedEncodingException {
-		String description = Common.getDescription();
+		String description = Data.getDescription();
 		try {
 			Storage.removeTask(description);
 			return "delete task " + description + " successfully";
@@ -95,7 +95,7 @@ public class Logic {
 	
 	// addTask adds the task into the existing tasks list 
 	private String addTask() throws FileNotFoundException, UnsupportedEncodingException {
-		String description = Common.getDescription();
+		String description = Data.getDescription();
 		Task newTask = new Task();
 		
 		newTask.setTaskName(description);

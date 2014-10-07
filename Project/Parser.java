@@ -4,11 +4,11 @@ public class Parser {
 	
 	public void parse(){
 		
-		String[] parts = Common.getInput().split(" ");
+		String[] parts = Data.getInput().split(" ");
 		
 		String command = parts[0];
 		
-		Common.setCommand(command);
+		Data.setCommand(command);
 		
 		parts[0] = "";
 		
@@ -23,7 +23,7 @@ public class Parser {
 						newDescription = newDescription + parts[j];					
 					}
 					
-					Common.setNewDescription(newDescription);
+					Data.setNewDescription(newDescription);
 					
 					String description = "";
 					
@@ -35,7 +35,7 @@ public class Parser {
 					
 					description = description.trim();
 					
-					Common.setDescription(description);
+					Data.setDescription(description);
 
 					break;		
 					
@@ -54,7 +54,7 @@ public class Parser {
 
 			description = description.trim();
 
-			Common.setDescription(description);
+			Data.setDescription(description);
 		}
 		
 		

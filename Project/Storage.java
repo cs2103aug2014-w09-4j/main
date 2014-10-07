@@ -34,27 +34,27 @@ import com.google.gson.reflect.TypeToken;
 public class Storage {
 	
 	public static void addTask(Task newTask) throws FileNotFoundException, UnsupportedEncodingException {
-		Common.task.add(newTask);
+		Data.task.add(newTask);
 		saveTasksIntoFile();
 	}
 	
 	public static void removeTask(String description) throws ArrayIndexOutOfBoundsException, FileNotFoundException, UnsupportedEncodingException {
 		int indexOfTask = searchTask(description);
-		Common.task.remove(indexOfTask);
+		Data.task.remove(indexOfTask);
 		saveTasksIntoFile();
 	}
 	
 	public static void updateTask(String description, String newDescription) throws FileNotFoundException, UnsupportedEncodingException {
 		int indexOfTask = searchTask(description);
-		Task taskToBeUpdated = Common.task.get(indexOfTask);
+		Task taskToBeUpdated = Data.task.get(indexOfTask);
 		taskToBeUpdated.setTaskName(newDescription);
 		saveTasksIntoFile();
 	}
 
 	private static int searchTask(String description) {
 		int indexOfTask = -1;
-		for(int i = 0; i < Common.task.size(); i++) {
-			if(Common.task.get(i).getTaskName().equals(description)) {
+		for(int i = 0; i < Data.task.size(); i++) {
+			if(Data.task.get(i).getTaskName().equals(description)) {
 				indexOfTask = i;
 			}
 		}
@@ -64,7 +64,7 @@ public class Storage {
 	public static Task getTask(String description) {
 		int indexOfTask = searchTask(description);
 		if(indexOfTask != -1) {
-			return Common.task.get(indexOfTask);
+			return Data.task.get(indexOfTask);
 		}
 		return null;
 	}	

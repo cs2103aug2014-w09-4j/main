@@ -187,7 +187,7 @@ public class GUI{
     
     
 	public static void main(String[] args) throws JsonSyntaxException, IOException {
-		Common.task = Storage.loadTasksFromFile();
+		Data.task = Storage.loadTasksFromFile();
 		new GUI();
 	}
 }
