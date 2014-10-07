@@ -25,6 +25,7 @@ public class Parser {
 					
 					Common.setNewDescription(newDescription);
 					
+					String description = "";
 					
 					for (int k = 0; k < i; k++){
 						
