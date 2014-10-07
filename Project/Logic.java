@@ -87,11 +87,12 @@ public class Logic {
 	// deleteTask removes the task from the existing tasks list
 	private String deleteTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
-		
-		Storage.removeTask(description);
-		
-		// dummy
-		return "delete task " + description + " successfully";
+		try {
+			Storage.removeTask(description);
+			return "delete task " + description + " successfully";
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return "Task with file name: " + description + " not found!";
+		}
 	}
 	
 	

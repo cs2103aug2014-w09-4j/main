@@ -38,12 +38,9 @@ public class Storage {
 		saveTasksIntoFile();
 	}
 	
-	public static void removeTask(String description) throws FileNotFoundException, UnsupportedEncodingException {
+	public static void removeTask(String description) throws ArrayIndexOutOfBoundsException, FileNotFoundException, UnsupportedEncodingException {
 		int indexOfTask = searchTask(description);
-		if(indexOfTask != -1) {
-			Common.task.remove(indexOfTask);
-		} else {
-		}
+		Common.task.remove(indexOfTask);
 		saveTasksIntoFile();
 	}
 
