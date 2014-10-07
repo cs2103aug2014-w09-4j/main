@@ -49,7 +49,7 @@ public class Logic {
 			
 	}
 	
-	
+	//displayTask shows the tasks list
 	private String displayTask() {
 		String returnStatement = "<html>";
 		
@@ -67,7 +67,7 @@ public class Logic {
 	}
 
 	
-	// updateTask replaces the existing task details with new task details 
+	// changeTask replaces the existing task details with new task details 
 	private String changeTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Common.getDescription();
 		String newDescription = Common.getNewDescription();
