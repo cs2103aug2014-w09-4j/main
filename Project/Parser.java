@@ -6,18 +6,54 @@ public class Parser {
 		
 		String[] parts = Common.getInput().split(" ");
 		
-		Common.setCommand(parts[0]);
+		String command = parts[0];
+		
+		Common.setCommand(command);
+		
 		parts[0] = "";
 		
-		String description = "";
-		
-		for (int i = 0; i < parts.length; i++){
-			description = description + parts[i];
+		if (command.equals("change")){
+			for (int i = 0; i < parts.length; i++){			
+				if (parts[i].equals("to")){
+					parts[i] = "";
+					
+					String newDescription = "";
+					
+					for (int j = i + 1; j < parts.length; j++){
+						newDescription = newDescription + parts[j];					
+					}
+					
+					Common.setNewDescription(newDescription);
+					
+					
+					for (int k = 0; k < i; k++){
+						
+						description = description + parts[i];
+						
+					}
+					
+					Common.setDescription(description);
+
+					break;		
+					
+				}
+			}
+			
+		} else {
+			
+			
+			String description = "";
+
+
+			for (int i = 0; i < parts.length; i++){
+				description = description + parts[i];
+			}
+
+			description = description.trim();
+
+			Common.setDescription(description);
 		}
 		
-		description = description.trim();
-		
-		Common.setDescription(description);
 		
 	}
 
