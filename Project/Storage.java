@@ -90,7 +90,7 @@ public class Storage {
 	
 	private static void saveTasksIntoFile() throws FileNotFoundException, UnsupportedEncodingException {
 		Gson gson = new Gson();
-		String jsonTasks = gson.toJson(Common.task);
+		String jsonTasks = gson.toJson(Data.task);
 		PrintWriter writer = new PrintWriter("Tasks.txt", "UTF-8");
 		writer.println(jsonTasks);
 		writer.close();
