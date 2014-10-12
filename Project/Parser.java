@@ -1,60 +1,159 @@
 package Project;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Parser {
 	
 	public void parse(){
 		
-		String[] parts = Data.getInput().split(" ");
+		String raw = Common.getInput();
+		
+		String[] parts = Common.getInput().split(" ");
 		
 		String command = parts[0];
 		
-		Data.setCommand(command);
+		Common.setCommand(command);
 		
 		parts[0] = "";
 		
+		String pattern;
+		
+		Pattern r;
+		
+		Matcher m;
+		
+		if (command.equals("add")){
+			pattern = "(add) (.*) from (.*) to (.*)";
+			
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+			
+			m = r.matcher(raw);
+			
+			if (m.find()) {
+
+				String add = m.group(2);
+			
+				String from = m.group(3);
+			
+				String to = m.group(4);
+				
+				return;
+			}
+			
+			
+			pattern = "(add) (.*) by (.*)";
+			
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+			
+			m = r.matcher(raw);
+			
+			if (m.find()) {
+
+				String add = m.group(2);
+			
+				String by = m.group(3);
+			
+				return;		
+			}
+			
+			
+			pattern = "(add) (.*)";
+			
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+			
+			m = r.matcher(raw);
+			
+			if (m.find()) {
+	
+				String add = m.group(2);
+				
+				Common.setDescription(add.trim());			
+				
+				return;			
+			}			
+		}
+
+
+		// change
+		
+		
 		if (command.equals("change")){
-			for (int i = 0; i < parts.length; i++){			
-				if (parts[i].equals("to")){
-					parts[i] = "";
-					
-					String newDescription = "";
-					
-					for (int j = i + 1; j < parts.length; j++){
-						newDescription = newDescription + parts[j];					
-					}
-					
-					Data.setNewDescription(newDescription);
-					
-					String description = "";
-					
-					for (int k = 0; k < i; k++){
-						
-						description = description + parts[k];
-						
-					}
-					
-					description = description.trim();
-					
-					Data.setDescription(description);
+			pattern = "(change) (.*) to (.*)";
 
-					break;		
-					
-				}
-			}
-			
-		} else {
-			
-			
-			String description = "";
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+
+			m = r.matcher(raw);
+
+			if (m.find()) {
 
 
-			for (int i = 0; i < parts.length; i++){
-				description = description + parts[i];
-			}
+				String old = m.group(2);
 
-			description = description.trim();
+				String _new = m.group(3);
+				
+				
+				Common.setDescription(old.trim());
+				
+				
+				Common.setNewDescription(_new.trim());
+				
 
-			Data.setDescription(description);
+				return;
+			}				
+		}	
+		
+		
+		
+		// search	
+		
+		if (command.equals("search")){
+			pattern = "(search) (.*) to (.*)";
+
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+
+			m = r.matcher(raw);
+
+			if (m.find()) {
+
+				String start_date = m.group(2);
+
+				String end_date = m.group(3);
+
+				return;
+			}				
+		}
+		
+		
+		// delete + complete
+		
+		if (command.equals("delete") || command.equals("complete")){
+			pattern = "(delete|complete) (.*)";
+
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+
+			m = r.matcher(raw);
+
+			if (m.find()) {
+
+				String task = m.group(2);
+
+				Common.setDescription(task.trim());
+
+				return;
+			}				
 		}
 		
 		
