@@ -38,6 +38,7 @@ import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -49,7 +50,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.text.JTextComponent;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -71,6 +71,10 @@ public class GUI{
 	private final JTextField userInputArea = new JTextField();
 	private final JLabel outputToUserArea = new JLabel();
 	private final JScrollPane scrollPane = new JScrollPane();
+	
+	private final PanelComponent userInputComponent = new PanelComponent(userInputArea, 1.0, 1.0, 1, 0);
+	private final PanelComponent userOutputComponent = new PanelComponent(scrollPane, 1.0, 3.0, 3, 0);
+	
 
 	public GUI() {
 		JFrame frame = new JFrame(APP_NAME);
@@ -90,10 +94,55 @@ public class GUI{
 		frame.setVisible(true);
 	}
 
-	private Component createComponents(){
+	private Component createComponents() {
+		setUserInput();
+		setUserOutput();
+        
+		ArrayList<PanelComponent> panelComponents = new ArrayList<PanelComponent>();
+		panelComponents.add(userInputComponent);
+		panelComponents.add(userOutputComponent);
+		setPanel(panelComponents);
+		
+		return panel;
+	}
+
+	/**
+	 * Set up JPanel: 
+	 * set layout to GridBagLayout;
+	 * add Components into JPAnel;
+	 * specify dimension for each component.
+	 * 
+	 * @param panelComponents : ArrayList of components to be added to the panel.
+	 */
+	private void setPanel(ArrayList<PanelComponent> panelComponents) {
+		// set layout for JPanel
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
+		
+		panel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		panel.setLayout(layout);
+		
+		gbc.fill = GridBagConstraints.BOTH; 
 
+		for (PanelComponent pc: panelComponents) {
+			panel.add(pc.getComponent());
+			
+			// set dimension for input text field
+			gbc.weightx = pc.getWeightx();
+			gbc.weighty = pc.getWeighty();
+			gbc.gridheight = pc.getGridheight();
+			gbc.gridwidth = pc.getGridwidth();
+			
+			layout.setConstraints(pc.getComponent(), gbc);
+		}
+	}
+
+	/**
+	 * Set up JTextField which executes user's input command by
+	 * initializing Parser and Logic classes, and display feedback 
+	 * to user after retrieving the feedback from Logic class.
+	 */
+	private void setUserInput() {
 		// add action listener for event when user presses "enter" in keyboard
 		userInputArea.addActionListener(new ActionListener() {
 			@Override
@@ -104,7 +153,8 @@ public class GUI{
 				// inputCommand is passed into parser and logic
 				Data.setInput(inputCommand);
 				(new Parser()).parse();
-				String outputFeedBack = null;
+				
+				String outputFeedBack = "";
 				try {
 					outputFeedBack = (new Logic()).executeUserCommand();
 				} catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -115,7 +165,12 @@ public class GUI{
 				outputToUserArea.setText(outputFeedBack);
 			}
 		});
-
+	}
+	
+	/**
+	 * Set up JScrollPane which is used to display feedback to the user.
+	 */
+	private void setUserOutput() {
 		scrollPane.getViewport().add(outputToUserArea);
 
         // add key bindings to the JLabel which display feedback to user
@@ -130,35 +185,11 @@ public class GUI{
         		SCROLLABLE_INCREMENT));
         actMap.put(DOWN, new UpDownAction(DOWN, scrollPane.getVerticalScrollBar().getModel(), 
         		SCROLLABLE_INCREMENT));
-        
-		// set layout for JPanel
-		panel.add(userInputArea);
-		panel.add(scrollPane);
-		
-		panel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-		panel.setLayout(layout);
-		
-		gbc.fill = GridBagConstraints.BOTH; 
-		
-		// set dimension for input text field
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.gridheight = 1;
-		gbc.gridwidth = 0;
-		layout.setConstraints(userInputArea, gbc);
-		
-		// set dimension for output label
-		gbc.weightx = 1.0;
-		gbc.weighty = 3.0;
-		gbc.gridheight = 3;
-		gbc.gridwidth = 0;
-		layout.setConstraints(scrollPane, gbc);
-		
-		return panel;
 	}
 	
-	
-	// Action performed when user press "up" or "down" on keyboard
+	/**
+	 * Set ActionListener for action performed when user press "up" or "down" on keyboard.
+	 */
     @SuppressWarnings("serial")
 	private class UpDownAction extends AbstractAction {
         private BoundedRangeModel vScrollBarModel;

@@ -32,6 +32,9 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
+ * This class enable all the classes in a project to record down information
+ * on a single local output file using a common logger.
+ * 
  * @author Wang YanHao
  *
  */
