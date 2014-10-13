@@ -3,17 +3,26 @@ package Project;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+
+	Parser accepts a String as input and modify the Data class to be used by other class
+	
+	@author kester
+
+
+*/
+
 public class Parser {
 	
 	public void parse(){
 		
-		String raw = Common.getInput();
+		String raw = Data.getInput();
 		
-		String[] parts = Common.getInput().split(" ");
+		String[] parts = Data.getInput().split(" ");
 		
 		String command = parts[0];
 		
-		Common.setCommand(command);
+		Data.setCommand(command);
 		
 		parts[0] = "";
 		
@@ -74,7 +83,7 @@ public class Parser {
 	
 				String add = m.group(2);
 				
-				Common.setDescription(add.trim());			
+				Data.setDescription(add.trim());			
 				
 				return;			
 			}			
@@ -101,10 +110,10 @@ public class Parser {
 				String _new = m.group(3);
 				
 				
-				Common.setDescription(old.trim());
+				Data.setDescription(old.trim());
 				
 				
-				Common.setNewDescription(_new.trim());
+				Data.setNewDescription(_new.trim());
 				
 
 				return;
@@ -150,7 +159,7 @@ public class Parser {
 
 				String task = m.group(2);
 
-				Common.setDescription(task.trim());
+				Data.setDescription(task.trim());
 
 				return;
 			}				
