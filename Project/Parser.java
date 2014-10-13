@@ -14,6 +14,12 @@ import java.util.regex.Pattern;
 
 public class Parser {
 	
+	/**
+	
+		Method parse a raw user input that is of type String
+	
+	*/
+	
 	public void parse(){
 		
 		String raw = Data.getInput();
