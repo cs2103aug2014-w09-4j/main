@@ -94,6 +94,11 @@ public class GUI{
 		frame.setVisible(true);
 	}
 
+	/**
+	 * Create and configure components that will be added to the JFrame, and display to the user.
+	 * 
+	 * @return Component to be displayed on the JFrame
+	 */
 	private Component createComponents() {
 		setUserInput();
 		setUserOutput();
