@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
@@ -62,6 +63,8 @@ import com.google.gson.JsonSyntaxException;
  *
  */
 public class GUI{
+	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
+	
 	private static final String APP_NAME = "Taskerino";
     private static final String UP = "Up";
     private static final String DOWN = "Down";
@@ -77,6 +80,8 @@ public class GUI{
 	
 
 	public GUI() {
+		LoggerFactory.logp(Level.CONFIG, className, "GUI", "Creating JFrame...");
+		
 		JFrame frame = new JFrame(APP_NAME);
 
 		Component contents = createComponents();
@@ -92,6 +97,8 @@ public class GUI{
 		frame.setSize(700, 500);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
+		LoggerFactory.logp(Level.CONFIG, className, "GUI", "Successfully setted up GUI.");
 	}
 
 	/**
@@ -100,14 +107,18 @@ public class GUI{
 	 * @return Component to be displayed on the JFrame
 	 */
 	private Component createComponents() {
+		LoggerFactory.logp(Level.CONFIG, className, "createComponents", "Creating components for JFrame...");
+		
 		setUserInput();
 		setUserOutput();
-        
+
+		LoggerFactory.logp(Level.CONFIG, className, "createComponents", "Arranging all components to be added into JPanel...");
 		ArrayList<PanelComponent> panelComponents = new ArrayList<PanelComponent>();
 		panelComponents.add(userInputComponent);
 		panelComponents.add(userOutputComponent);
 		setPanel(panelComponents);
-		
+
+		LoggerFactory.logp(Level.CONFIG, className, "createComponents", "Successfully setted up all components for JFrame.");
 		return panel;
 	}
 
@@ -123,13 +134,16 @@ public class GUI{
 		// set layout for JPanel
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
-		
+
+		LoggerFactory.logp(Level.CONFIG, className, "setPanel", "Set Font for JPanel to SansSerif, Font.PLAIN, size 14.");
 		panel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		LoggerFactory.logp(Level.CONFIG, className, "setPanel", "Set layout for JPanel to GridBagLayout.");
 		panel.setLayout(layout);
 		
 		gbc.fill = GridBagConstraints.BOTH; 
 
 		for (PanelComponent pc: panelComponents) {
+			LoggerFactory.logp(Level.CONFIG, className, "setPanel", "Add component" + pc.getComponent().getName() + "to JPanel.");
 			panel.add(pc.getComponent());
 			
 			// set dimension for input text field
@@ -148,22 +162,32 @@ public class GUI{
 	 * to user after retrieving the feedback from Logic class.
 	 */
 	private void setUserInput() {
+		LoggerFactory.logp(Level.CONFIG, className, "setUserInput", "Add ActionListener for user inputs.");
+		
 		// add action listener for event when user presses "enter" in keyboard
 		userInputArea.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ae) {
 				String inputCommand = userInputArea.getText();
+				LoggerFactory.logp(Level.INFO, className, "setUserInput", "User input commands: \n" + inputCommand);
+				
 				userInputArea.setText("");
 				
 				// inputCommand is passed into parser and logic
+				LoggerFactory.logp(Level.INFO, className, "setUserInput", "Send user input commands to Data.");
 				Data.setInput(inputCommand);
+				
+				LoggerFactory.logp(Level.INFO, className, "setUserInput", "Initialize Paser.");
 				(new Parser()).parse();
 				
 				String outputFeedBack = "";
 				try {
+					LoggerFactory.logp(Level.INFO, className, "setUserInput", "Asking Logic for feedback...");
 					outputFeedBack = (new Logic()).executeUserCommand();
+					LoggerFactory.logp(Level.INFO, className, "setUserInput", "Successfully get feedback from Logic: \n" + outputFeedBack);
 				} catch (FileNotFoundException | UnsupportedEncodingException e) {
 					// handle the exceptions
+					LoggerFactory.logp(Level.WARNING, className, "setUserInput", e.getMessage());
 					e.printStackTrace();
 				}
 				
@@ -176,6 +200,7 @@ public class GUI{
 	 * Set up JScrollPane which is used to display feedback to the user.
 	 */
 	private void setUserOutput() {
+		LoggerFactory.logp(Level.CONFIG, className, "setUserOutput", "Creating output-to-user components...");
 		scrollPane.getViewport().add(outputToUserArea);
 
         // add key bindings to the JLabel which display feedback to user
@@ -183,11 +208,15 @@ public class GUI{
         InputMap inMap = outputToUserArea.getInputMap(condition);
         ActionMap actMap = outputToUserArea.getActionMap();
 		
+        LoggerFactory.logp(Level.CONFIG, className, "setUserOutput", "Setting hotkeys...");
         inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), UP);
         inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), DOWN);
         
+        LoggerFactory.logp(Level.CONFIG, className, "setUserOutput", "Setting hotkeys for UP key...");
         actMap.put(UP, new UpDownAction(UP, scrollPane.getVerticalScrollBar().getModel(), 
         		SCROLLABLE_INCREMENT));
+        
+        LoggerFactory.logp(Level.CONFIG, className, "setUserOutput", "Setting hotkeys for DOWN key...");
         actMap.put(DOWN, new UpDownAction(DOWN, scrollPane.getVerticalScrollBar().getModel(), 
         		SCROLLABLE_INCREMENT));
 	}
@@ -223,6 +252,8 @@ public class GUI{
     
     
 	public static void main(String[] args) throws JsonSyntaxException, IOException {
+		LoggerFactory.logp(Level.INFO, className, "Main", "Start logger!");
+		
 		Data.task = Storage.loadTasksFromFile();
 		new GUI();
 	}
