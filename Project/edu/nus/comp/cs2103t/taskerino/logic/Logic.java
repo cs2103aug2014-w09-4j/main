@@ -2,10 +2,8 @@ package edu.nus.comp.cs2103t.taskerino.logic;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
 
-import edu.nus.comp.cs2103t.taskerino.common.Data;
-import edu.nus.comp.cs2103t.taskerino.common.Task;
+import edu.nus.comp.cs2103t.taskerino.common.*;
 import edu.nus.comp.cs2103t.taskerino.storage.Storage;
 
 
@@ -17,7 +15,6 @@ import edu.nus.comp.cs2103t.taskerino.storage.Storage;
 public class Logic {
 	private static final String COMMAND_ADD = "add";
 	private static final String COMMAND_DELETE = "delete";
-	private static final String COMMAND_DISPLAY = "display";
 	private static final String COMMAND_CHANGE = "change";
 	private static final String COMMAND_COMPLETE = "complete";
 	private static final String COMMAND_SEARCH = "search";
@@ -34,12 +31,6 @@ public class Logic {
 				return deleteTask();
 			case COMMAND_CHANGE:
 				return changeTask();
-				
-			// The method "Display all tasks" is not in the user menu, 
-			// but I created this method to test the GUI output format
-			case COMMAND_DISPLAY:
-				return displayTask();
-				
 			case COMMAND_COMPLETE:
 				
 			case COMMAND_SEARCH:
@@ -52,24 +43,6 @@ public class Logic {
 		}
 			
 	}
-	
-	//displayTask shows the tasks list
-	private String displayTask() {
-		String returnStatement = "<html>";
-		
-		if (Data.task.isEmpty()) {
-			returnStatement += "File is empty!"; 
-		} else {
-			returnStatement += ("1. " + Data.task.get(0).displayTaskDetails());
-			for (int i = 1; i < Data.task.size(); i++) {
-				returnStatement += ("<br>" + (i+1) + ". " + Data.task.get(i).displayTaskDetails() + "</br>");
-			}
-		}
-		returnStatement += "</html>";
-		
-		return returnStatement;
-	}
-
 	
 	// changeTask replaces the existing task details with new task details 
 	private String changeTask() throws FileNotFoundException, UnsupportedEncodingException {

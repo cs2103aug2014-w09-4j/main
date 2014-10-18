@@ -20,8 +20,12 @@ public class Task{
 	public void setStatus(boolean status){
 		this.status = status;
 	}
-	
-	public String displayTaskDetails() {
-		return "Name of Task: " + taskName + "\nDate of Task: " + date + "\nStatus of Task: " + status;
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 }

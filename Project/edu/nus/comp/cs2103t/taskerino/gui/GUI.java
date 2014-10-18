@@ -36,9 +36,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
@@ -53,14 +51,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.table.DefaultTableModel;
 
-import com.google.gson.JsonSyntaxException;
-
-import edu.nus.comp.cs2103t.taskerino.common.Data;
-import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
-import edu.nus.comp.cs2103t.taskerino.logic.Logic;
-import edu.nus.comp.cs2103t.taskerino.parser.Parser;
-import edu.nus.comp.cs2103t.taskerino.storage.Storage;
+import edu.nus.comp.cs2103t.taskerino.common.*;
 
 
 /**
@@ -73,10 +66,12 @@ import edu.nus.comp.cs2103t.taskerino.storage.Storage;
 public class GUI{
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static final String APP_NAME = "Taskerino";
+	private static Controller controller = Controller.getController();
 
 	// Object used to set up JTable
-	Object rowData[][] = {{"test", null, "done"}};
-	Object columnNames[] = { "Task Name", "Date", "Status" };
+	private Object rowData[][] = {};
+	private Object columnNames[] = { "Task Name", "Date", "Status" };
+	private DefaultTableModel dataModel;
 
 	// all components in JFrame
 	private JPanel panel = new JPanel();
@@ -225,28 +220,15 @@ public class GUI{
 			public void actionPerformed(ActionEvent ae) {
 				String inputCommand = userInputArea.getText();
 				LoggerFactory.logp(Level.INFO, className, "setUserInput", "User input commands: \n" + inputCommand);
-
+				controller.executeUserCommand(inputCommand);
+				
 				userInputArea.setText("");
-
-				// inputCommand is passed into parser and logic
-				LoggerFactory.logp(Level.INFO, className, "setUserInput", "Send user input commands to Data.");
-				Data.setInput(inputCommand);
-
-				LoggerFactory.logp(Level.INFO, className, "setUserInput", "Initialize Paser.");
-				(new Parser()).parse();
-
-				String outputFeedBack = "";
-				try {
-					LoggerFactory.logp(Level.INFO, className, "setUserInput", "Asking Logic for feedback...");
-					outputFeedBack = (new Logic()).executeUserCommand();
-					LoggerFactory.logp(Level.INFO, className, "setUserInput", "Successfully get feedback from Logic: \n" + outputFeedBack);
-				} catch (FileNotFoundException | UnsupportedEncodingException e) {
-					// handle the exceptions
-					LoggerFactory.logp(Level.WARNING, className, "setUserInput", e.getMessage());
-					e.printStackTrace();
-				}
-
+				
+				String outputFeedBack = controller.getUserFeedback();
 				feedbackToUser.setText(outputFeedBack);
+				
+				// refresh userTaskTable
+				updateTaskTable();
 			}
 		});
 	}
@@ -283,19 +265,45 @@ public class GUI{
 	 */
 	@SuppressWarnings("serial")
 	private void setTable() {
-		userTaskTable = new JTable(rowData, columnNames){
+		dataModel = new DefaultTableModel(rowData, columnNames);
+		
+		userTaskTable = new JTable(dataModel){
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
 		};
-
+		
 		// set column size
 		userTaskTable.getColumnModel().getColumn(0).setPreferredWidth(450);
 		userTaskTable.getColumnModel().getColumn(1).setPreferredWidth(70);
 		userTaskTable.getColumnModel().getColumn(2).setPreferredWidth(50);
+		
+		updateTaskTable();
 	}
 
+	/**
+	 * Update userTaskTable entries.
+	 */
+	private void updateTaskTable() {
+		// get all user tasks
+		ArrayList<Task> userTasks = controller.getUserTasks();
+		
+		// clear table data
+		dataModel.setRowCount(0);
+		
+		// reset table data
+		for (Task useTask: userTasks) {
+			String[] data = new String[3];
+
+			data[0] = useTask.getTaskName();
+			data[1] = useTask.getDate();
+			data[2] = "" + useTask.getStatus();
+
+			dataModel.addRow(data);
+	    }
+	}
+	
 	/**
 	 * Set ActionListener for action performed when user press "up" or "down" on keyboard.
 	 */
@@ -325,11 +333,4 @@ public class GUI{
 		}
 	}
 
-
-	public static void main(String[] args) throws JsonSyntaxException, IOException {
-		LoggerFactory.logp(Level.INFO, className, "Main", "Start logger!");
-
-		Data.task = Storage.loadTasksFromFile();
-		new GUI();
-	}
 }

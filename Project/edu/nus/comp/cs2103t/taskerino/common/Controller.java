@@ -1,0 +1,101 @@
+/**
+// code is far away from bug with Buddha protection
+//
+//
+//                       _oo0oo_
+//                      o8888888o
+//                      88" . "88
+//                      (| -_- |)
+//                      0\  =  /0
+//                    ___/`---'\___
+//                  .' \\|     |// '.
+//                 / \\|||  :  |||// \
+//                / _||||| -:- |||||- \
+//               |   | \\\  -  /// |   |
+//               | \_|  ''\---/''  |_/ |
+//               \  .-\__  '-'  ___/-. /
+//             ___'. .'  /--.--\  `. .'___
+//          ."" '<  `.___\_<|>_/___.' >' "".
+//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
+//         \  \ `_.   \_ __\ /__ _/   .-` /  /
+//     =====`-.____`.___ \_____/___.-`___.-'=====
+//                       `=---='
+//
+//
+//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ */
+package edu.nus.comp.cs2103t.taskerino.common;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+
+import com.google.gson.JsonSyntaxException;
+
+import edu.nus.comp.cs2103t.taskerino.gui.GUI;
+import edu.nus.comp.cs2103t.taskerino.logic.Logic;
+import edu.nus.comp.cs2103t.taskerino.parser.Parser;
+import edu.nus.comp.cs2103t.taskerino.storage.Storage;
+
+/**
+ * Main class that initialize the program Taskerino.
+ * 
+ * @author Wang YanHao
+ *
+ */
+public class Controller {
+	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
+	private static Controller singletonController;
+	private Logic logic;
+	private Parser parser;
+	
+	private Controller(){
+		logic = new Logic();
+		parser = new Parser();
+	}
+	
+	public static Controller getController() {
+		if (singletonController == null) {
+			singletonController = new Controller();
+		}
+		return singletonController;
+	}
+	
+	public static void main(String[] args) throws JsonSyntaxException, IOException {
+		LoggerFactory.logp(Level.INFO, className, "Main", "Start logger!");
+		LoggerFactory.logp(Level.INFO, className, "Main", "Loading user Tasks...");
+		Data.task = Storage.loadTasksFromFile();
+		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
+		new GUI();
+	}
+	
+	public void executeUserCommand(String userCommand) {
+		// inputCommand is passed into parser and logic
+		LoggerFactory.logp(Level.INFO, className, "executeUserCommand", "Send user input commands to Data.");
+		Data.setInput(userCommand);
+
+		LoggerFactory.logp(Level.INFO, className, "executeUserCommand", "Initialize Paser.");
+		parser.parse();
+	}
+	
+	public String getUserFeedback() {
+		String outputFeedBack = "";
+		try {
+			LoggerFactory.logp(Level.INFO, className, "sendUserFeedback", "Asking Logic for feedback...");
+			outputFeedBack = logic.executeUserCommand();
+			LoggerFactory.logp(Level.INFO, className, "sendUserFeedback", "Successfully get feedback from Logic: \n" + outputFeedBack);
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// handle the exceptions
+			LoggerFactory.logp(Level.WARNING, className, "sendUserFeedback", e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return outputFeedBack;
+	}
+	
+	public ArrayList<Task> getUserTasks() {
+		return Data.task;
+	}
+}
