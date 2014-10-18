@@ -18,7 +18,7 @@
  *NOTE: changes made to task list will be saved during addTask and removeTask function calls as saveTasksIntoFile is called at end of both operations.
  *
 **/
-package Project;
+package edu.nus.comp.cs2103t.taskerino.storage;
 
 import java.util.ArrayList;
 import java.lang.reflect.Type;
@@ -32,6 +32,9 @@ import java.io.UnsupportedEncodingException;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+
+import edu.nus.comp.cs2103t.taskerino.common.Data;
+import edu.nus.comp.cs2103t.taskerino.common.Task;
 
 
 public class Storage {

@@ -1,4 +1,4 @@
-package Project;
+package edu.nus.comp.cs2103t.taskerino.common;
 
 public class Task{
 	private String taskName;

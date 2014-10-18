@@ -1,8 +1,10 @@
-package Project;
+package edu.nus.comp.cs2103t.taskerino.parser;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+
+import edu.nus.comp.cs2103t.taskerino.common.Data;
 
 public class ParserTest {
 

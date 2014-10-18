@@ -1,4 +1,4 @@
-package Project;
+package edu.nus.comp.cs2103t.taskerino.common;
 
 import java.util.ArrayList;
 

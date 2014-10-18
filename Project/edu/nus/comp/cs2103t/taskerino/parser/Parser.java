@@ -1,7 +1,9 @@
-package Project;
+package edu.nus.comp.cs2103t.taskerino.parser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import edu.nus.comp.cs2103t.taskerino.common.Data;
 
 /**
 
@@ -39,6 +41,7 @@ public class Parser {
 		Matcher m;
 		
 		if (command.equals("add")){
+						
 			pattern = "(add) (.*) from (.*) to (.*)";
 			
 			r = Pattern.compile(pattern);

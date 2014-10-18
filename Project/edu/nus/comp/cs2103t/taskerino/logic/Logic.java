@@ -1,8 +1,12 @@
-package Project;
+package edu.nus.comp.cs2103t.taskerino.logic;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
+
+import edu.nus.comp.cs2103t.taskerino.common.Data;
+import edu.nus.comp.cs2103t.taskerino.common.Task;
+import edu.nus.comp.cs2103t.taskerino.storage.Storage;
 
 
 /**

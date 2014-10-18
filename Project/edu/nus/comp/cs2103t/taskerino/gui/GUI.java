@@ -24,7 +24,7 @@
 //
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
-package Project;
+package edu.nus.comp.cs2103t.taskerino.gui;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -55,6 +55,12 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import com.google.gson.JsonSyntaxException;
+
+import edu.nus.comp.cs2103t.taskerino.common.Data;
+import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
+import edu.nus.comp.cs2103t.taskerino.logic.Logic;
+import edu.nus.comp.cs2103t.taskerino.parser.Parser;
+import edu.nus.comp.cs2103t.taskerino.storage.Storage;
 
 
 /**
