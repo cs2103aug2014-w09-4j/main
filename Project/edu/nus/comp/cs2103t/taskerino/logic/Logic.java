@@ -32,9 +32,9 @@ public class Logic {
 			case COMMAND_CHANGE:
 				return changeTask();
 			case COMMAND_COMPLETE:
-				
+				return completeTask();
 			case COMMAND_SEARCH:
-				
+				return searchTask();
 			case COMMAND_EXIT:
 				System.exit(0);
 				
@@ -85,5 +85,41 @@ public class Logic {
 		
 		// dummy
 		return "add task " + newTask.getTaskName() + " successfully";
+	}
+	/**
+     * completeTask marks the task from the existing tasks list 
+     * and return a String feedback to GUI class.
+     */
+	/*private String completeTask() {
+		String description = Data.getDescription();
+		for(int i = 0; i < Data.task.size(); i++){
+			if(Data.task.get(i).getTaskName().equals(description)){
+				Data.task.get(i).setStatus(true);
+				return "complete task " + description;
+			}
+		}
+		if(i == Data.task.size()){
+			return "Task with name: " description + " not found!";
+		}
+	}*/
+	/**
+     * searchTask search the existing tasks list 
+     * obtain the tasks from the exisint tasks list
+	 * and return the details of the tasks to GUI class
+     */
+	/*private ArrayList<String> searchTask() {
+		String description = Data.getDescription();
+		ArrayList<String> searches = new ArrayList<String>();
+		for(int i = 0; i < Data.task.size(); i++){
+			String details = Data.task.get(i).getTaskName();
+			String[] parts = details.split(" ");
+			for(int j = 0; j < parts.size(); j++){
+				if(parts[j].equals(description)){
+					searches.add(details);
+					break;
+				}
+			}
+		}
+		return searches;
 	}
 }
