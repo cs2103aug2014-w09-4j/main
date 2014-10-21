@@ -86,6 +86,26 @@ public class Logic {
 		// dummy
 		return "add task " + newTask.getTaskName() + " successfully";
 	}
+	
+	public String testCommand(String userCommand) {
+		switch (userCommand) {
+			case COMMAND_ADD:
+				return addTask();
+			case COMMAND_DELETE:
+				return deleteTask();
+			case COMMAND_CHANGE:
+				return changeTask();
+			case COMMAND_COMPLETE:
+				return completeTask();
+			case COMMAND_SEARCH:
+				return searchTask();
+			case COMMAND_EXIT:
+				System.exit(0);
+				
+			default:
+				return "invalid msg";
+		}
+	}
 	/**
      * completeTask marks the task from the existing tasks list 
      * and return a String feedback to GUI class.
