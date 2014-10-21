@@ -19,9 +19,9 @@ public class ParserTest {
 				
 		parser.parse();
 		
-		assertEquals("1", Data.getCommand(), "add");
+		assertEquals("1", "add", Data.getCommand());
 		
-		assertEquals("1", Data.getDescription(), "do tutorial");
+		assertEquals("1", "do tutorial", Data.getDescription());
 
 	}
 	
@@ -36,9 +36,9 @@ public class ParserTest {
 				
 		parser.parse();
 		
-		assertEquals("1", Data.getCommand(), "delete");
+		assertEquals("1", "delete", Data.getCommand());
 		
-		assertEquals("1", Data.getDescription(), "do tutorial");
+		assertEquals("1", "do tutorial", Data.getDescription());
 
 	}
 	
@@ -53,11 +53,11 @@ public class ParserTest {
 				
 		parser.parse();
 		
-		assertEquals("1", Data.getCommand(), "change");
+		assertEquals("1", "change", Data.getCommand());
 		
-		assertEquals("1", Data.getDescription(), "do tutorial");
+		assertEquals("1", "do tutorial", Data.getDescription());
 
-		assertEquals("1", Data.getNewDescription(), "study for exams");
+		assertEquals("1", "study for exams", Data.getNewDescription());
 
 	}
 
