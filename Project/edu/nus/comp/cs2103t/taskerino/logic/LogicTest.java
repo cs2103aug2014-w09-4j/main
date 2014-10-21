@@ -13,7 +13,7 @@ public class LogicTest {
 		Data data = new Data();
 		Logic logic = new Logic();
 		data.setDescription("do tutorial");
-		assertEquals("1", logic.testCommand("add"), "add task do tutorial successfully");
+		assertEquals("add task do tutorial successfully", logic.testCommand("add"));
 	}
 	
 	@Test
@@ -22,8 +22,8 @@ public class LogicTest {
 		data.setDescription("do tutorial");
 		Logic logic = new Logic();
 		logic.addTask();
-		assertEquals("1", logic.testCommand("delete"), "delete task do tutorial successfully");
-		assertEquals("1", logic.testCommand("delete"), "Task with name: do tutorial not found!");
+		assertEquals("delete task do tutorial successfully", logic.testCommand("delete"));
+		assertEquals("Task with name: do tutorial not found!", logic.testCommand("delete"));
 	}
 	
 	@Test
@@ -33,7 +33,7 @@ public class LogicTest {
 		data.setDescription("help");
 		logic.testCommand("add");
 		data.setNewDescription("no help");
-		assertEquals("1", logic.testCommand("change"), "Update task from help to no help");
-		assertEquals("1", logic.testCommand("change"), "Task with name: help not found!");
+		assertEquals("Update task from help to no help", logic.testCommand("change"));
+		assertEquals("Task with name: help not found!", logic.testCommand("change"));
 	}
 }
