@@ -298,8 +298,8 @@ public class GUI{
 			String[] data = new String[4];
 
 			data[0] = useTask.getTaskName();
-			data[1] = useTask.getStartDate();
-			data[2] = useTask.getDueDate();
+			data[1] = useTask.getStartDate().toString();
+			data[2] = useTask.getDueDate().toString();
 			data[3] = "" + useTask.getStatus();
 
 			dataModel.addRow(data);

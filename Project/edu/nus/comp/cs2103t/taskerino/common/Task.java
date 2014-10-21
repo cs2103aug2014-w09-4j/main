@@ -2,8 +2,8 @@ package edu.nus.comp.cs2103t.taskerino.common;
 
 public class Task{
 	private String taskName;
-	private String startDate;
-	private String dueDate;
+	private DateAndTime startDate;
+	private DateAndTime dueDate;
 	private boolean status;
 	
 	public String getTaskName(){
@@ -22,19 +22,19 @@ public class Task{
 		this.status = status;
 	}
 
-	public String getStartDate() {
+	public DateAndTime getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(String date) {
+	public void setStartDate(DateAndTime date) {
 		this.startDate = date;
 	}
 	
-	public String getDueDate() {
+	public DateAndTime getDueDate() {
 		return dueDate;
 	}
 
-	public void setDueDate(String date) {
+	public void setDueDate(DateAndTime date) {
 		this.dueDate = date;
 	}
 }
