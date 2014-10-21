@@ -293,6 +293,7 @@ public class GUI{
 		// clear table data
 		dataModel.setRowCount(0);
 		
+		LoggerFactory.logp(Level.CONFIG, className, "updateTaskTable", "Reset tasks in userTask table.");
 		// reset table data
 		for (Task useTask: userTasks) {
 			String[] data = new String[4];
