@@ -116,7 +116,7 @@ public class Controller {
 	}
 	
 	/**
-	 *  Get all user's tasks.
+	 * Get all user's tasks.
 	 * 
 	 * @return ArrayList of Tasks
 	 */

@@ -70,7 +70,7 @@ public class GUI{
 
 	// Object used to set up JTable
 	private Object rowData[][] = {};
-	private Object columnNames[] = { "Task Name", "Date", "Status" };
+	private Object columnNames[] = { "Task Name", "Start Date", "Due Date", "Status" };
 	private DefaultTableModel dataModel;
 
 	// all components in JFrame
@@ -277,7 +277,8 @@ public class GUI{
 		// set column size
 		userTaskTable.getColumnModel().getColumn(0).setPreferredWidth(450);
 		userTaskTable.getColumnModel().getColumn(1).setPreferredWidth(70);
-		userTaskTable.getColumnModel().getColumn(2).setPreferredWidth(50);
+		userTaskTable.getColumnModel().getColumn(2).setPreferredWidth(70);
+		userTaskTable.getColumnModel().getColumn(3).setPreferredWidth(50);
 		
 		updateTaskTable();
 	}
@@ -294,11 +295,12 @@ public class GUI{
 		
 		// reset table data
 		for (Task useTask: userTasks) {
-			String[] data = new String[3];
+			String[] data = new String[4];
 
 			data[0] = useTask.getTaskName();
-			data[1] = useTask.getDate();
-			data[2] = "" + useTask.getStatus();
+			data[1] = useTask.getStartDate();
+			data[2] = useTask.getDueDate();
+			data[3] = "" + useTask.getStatus();
 
 			dataModel.addRow(data);
 	    }
