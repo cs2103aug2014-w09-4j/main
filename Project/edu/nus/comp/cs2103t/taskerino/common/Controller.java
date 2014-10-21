@@ -40,7 +40,9 @@ import edu.nus.comp.cs2103t.taskerino.parser.Parser;
 import edu.nus.comp.cs2103t.taskerino.storage.Storage;
 
 /**
- * Main class that initialize the program Taskerino.
+ * Main class that initialize and controls the program Taskerino
+ * by providing methods that integrating classes from different
+ * packages together.
  * 
  * @author Wang YanHao
  *
@@ -50,12 +52,18 @@ public class Controller {
 	private static Controller singletonController;
 	private Logic logic;
 	private Parser parser;
+	private String outputFeedBack = "";
 	
 	private Controller(){
 		logic = new Logic();
 		parser = new Parser();
 	}
 	
+	/**
+	 * Returns Controller singleton instance 
+	 * 
+	 * @return Controller singleton
+	 */
 	public static Controller getController() {
 		if (singletonController == null) {
 			singletonController = new Controller();
@@ -71,30 +79,47 @@ public class Controller {
 		new GUI();
 	}
 	
+	/**
+	 * Execute user command by passing the input userCommand String to
+	 * Parser and Logic classes.
+	 * 
+	 * @param userCommand : user's input command
+	 */
 	public void executeUserCommand(String userCommand) {
+		String methodName = "executeUserCommand";
+		
 		// inputCommand is passed into parser and logic
-		LoggerFactory.logp(Level.INFO, className, "executeUserCommand", "Send user input commands to Data.");
+		LoggerFactory.logp(Level.INFO, className, methodName, "Send user input commands to Data.");
 		Data.setInput(userCommand);
 
-		LoggerFactory.logp(Level.INFO, className, "executeUserCommand", "Initialize Paser.");
+		LoggerFactory.logp(Level.INFO, className, methodName, "Initialize Paser.");
 		parser.parse();
-	}
-	
-	public String getUserFeedback() {
-		String outputFeedBack = "";
+		
 		try {
-			LoggerFactory.logp(Level.INFO, className, "sendUserFeedback", "Asking Logic for feedback...");
+			LoggerFactory.logp(Level.INFO, className, methodName, "Asking Logic for feedback...");
 			outputFeedBack = logic.executeUserCommand();
-			LoggerFactory.logp(Level.INFO, className, "sendUserFeedback", "Successfully get feedback from Logic: \n" + outputFeedBack);
+			LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			// handle the exceptions
-			LoggerFactory.logp(Level.WARNING, className, "sendUserFeedback", e.getMessage());
+			LoggerFactory.logp(Level.WARNING, className, methodName, e.getMessage());
 			e.printStackTrace();
 		}
-		
+	}
+	
+	/**
+	 * Get feedback to be displayed to user.
+	 * 
+	 * @return String outputFeedBack
+	 */
+	public String getUserFeedback() {
 		return outputFeedBack;
 	}
 	
+	/**
+	 *  Get all user's tasks.
+	 * 
+	 * @return ArrayList of Tasks
+	 */
 	public ArrayList<Task> getUserTasks() {
 		return Data.task;
 	}
