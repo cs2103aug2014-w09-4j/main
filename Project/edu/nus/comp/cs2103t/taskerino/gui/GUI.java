@@ -70,7 +70,7 @@ public class GUI{
 
 	// Object used to set up JTable
 	private Object rowData[][] = {};
-	private Object columnNames[] = { "Task Name", "Start Date", "Due Date", "Status" };
+	private Object columnNames[] = { "Index", "Task Name", "Start Date", "Due Date", "Status" };
 	private DefaultTableModel dataModel;
 
 	// all components in JFrame
@@ -113,6 +113,7 @@ public class GUI{
 		LoggerFactory.logp(Level.CONFIG, className, "GUI", "Successfully setted up GUI.");
 	}
 
+	
 	/**
 	 * Create and configure components that will be added to the JFrame, and display to the user.
 	 * 
@@ -199,6 +200,7 @@ public class GUI{
 		panel.add(feedbackToUser, gbc);
 	}
 
+	
 	/**
 	 * Set up JLabel which is used to display feedback to the user. 
 	 */
@@ -206,6 +208,7 @@ public class GUI{
 		feedbackScrollPane.getViewport().add(feedbackToUser);
 	}
 
+	
 	/**
 	 * Set up JTextField which executes user's input command by
 	 * initializing Parser and Logic classes, and display feedback 
@@ -233,6 +236,7 @@ public class GUI{
 		});
 	}
 
+	
 	/**
 	 * Set up JScrollPane which is used to display all user's tasks.
 	 */
@@ -260,6 +264,7 @@ public class GUI{
 				SCROLLABLE_INCREMENT));
 	}
 
+	
 	/**
 	 * Initialize and set userTaskTable properties.
 	 */
@@ -275,14 +280,16 @@ public class GUI{
 		};
 		
 		// set column size
-		userTaskTable.getColumnModel().getColumn(0).setPreferredWidth(450);
-		userTaskTable.getColumnModel().getColumn(1).setPreferredWidth(70);
+		userTaskTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+		userTaskTable.getColumnModel().getColumn(1).setPreferredWidth(450);
 		userTaskTable.getColumnModel().getColumn(2).setPreferredWidth(70);
-		userTaskTable.getColumnModel().getColumn(3).setPreferredWidth(50);
+		userTaskTable.getColumnModel().getColumn(3).setPreferredWidth(70);
+		userTaskTable.getColumnModel().getColumn(4).setPreferredWidth(50);
 		
 		updateTaskTable();
 	}
 
+	
 	/**
 	 * Update userTaskTable entries.
 	 */
@@ -296,16 +303,18 @@ public class GUI{
 		LoggerFactory.logp(Level.CONFIG, className, "updateTaskTable", "Reset tasks in userTask table.");
 		// reset table data
 		for (Task useTask: userTasks) {
-			String[] data = new String[4];
+			String[] data = new String[5];
 
-			data[0] = useTask.getTaskName();
-			data[1] = useTask.getStartDate() != null ? "" + useTask.getStartDate() : "";
-			data[2] = useTask.getDueDate() != null ? "" + useTask.getDueDate() : "";
-			data[3] = "" + useTask.getStatus();
+			data[0] = "" + useTask.getTaskIndex();
+			data[1] = useTask.getTaskName();
+			data[2] = useTask.getStartDate() != null ? "" + useTask.getStartDate() : "";
+			data[3] = useTask.getDueDate() != null ? "" + useTask.getDueDate() : "";
+			data[4] = "" + useTask.getStatus();
 
 			dataModel.addRow(data);
 	    }
 	}
+	
 	
 	/**
 	 * Set ActionListener for action performed when user press "up" or "down" on keyboard.

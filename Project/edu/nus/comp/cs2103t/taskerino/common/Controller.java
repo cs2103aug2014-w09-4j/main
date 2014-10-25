@@ -83,8 +83,11 @@ public class Controller {
 	
 	public static void main(String[] args) throws JsonSyntaxException, IOException {
 		LoggerFactory.logp(Level.INFO, className, "Main", "Start logger!");
+		
 		LoggerFactory.logp(Level.INFO, className, "Main", "Loading user Tasks...");
 		Data.task = Storage.loadTasksFromFile();
+		Task.currentIndex = (Data.task == null ? 1 : Data.task.get(Data.task.size() - 1).getTaskIndex());
+		
 		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
 		new GUI();
 	}
