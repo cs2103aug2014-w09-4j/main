@@ -49,15 +49,24 @@ import edu.nus.comp.cs2103t.taskerino.storage.Storage;
  */
 public class Controller {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
+	private static final String COMMAND_ADD = "add";
+	private static final String COMMAND_DELETE = "delete";
+	private static final String COMMAND_CHANGE = "change";
+	private static final String COMMAND_COMPLETE = "complete";
+	private static final String COMMAND_SEARCH = "search";
+	private static final String COMMAND_EXIT = "exit";
+	
 	private static Controller singletonController;
 	private Logic logic;
 	private Parser parser;
 	private String outputFeedBack = "";
 	
+	// private constructor
 	private Controller(){
 		logic = new Logic();
 		parser = new Parser();
 	}
+	
 	
 	/**
 	 * Returns Controller singleton instance 
@@ -71,6 +80,7 @@ public class Controller {
 		return singletonController;
 	}
 	
+	
 	public static void main(String[] args) throws JsonSyntaxException, IOException {
 		LoggerFactory.logp(Level.INFO, className, "Main", "Start logger!");
 		LoggerFactory.logp(Level.INFO, className, "Main", "Loading user Tasks...");
@@ -78,6 +88,7 @@ public class Controller {
 		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
 		new GUI();
 	}
+	
 	
 	/**
 	 * Execute user command by passing the input userCommand String to
@@ -92,19 +103,62 @@ public class Controller {
 		LoggerFactory.logp(Level.INFO, className, methodName, "Send user input commands to Data.");
 		Data.setInput(userCommand);
 
-		LoggerFactory.logp(Level.INFO, className, methodName, "Initialize Paser.");
+		LoggerFactory.logp(Level.INFO, className, methodName, "Calling Paser.");
 		parser.parse();
-		
+
+		LoggerFactory.logp(Level.INFO, className, methodName, "Calling Logic and Storage.");
 		try {
-			LoggerFactory.logp(Level.INFO, className, methodName, "Asking Logic for feedback...");
-			outputFeedBack = logic.executeUserCommand();
-			LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// handle the exceptions
-			LoggerFactory.logp(Level.WARNING, className, methodName, e.getMessage());
+			execute((Data.getCommand()).toLowerCase());
+		} catch (FileNotFoundException e) {
+			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
 			e.printStackTrace();
 		}
+		LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
 	}
+	
+	
+	/**
+	 * @param command
+	 * @throws UnsupportedEncodingException 
+	 * @throws FileNotFoundException 
+	 */
+	private void execute(String command) throws FileNotFoundException, UnsupportedEncodingException {
+		switch (command) {
+			case COMMAND_ADD:
+				outputFeedBack = logic.addTask();
+				Storage.saveTasksIntoFile();
+				break;
+				
+			case COMMAND_DELETE:
+				outputFeedBack = logic.deleteTask();
+				Storage.saveTasksIntoFile();
+				break;
+				
+			case COMMAND_CHANGE:
+				outputFeedBack = logic.changeTask();
+				Storage.saveTasksIntoFile();
+				break;
+				
+			case COMMAND_COMPLETE:
+				outputFeedBack = logic.completeTask();
+				Storage.saveTasksIntoFile();
+				break;
+				
+			case COMMAND_SEARCH:
+				outputFeedBack = logic.searchTask();
+				break;
+				
+			case COMMAND_EXIT:
+				System.exit(0);
+				
+			default:
+				outputFeedBack = "invalid msg";
+		}
+	}
+
 	
 	/**
 	 * Get feedback to be displayed to user.
@@ -114,6 +168,7 @@ public class Controller {
 	public String getUserFeedback() {
 		return outputFeedBack;
 	}
+	
 	
 	/**
 	 * Get all user's tasks.
