@@ -97,36 +97,5 @@ public class Logic {
 		}
 		return tasksFound;
 	}
-	
-	
-	
-	// for unit testing
-
-	private static final String COMMAND_ADD = "add";
-	private static final String COMMAND_DELETE = "delete";
-	private static final String COMMAND_CHANGE = "change";
-	private static final String COMMAND_COMPLETE = "complete";
-	private static final String COMMAND_SEARCH = "search";
-	private static final String COMMAND_EXIT = "exit";
-	
-	public String testCommand(String userCommand) throws FileNotFoundException, UnsupportedEncodingException {
-		switch (userCommand) {
-			case COMMAND_ADD:
-				return addTask();
-			case COMMAND_DELETE:
-				return deleteTask();
-			case COMMAND_CHANGE:
-				return changeTask();
-			case COMMAND_COMPLETE:
-				return completeTask();
-			case COMMAND_SEARCH:
-				return searchTask();
-			case COMMAND_EXIT:
-				System.exit(0);
-				
-			default:
-				return "invalid msg";
-		}
-	}
 }
 	
