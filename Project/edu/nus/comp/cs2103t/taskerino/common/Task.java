@@ -6,13 +6,7 @@ public class Task{
 	private DateAndTime dueDate;
 	private boolean status;
 	
-	public Task() {
-		// default constructor set starting time to current time
-		startDate = new DateAndTime();
-		// default constructor set due time to one year later
-		dueDate = new DateAndTime(startDate.getYear() + 1,
-				startDate.getMonth(), startDate.getDay());
-	}
+	public Task() {}
 	
 	public String getTaskName(){
 		return this.taskName;

@@ -1,0 +1,87 @@
+1. help
+
+// shows a list of possible user commands and their respective descriptions
+help
+
+// show a list of detailed instruction within a command word
+help <command word>
+e.g help add 
+
+
+
+2. add
+
+// add a floating task
+add <task name>
+
+// add a task with a deadline
+add <task name> by <date>
+
+// add a task with timed duration
+add <task name> from <starting date> to <ending date>
+
+// add a floating task with a picture
+add <task name> with <pic address>
+
+// add a floating task with both deadline and picture
+add <task name> by <date> with <pic address>
+
+// add a task with both timed duration and picture
+add <task name> from <starting date> to <ending date> with <pic address>
+
+
+
+3. delete
+
+// delete a task
+delete <task name>
+
+// delete a task
+delete <task index>
+
+// delete starting time from a task
+delete starting time from <task index>
+
+// delete ending time from a task
+delete ending time from <task index>
+
+// delete picture from a task
+delete picture from <task index>
+
+
+
+4. change 
+
+// rename existing task
+change <task index> to <new task name>
+
+// change starting time for a existing task
+change starting time to <new date> from <task index>
+
+// change ending time for a existing task
+change ending time to <new date> from <task index>
+
+// change picture for a existing task
+change picture to <new pic address> from <task index>
+
+
+
+5. search
+
+// search for tasks containing certain keywords
+search <keywords>
+
+// search for tasks within a specific range of dates
+search <starting date> to <ending date>
+
+
+
+6. complete
+
+// mark a task as completed
+complete <task name>
+
+// mark a task as completed
+complete <task index>
+
+
