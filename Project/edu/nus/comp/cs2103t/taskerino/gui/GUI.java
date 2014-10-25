@@ -26,6 +26,7 @@
  */
 package edu.nus.comp.cs2103t.taskerino.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -52,6 +53,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import edu.nus.comp.cs2103t.taskerino.common.*;
 
@@ -70,7 +72,14 @@ public class GUI{
 
 	// Object used to set up JTable
 	private Object rowData[][] = {};
+	private static final int ROW_HEIGHT = 30;
+	private static final int ROW_MARGIN = 0;
 	private Object columnNames[] = { "Index", "Task Name", "Start Date", "Due Date", "Status" };
+	private static final int COLUMN_ONE_SIZE = 50;
+	private static final int COLUMN_TWO_SIZE = 450;
+	private static final int COLUMN_THREE_SIZE = 70;
+	private static final int COLUMN_FOUR_SIZE = 70;
+	private static final int COLUMN_FIVE_SIZE = 50;
 	private DefaultTableModel dataModel;
 
 	// all components in JFrame
@@ -81,11 +90,14 @@ public class GUI{
 	private JButton tagAll = new JButton("All");
 	private JTable userTaskTable;
 	private JScrollPane taskScrollPane;
+	
+	// variable for JPanel
+	private static final Font font = new Font("SansSerif", Font.PLAIN, 14);
 
 	// variable for JScrollPanel
-	private final String UP = "Up";
-	private final String DOWN = "Down";
-	private final int SCROLLABLE_INCREMENT = 14;
+	private static final String UP = "Up";
+	private static final String DOWN = "Down";
+	private static final int SCROLLABLE_INCREMENT = 14;
 
 
 	public GUI() {
@@ -147,7 +159,7 @@ public class GUI{
 		GridBagConstraints gbc = new GridBagConstraints();
 
 		LoggerFactory.logp(Level.CONFIG, className, "setPanel", "Set layout for JPanel to GridBagLayout.");
-		panel.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		panel.setFont(font);
 		panel.setLayout(layout);
 		
 		//Add tagAll
@@ -277,15 +289,32 @@ public class GUI{
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
+			
+			@Override
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
+			        Component returnComp = super.prepareRenderer(renderer, row, column);
+			        Color alternateColor = Color.WHITE;
+			        Color whiteColor = Color.LIGHT_GRAY;
+			        if (!returnComp.getBackground().equals(getSelectionBackground())){
+			            Color bg = (row % 2 == 0 ? alternateColor : whiteColor);
+			            returnComp .setBackground(bg);
+			            bg = null;
+			        }
+			        return returnComp;
+			}
 		};
 		
-		// set column size
-		userTaskTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-		userTaskTable.getColumnModel().getColumn(1).setPreferredWidth(450);
-		userTaskTable.getColumnModel().getColumn(2).setPreferredWidth(70);
-		userTaskTable.getColumnModel().getColumn(3).setPreferredWidth(70);
-		userTaskTable.getColumnModel().getColumn(4).setPreferredWidth(50);
+		// set row size
+		userTaskTable.setRowHeight(ROW_HEIGHT);
+		userTaskTable.setRowMargin(ROW_MARGIN);
 		
+		// set column size
+		userTaskTable.getColumnModel().getColumn(0).setPreferredWidth(COLUMN_ONE_SIZE);
+		userTaskTable.getColumnModel().getColumn(1).setPreferredWidth(COLUMN_TWO_SIZE);
+		userTaskTable.getColumnModel().getColumn(2).setPreferredWidth(COLUMN_THREE_SIZE);
+		userTaskTable.getColumnModel().getColumn(3).setPreferredWidth(COLUMN_FOUR_SIZE);
+		userTaskTable.getColumnModel().getColumn(4).setPreferredWidth(COLUMN_FIVE_SIZE);
+
 		updateTaskTable();
 	}
 

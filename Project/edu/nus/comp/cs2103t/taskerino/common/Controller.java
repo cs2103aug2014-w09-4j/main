@@ -158,7 +158,7 @@ public class Controller {
 				System.exit(0);
 				
 			default:
-				outputFeedBack = "invalid msg";
+				outputFeedBack = "Invalid Command!";
 		}
 	}
 
