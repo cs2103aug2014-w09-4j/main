@@ -31,9 +31,23 @@ public class LogicTest {
 		Data data = new Data();
 		Logic logic = new Logic();
 		data.setDescription("help");
-		logic.testCommand("add");
+		logic.addTask();
 		data.setNewDescription("no help");
 		assertEquals("Update task from help to no help", logic.changeTask());
 		assertEquals("Task with name: help not found!", logic.changeTask());
+	}
+	
+	@Test
+	public void searchFunction() {
+		Data data = new Data();
+		Logic logic = new Logic();
+		data.setDescription("an apple");
+		logic.addTask();
+		data.setDescription("a pear");
+		logic.addTask();
+		data.setDescription("apple");
+		assertEquals("1. an apple", logic.searchTask());
+		data.setDescription("pear");
+		assertEquals("1. a pear", logic.searchTask());
 	}
 }
