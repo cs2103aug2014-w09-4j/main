@@ -149,7 +149,22 @@ public class Parser {
 				String end_date = m.group(3);
 
 				return;
-			}				
+			}
+			
+			pattern = "(search) (.*)";
+
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+
+			m = r.matcher(raw);
+
+			if (m.find()) {
+
+				String keywords = m.group(2);
+
+				return;
+			}			
 		}
 		
 		
