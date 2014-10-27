@@ -140,40 +140,40 @@ public class Data {
 	public static void setNewDescription(String newAddType){
 		addType = newAddType;
 	}
-	
-	public static void setNewFromDay(int newFromDay){
+
+	public static void setFromDay(int newFromDay){
 		fromDay = newFromDay;
 	}
-	
-	public static void setNewFromMonth(int newFromMonth){
+
+	public static void setFromMonth(int newFromMonth){
 		fromMonth = newFromMonth;
 	}
-	
-	public static void setNewFromYear(int newFromYear){
+
+	public static void setFromYear(int newFromYear){
 		fromYear = newFromYear;
 	}
-	
-	public static void setNewToDay(int newToDay){
+
+	public static void setToDay(int newToDay){
 		toDay = newToDay;
 	}
 
-	public static void setNewToMonth(int newToMonth){
+	public static void setToMonth(int newToMonth){
 		toMonth = newToMonth;
 	}
 
-	public static void setNewToYear(int newToYear){
+	public static void setToYear(int newToYear){
 		toYear = newToYear;
 	}
-	
-	public static void setNewByDay(int newByDay){
+
+	public static void setByDay(int newByDay){
 		byDay = newByDay;
 	}
 
-	public static void setNewByMonth(int newByMonth){
+	public static void setByMonth(int newByMonth){
 		byMonth = newByMonth;
 	}
 
-	public static void setNewByYear(int newByYear){
+	public static void setByYear(int newByYear){
 		byYear = newByYear;
 	}
 

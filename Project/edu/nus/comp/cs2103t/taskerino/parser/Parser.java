@@ -129,7 +129,20 @@ public class Parser {
 				int to_month_int = convert_date(to_month);
 			
 				int to_year = m.group(8);
-								
+				
+				
+				Data.setFromDay(from_day);
+				
+				Data.setFromMonth(from_month_int);
+				
+				Data.setFromYear(from_year);
+				
+				Data.setToDay(to_day);
+				
+				Data.setToMonth(to_month_int);
+				
+				Data.setToYear(to_year);
+				
 				return;
 			}
 			
@@ -150,10 +163,16 @@ public class Parser {
 			
 				String by_month = m.group(4);
 			
-				int to_month_int = convert_date(to_month);
+				int by_month_int = convert_date(by_month);
 			
 				int by_year = m.group(5);
-			
+				
+				Data.setByDay(by_day);
+				
+				Data.setByMonth(by_month_int);
+				
+				Data.setByYear(by_year);
+				
 				return;		
 			}
 			
