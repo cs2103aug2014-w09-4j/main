@@ -34,7 +34,7 @@ import java.util.logging.Level;
 
 import com.google.gson.JsonSyntaxException;
 
-import edu.nus.comp.cs2103t.taskerino.gui.GUI;
+import edu.nus.comp.cs2103t.taskerino.gui.GUIFrame;
 import edu.nus.comp.cs2103t.taskerino.logic.Logic;
 import edu.nus.comp.cs2103t.taskerino.parser.Parser;
 import edu.nus.comp.cs2103t.taskerino.storage.Storage;
@@ -89,7 +89,7 @@ public class Controller {
 		Task.currentIndex = (Data.task == null ? 1 : Data.task.get(Data.task.size() - 1).getTaskIndex());
 		
 		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
-		new GUI();
+		new GUIFrame();
 	}
 	
 	
