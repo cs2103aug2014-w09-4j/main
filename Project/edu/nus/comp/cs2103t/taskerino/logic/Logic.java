@@ -50,10 +50,24 @@ public class Logic {
      * and return a String feedback to GUI class.
      */
 	public String addTask() throws FileNotFoundException, UnsupportedEncodingException {
-		String description = Data.getDescription();
-		Task newTask = new Task();
-		newTask.setTaskName(description);
-		Data.addTask(newTask);
+		String type = Data.getAddType();
+		if(type.equals("floating"){
+			String description = Data.getDescription();
+			Task newTask = new Task();
+			newTask.setTaskName(description);
+			Data.addTask(newTask);
+		}
+		else if(type.equals("deadline") {
+			String description = Data.getDescription();
+			Task newTask = new Task();
+			newTask.setTaskName(description);
+			Data.addTask(newTask);
+		}
+		else if(type.equals("timed"){
+			String description = Data.getDescription();
+			Task newTask = new Task();
+			newTask.setTaskName(description);
+			Data.addTask(newTask);
 		// dummy
 		return "add task " + newTask.getTaskName() + " successfully";
 	}
@@ -95,7 +109,11 @@ public class Logic {
 		for(int a = 0; a < searches.size(); a++) {
 			tasksFound += a+1 +". " + searches.get(a) + "\n";
 		}
-		return tasksFound;
+		if(tasksFound.equals("")){
+			return "Task with name: " + description + " not found!";
+		} else{
+			return tasksFound;
+		}
 	}
 }
 	
