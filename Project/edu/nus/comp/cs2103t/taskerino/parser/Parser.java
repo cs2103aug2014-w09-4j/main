@@ -114,21 +114,21 @@ public class Parser {
 
 				String add = m.group(2);
 			
-				int from_day = m.group(3);
+				String from_day = m.group(3);
 			
 				String from_month = m.group(4);
 											
-				int from_year = m.group(5);
+				String from_year = m.group(5);
 
 				int from_month_int = convert_date(from_month);
 			
-				int to_day = m.group(6);
+				String to_day = m.group(6);
 			
 				String to_month = m.group(7);
 			
 				int to_month_int = convert_date(to_month);
 			
-				int to_year = m.group(8);
+				String to_year = m.group(8);
 				
 				
 				Data.setFromDay(Integer.parseInt(from_day));
@@ -159,13 +159,13 @@ public class Parser {
 
 				String add = m.group(2);
 			
-				int by_day = m.group(3);
+				String by_day = m.group(3);
 			
 				String by_month = m.group(4);
 			
 				int by_month_int = convert_date(by_month);
 			
-				int by_year = m.group(5);
+				String by_year = m.group(5);
 				
 				Data.setByDay(Integer.parseInt(by_day));
 				
