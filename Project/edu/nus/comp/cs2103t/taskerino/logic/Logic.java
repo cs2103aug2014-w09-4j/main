@@ -51,24 +51,23 @@ public class Logic {
      */
 	public String addTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String type = Data.getAddType();
-		if(type.equals("floating"){
+		Task newTask = new Task();
+		
+		if (type.equals("floating")) {
 			String description = Data.getDescription();
-			Task newTask = new Task();
 			newTask.setTaskName(description);
 			Data.addTask(newTask);
 		}
-		else if(type.equals("deadline") {
+		else if (type.equals("deadline")) {
 			String description = Data.getDescription();
-			Task newTask = new Task();
 			newTask.setTaskName(description);
 			Data.addTask(newTask);
 			int byDay = Data.getByDay();
 			int byMonth = Data.getByMonth();
 			int byYear = Data.getByYear();
 		}
-		else if(type.equals("timed"){
+		else if (type.equals("timed")) {
 			String description = Data.getDescription();
-			Task newTask = new Task();
 			newTask.setTaskName(description);
 			Data.addTask(newTask);
 			int fromDay = Data.getFromDay();
