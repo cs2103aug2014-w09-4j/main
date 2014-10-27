@@ -62,12 +62,22 @@ public class Logic {
 			Task newTask = new Task();
 			newTask.setTaskName(description);
 			Data.addTask(newTask);
+			int byDay = Data.getByDay();
+			int byMonth = Data.getByMonth();
+			int byYear = Data.getByYear();
 		}
 		else if(type.equals("timed"){
 			String description = Data.getDescription();
 			Task newTask = new Task();
 			newTask.setTaskName(description);
 			Data.addTask(newTask);
+			int fromDay = Data.getFromDay();
+			int fromMonth = Data.getFromMonth();
+			int fromYear = Data.getFromYear();
+			int toDay = Data.getToDay();
+			int toMonth = Data.getToMonth();
+			int toYear = Data.getToYear();
+		}
 		// dummy
 		return "add task " + newTask.getTaskName() + " successfully";
 	}
