@@ -36,6 +36,8 @@ public class Data {
 	
 	public static ArrayList<Task> task;
 	
+	public static ArrayList<Task> addType;
+	
 /*****************
      Getters 
 ******************/
@@ -56,6 +58,10 @@ public class Data {
 		return newDescription;
 	}
 	
+	public static String getAddType(){
+		return addType;
+	}
+	
 /*****************
       Setters 
 ******************/	
@@ -74,6 +80,10 @@ public class Data {
 	
 	public static void setNewDescription(String newNewDescription){
 		newDescription = newNewDescription;
+	}
+	
+	public static void setNewDescription(String newAddType){
+		addType = newAddType;
 	}
 
 /*****************
