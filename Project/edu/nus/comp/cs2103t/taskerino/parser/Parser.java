@@ -42,7 +42,7 @@ public class Parser {
 		
 		if (command.equals("add")){
 						
-			pattern = "(add) (.*) from~ (.*) to~ (.*)";
+			pattern = "(add) (.*) from~ (.*) (.*) (.*) to~ (.*) (.*) (.*)";
 			
 			r = Pattern.compile(pattern);
 
@@ -54,15 +54,23 @@ public class Parser {
 
 				String add = m.group(2);
 			
-				String from = m.group(3);
+				String from_day = m.group(3);
 			
-				String to = m.group(4);
-				
+				String from_month = m.group(4);
+			
+				String from_year = m.group(5);
+			
+				String to_day = m.group(6);
+			
+				String to_month = m.group(7);
+			
+				String to_year = m.group(8);
+								
 				return;
 			}
 			
 			
-			pattern = "(add) (.*) by~ (.*)";
+			pattern = "(add) (.*) by~ (.*) (.*) (.*)";
 			
 			r = Pattern.compile(pattern);
 
@@ -74,7 +82,11 @@ public class Parser {
 
 				String add = m.group(2);
 			
-				String by = m.group(3);
+				String by_day = m.group(3);
+			
+				String by_month = m.group(4);
+			
+				String by_year = m.group(5);
 			
 				return;		
 			}
