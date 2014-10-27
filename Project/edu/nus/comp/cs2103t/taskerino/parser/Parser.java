@@ -42,7 +42,7 @@ public class Parser {
 		
 		if (command.equals("add")){
 						
-			pattern = "(add) (.*) from (.*) to (.*)";
+			pattern = "(add) (.*) from~ (.*) to~ (.*)";
 			
 			r = Pattern.compile(pattern);
 
@@ -62,7 +62,7 @@ public class Parser {
 			}
 			
 			
-			pattern = "(add) (.*) by (.*)";
+			pattern = "(add) (.*) by~ (.*)";
 			
 			r = Pattern.compile(pattern);
 
@@ -103,7 +103,7 @@ public class Parser {
 		
 		
 		if (command.equals("change")){
-			pattern = "(change) (.*) to (.*)";
+			pattern = "(change) (.*) to~ (.*)";
 
 			r = Pattern.compile(pattern);
 
@@ -134,7 +134,7 @@ public class Parser {
 		// search	
 		
 		if (command.equals("search")){
-			pattern = "(search) (.*) to (.*)";
+			pattern = "(search) (.*) to~ (.*)";
 
 			r = Pattern.compile(pattern);
 
