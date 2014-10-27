@@ -35,6 +35,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -44,6 +46,7 @@ import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BoundedRangeModel;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.InputMap;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -95,7 +98,7 @@ import edu.nus.comp.cs2103t.taskerino.common.Task;
  * 
  */
 
-public class GUIComponents {
+public class GUIComponents implements ItemListener {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static Controller controller = Controller.getController();
 
@@ -105,7 +108,11 @@ public class GUIComponents {
 	private JPanel contentPanel = new JPanel();
 	
 	// variables for tags
+	private	static final String PACKAGE = "javax.swing.";
 	private JPanel tagPanel;
+
+	private static String[] tagBoxItems = {"ALL"};	// should be Vector DS, but declared as array for ease of implementation, will change if logic and storage support further such function
+	private static String selectedItem;
 	private JComboBox<Object> tagBox;
 	
 	// variable for user input
@@ -454,15 +461,26 @@ public class GUIComponents {
 		LoggerFactory.logp(Level.CONFIG, className, methodName, "Setting up tagBox.");
 		
 		tagBox = new JComboBox<Object>();
-
+		
 		JLabel label = new JLabel("Select Tags:");
 		label.setDisplayedMnemonic('S');
 		label.setLabelFor(tagBox);
-
+		
 		tagPanel = new JPanel();
 		tagPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
 		tagPanel.add(label);
 		tagPanel.add(tagBox);
+		
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Select tag in the tagBox.");
+		tagBox.removeItemListener(this);
+		tagBox.setModel(new DefaultComboBoxModel<Object>(tagBoxItems));
+		tagBox.setSelectedIndex(0);
+		tagBox.addItemListener(this);
+		tagBox.requestFocusInWindow();
+
+		if (selectedItem != null) {
+			tagBox.setSelectedItem(selectedItem);
+		}
 	}
 	
 	
@@ -585,5 +603,35 @@ public class GUIComponents {
 			}
 		}
 	}
+
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
+	 */
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		// Implement the ItemListener interface
+		String componentName = (String)e.getItem();
+		changeTableModel(getClassName(componentName));
+		selectedItem = componentName;
+	}
 	
+	/**
+	 *  Use the component name to build the class name
+	 */
+	private String getClassName(String componentName) {
+		//  The table header is in a child package
+		if (componentName.equals("TableHeader")) {
+			return PACKAGE + "table.JTableHeader";
+		} else {
+			return PACKAGE + "J" + componentName;
+		}
+	}
+	
+	/**
+	 *  Change the TabelModel in the table for the selected component
+	 */
+	private void changeTableModel(String className) {
+		// dummy class, will implement in future if logic has support this funciton
+	}
 }
