@@ -131,17 +131,17 @@ public class Parser {
 				int to_year = m.group(8);
 				
 				
-				Data.setFromDay(from_day);
+				Data.setFromDay(Integer.parseInt(from_day));
 				
 				Data.setFromMonth(from_month_int);
 				
-				Data.setFromYear(from_year);
+				Data.setFromYear(Integer.parseInt(from_year));
 				
-				Data.setToDay(to_day);
+				Data.setToDay(Integer.parseInt(to_day));
 				
 				Data.setToMonth(to_month_int);
 				
-				Data.setToYear(to_year);
+				Data.setToYear(Integer.parseInt(to_year));
 				
 				return;
 			}
@@ -167,11 +167,11 @@ public class Parser {
 			
 				int by_year = m.group(5);
 				
-				Data.setByDay(by_day);
+				Data.setByDay(Integer.parseInt(by_day));
 				
 				Data.setByMonth(by_month_int);
 				
-				Data.setByYear(by_year);
+				Data.setByYear(Integer.parseInt(by_year));
 				
 				return;		
 			}
