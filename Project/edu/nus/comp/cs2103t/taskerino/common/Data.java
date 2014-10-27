@@ -34,10 +34,29 @@ public class Data {
 	
 	private static String newDescription;
 	
+	public static String addType;
+	
+	public static int fromDay;
+		
+	public static int fromMonth;
+	
+	public static int fromYear;
+	
+	public static int toDay;
+		
+	public static int toMonth;
+	
+	public static int toYear;
+	
+	public static int byDay;
+		
+	public static int byMonth;
+	
+	public static int byYear;
+	
+	
 	public static ArrayList<Task> task;
-	
-	public static ArrayList<Task> addType;
-	
+		
 /*****************
      Getters 
 ******************/
@@ -62,6 +81,42 @@ public class Data {
 		return addType;
 	}
 	
+	public static int getFromDay(){
+		return fromDay;
+	}
+	
+	public static int getFromMonth(){
+		return fromMonth;
+	}
+	
+	public static int getFromYear(){
+		return fromYear;
+	}
+	
+	public static int getToDay(){
+		return toDay;
+	}
+	
+	public static int getToMonth(){
+		return toMonth;
+	}
+	
+	public static int getToYear(){
+		return toYear;
+	}
+	
+	public static int getByDay(){
+		return byDay;
+	}
+	
+	public static int getByMonth(){
+		return byMonth;
+	}
+	
+	public static int getByYear(){
+		return byYear;
+	}
+	
 /*****************
       Setters 
 ******************/	
@@ -84,6 +139,42 @@ public class Data {
 	
 	public static void setNewDescription(String newAddType){
 		addType = newAddType;
+	}
+	
+	public static void setNewFromDay(int newFromDay){
+		fromDay = newFromDay;
+	}
+	
+	public static void setNewFromMonth(int newFromMonth){
+		fromMonth = newFromMonth;
+	}
+	
+	public static void setNewFromYear(int newFromYear){
+		fromYear = newFromYear;
+	}
+	
+	public static void setNewToDay(int newToDay){
+		toDay = newToDay;
+	}
+
+	public static void setNewToMonth(int newToMonth){
+		toMonth = newToMonth;
+	}
+
+	public static void setNewToYear(int newToYear){
+		toYear = newToYear;
+	}
+	
+	public static void setNewByDay(int newByDay){
+		byDay = newByDay;
+	}
+
+	public static void setNewByMonth(int newByMonth){
+		byMonth = newByMonth;
+	}
+
+	public static void setNewByYear(int newByYear){
+		byYear = newByYear;
 	}
 
 /*****************

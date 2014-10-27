@@ -22,6 +22,66 @@ public class Parser {
 	
 	*/
 	
+	public int convert_date(String the_month){
+		
+		int month = 0;
+		
+		switch (month) {
+            case 1:  the_month = "january";
+                     month = 1;
+					 break;
+					
+            case 2:  the_month = "february";
+                     month = 2;
+					 break;
+					
+            case 3:  the_month = "march";
+                     month = 3;
+					 break;
+
+            case 4:  the_month = "april";
+                     month = 4;
+					 break;
+
+            case 5:  the_month = "may";
+                     month = 5;
+					 break;
+
+            case 6:  the_month = "june";
+                     month = 6;
+					 break;
+
+            case 7:  the_month = "july";
+                     month = 7;
+					 break;
+
+            case 8:  the_month = "august";
+                     month = 8;
+					 break;
+
+            case 9:  the_month = "september";
+                     month = 9;
+					 break;
+
+            case 10: the_month = "october";
+                     month = 10;
+					 break;
+
+            case 11: the_month = "november";
+                     month = 11;
+					 break;
+
+            case 12: the_month = "december";
+                     month = 12;
+					 break;
+
+            default: the_month = "Invalid month";
+                     break;
+        }
+
+		return month;
+	}
+	
 	public void parse(){
 		
 		String raw = Data.getInput();
@@ -54,17 +114,21 @@ public class Parser {
 
 				String add = m.group(2);
 			
-				String from_day = m.group(3);
+				int from_day = m.group(3);
 			
 				String from_month = m.group(4);
+											
+				int from_year = m.group(5);
+
+				int from_month_int = convert_date(from_month);
 			
-				String from_year = m.group(5);
-			
-				String to_day = m.group(6);
+				int to_day = m.group(6);
 			
 				String to_month = m.group(7);
 			
-				String to_year = m.group(8);
+				int to_month_int = convert_date(to_month);
+			
+				int to_year = m.group(8);
 								
 				return;
 			}
@@ -82,11 +146,13 @@ public class Parser {
 
 				String add = m.group(2);
 			
-				String by_day = m.group(3);
+				int by_day = m.group(3);
 			
 				String by_month = m.group(4);
 			
-				String by_year = m.group(5);
+				int to_month_int = convert_date(to_month);
+			
+				int by_year = m.group(5);
 			
 				return;		
 			}
@@ -174,6 +240,8 @@ public class Parser {
 			if (m.find()) {
 
 				String keywords = m.group(2);
+
+				Data.setDescription(keywords.trim());
 
 				return;
 			}			
