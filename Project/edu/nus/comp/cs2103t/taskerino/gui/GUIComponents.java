@@ -362,7 +362,7 @@ public class GUIComponents implements ItemListener {
 				if (previousCommand.isEmpty()) {
 					feedbackToUser.setText("No more command in the history!");
 				} else {
-					feedbackToUser.setText("");
+					feedbackToUser.setText(" ");
 				}
 			} else if (name.equals(DOWN)) {
 				String postCommand = commandHistory.getPostCommand();
@@ -371,7 +371,7 @@ public class GUIComponents implements ItemListener {
 				if (postCommand.isEmpty()) {
 					feedbackToUser.setText("You have reached the end of command history!");
 				} else {
-					feedbackToUser.setText("");
+					feedbackToUser.setText(" ");
 				}
 			}
 		}

@@ -45,7 +45,7 @@ public class DateAndTimeTest {
 	public void testDefaultDateConstructor() {
 		DateAndTime testCase00 = new DateAndTime();
 		String testOutput = testCase00.toString();
-		String expectedOutput = "21/10/2014";
+		String expectedOutput = "28/10/2014";
 		assertEquals("Test for default date constructor.", testOutput, expectedOutput);
 	}
 	
@@ -53,9 +53,9 @@ public class DateAndTimeTest {
 	public void testValidSpecificDateInputConstructor() {
 		try {
 			// Test a valid specific date input
-			DateAndTime testCase01 = new DateAndTime(2014, 10, 15);
+			DateAndTime testCase01 = new DateAndTime(2014, 10, 29);
 			String testOutput = testCase01.toString();
-			String expectedOutput = "15/10/2014";
+			String expectedOutput = "29/10/2014";
 			assertEquals("Test for valid specific date input constructor.", testOutput, expectedOutput);
 
 			// Test for lower boundary value for a valid specific month input
@@ -95,13 +95,13 @@ public class DateAndTimeTest {
 			assertEquals("Test for valid specific date input constructor.", testOutput, expectedOutput);
 
 			// Test for upper boundary value for a valid specific day input for February
-			DateAndTime testCase08 = new DateAndTime(2014, 2, 29);
+			DateAndTime testCase08 = new DateAndTime(2012, 2, 29);
 			testOutput = testCase08.toString();
-			expectedOutput = "29/2/2014";
+			expectedOutput = "29/2/2012";
 			assertEquals("Test for valid specific date input constructor.", testOutput, expectedOutput);
 
 			// Test for upper boundary value for a valid specific day input for February
-			DateAndTime testCase09 = new DateAndTime(2015, 2, 28);
+			DateAndTime testCase09 = new DateAndTime(2014, 2, 28);
 			testOutput = testCase09.toString();
 			expectedOutput = "28/2/2014";
 			assertEquals("Test for valid specific date input constructor.", testOutput, expectedOutput);

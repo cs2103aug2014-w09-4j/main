@@ -121,11 +121,13 @@ public class DateAndTime {
 	public void setDay(int day) throws IllegalArgumentException {
 		boolean isValidInput = false;
 
-		switch (this.month) {
+		switch (getMonth()) {
 			case 1: case 3: case 5: case 7: case 8: case 10: case 12:
 				isValidInput = (day >= 1 && day <= 31);
+				break;
 			case 4: case 6: case 9: case 11:
 				isValidInput = (day >= 1 && day <= 30);
+				break;
 			case 2:
 				// check for leap year
 				if ((year % 100 != 0 && year % 4 == 0) || (year % 400 == 0)) {
