@@ -157,6 +157,9 @@ public class GUIComponents implements ItemListener {
 	private static final String CTRL_UP = "Ctrl_Up";
 	private static final String CTRL_DOWN = "Ctrl_Down";
 	
+	public void focusInputTextField(){
+		userInputArea.requestFocusInWindow();
+	}
 	
 	// constructor
 	public GUIComponents() {
@@ -650,7 +653,6 @@ public class GUIComponents implements ItemListener {
 				rootPane.getContentPane().add(bindings.getContentPanel());
 				SwingUtilities.updateComponentTreeUI(rootPane);
 				rootPane.requestFocusInWindow();
-				
 			} catch (Exception exception) {
 				LoggerFactory.logp(Level.SEVERE, innerClassName, "Action Listener", 
 						"Failed to load Look & Feel." + exception.getMessage());

@@ -46,7 +46,7 @@ public class GUIFrame extends JFrame {
 		this.setTitle(APP_NAME);
 		
 		GUIComponents components = new GUIComponents();
-		this.setJMenuBar( components.getMenuBar() );
+		this.setJMenuBar(components.getMenuBar());
 		this.getContentPane().add(components.getContentPanel());
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,5 +54,7 @@ public class GUIFrame extends JFrame {
 		this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+		
+		components.focusInputTextField();
 	}
 }
