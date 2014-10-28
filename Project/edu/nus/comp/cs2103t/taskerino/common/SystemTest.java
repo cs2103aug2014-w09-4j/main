@@ -1,15 +1,14 @@
 package edu.nus.comp.cs2103t.taskerino.common;
-
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import edu.nus.comp.cs2103t.taskerino.common.Data;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 
 public class SystemTest {
 
 	@Test
-	public void add() {
+	public void add() throws FileNotFoundException, UnsupportedEncodingException{
 		Data data = new Data();
 		Controller controller = new Controller();
 		data.setDescription("do tutorial");
@@ -18,7 +17,7 @@ public class SystemTest {
 	}
 	
 	@Test
-	public void delete() {
+	public void delete() throws FileNotFoundException, UnsupportedEncodingException{
 		Data data = new Data();
 		Controller controller = new Controller();
 		data.setDescription("do tutorial");
@@ -29,7 +28,7 @@ public class SystemTest {
 	}
 	
 	@Test
-	public void change() {
+	public void change() throws FileNotFoundException, UnsupportedEncodingException{
 		Data data = new Data();
 		Controller controller = new Controller();
 		data.setDescription("help");
