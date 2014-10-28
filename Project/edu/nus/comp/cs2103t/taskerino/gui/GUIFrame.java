@@ -37,6 +37,7 @@ import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
 public class GUIFrame extends JFrame {
+	private static GUIComponents components;
 	private static final String APP_NAME = "Taskerino";
 	private static final int FRAME_WIDTH = 800;
 	private static final int FRAME_HEIGHT = 550;
@@ -45,7 +46,7 @@ public class GUIFrame extends JFrame {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		this.setTitle(APP_NAME);
 		
-		GUIComponents components = new GUIComponents();
+		components = GUIComponents.getGUIComponents();
 		this.setJMenuBar(components.getMenuBar());
 		this.getContentPane().add(components.getContentPanel());
 		
@@ -56,5 +57,15 @@ public class GUIFrame extends JFrame {
 		this.setVisible(true);
 		
 		components.focusInputTextField();
+	}
+	
+	/**
+	 * Wrapper method which communicates with GUIComponents class and get one of user's task names
+	 * based on input row index.
+	 * @param taskRowIndex
+	 * @return taskName
+	 */
+	public String getTaskNameAtRowIndex(int taskRowIndex) throws IllegalArgumentException {
+		return components.getTaskName(taskRowIndex);
 	}
 }

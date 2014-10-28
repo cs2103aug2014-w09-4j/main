@@ -49,6 +49,7 @@ import edu.nus.comp.cs2103t.taskerino.storage.Storage;
  */
 public class Controller {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
+	private static final String INVALID_COMMAND_FEEDBACK = "Invalid Command!";
 	private static final String COMMAND_ADD = "add";
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_CHANGE = "change";
@@ -58,6 +59,7 @@ public class Controller {
 	
 	private static Controller singletonController;
 	private CommandHistory commandHistory;
+	private static GUIFrame gui;
 	private Logic logic;
 	private Parser parser;
 	private String outputFeedBack = "";
@@ -88,10 +90,9 @@ public class Controller {
 		
 		LoggerFactory.logp(Level.INFO, className, "Main", "Loading user Tasks...");
 		Data.task = Storage.loadTasksFromFile();
-		Task.currentIndex = (Data.task == null ? 1 : Data.task.get(Data.task.size() - 1).getTaskIndex());
 		
 		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
-		new GUIFrame();
+		gui = new GUIFrame();
 	}
 	
 	
@@ -103,6 +104,7 @@ public class Controller {
 	 */
 	public void executeUserCommand(String userCommand) {
 		String methodName = "executeUserCommand";
+		boolean isParseSuccessful = false;
 		
 		// store user command if it is not empty
 		if (!userCommand.isEmpty()) {
@@ -114,15 +116,25 @@ public class Controller {
 		LoggerFactory.logp(Level.INFO, className, methodName, "Send user input commands to Data.");
 		Data.setInput(userCommand);
 
-		LoggerFactory.logp(Level.INFO, className, methodName, "Calling Paser.");
-		parser.parse();
-
 		try {
-			LoggerFactory.logp(Level.INFO, className, methodName, "Calling Logic and Storage.");
-			execute((Data.getCommand()).toLowerCase());
+			LoggerFactory.logp(Level.INFO, className, methodName, "Calling Paser.");
+			parser.parse();
+			isParseSuccessful = true;
 		} catch (Exception e) {
+			outputFeedBack = INVALID_COMMAND_FEEDBACK;
 			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
 			e.printStackTrace();
+		}
+
+		if (isParseSuccessful) {
+			try {
+				LoggerFactory.logp(Level.INFO, className, methodName, "Calling Logic and Storage.");
+				execute((Data.getCommand()).toLowerCase());
+			} catch (Exception e) {
+				outputFeedBack = INVALID_COMMAND_FEEDBACK;
+				LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
+				e.printStackTrace();
+			}
 		}
 		
 		LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
@@ -164,7 +176,7 @@ public class Controller {
 				System.exit(0);
 				
 			default:
-				outputFeedBack = "Invalid Command!";
+				outputFeedBack = INVALID_COMMAND_FEEDBACK;
 		}
 	}
 
@@ -186,5 +198,16 @@ public class Controller {
 	 */
 	public ArrayList<Task> getUserTasks() {
 		return Data.task;
+	}
+
+
+	/**
+	 * Wrapper method which communicates with GUI class and get one of user's task names
+	 * based on input row index.
+	 * @param taskRowIndex
+	 * @return taskName
+	 */
+	public String getTaskNameAtRowIndex(int taskRowIndex) throws IllegalArgumentException {
+		return gui.getTaskNameAtRowIndex(taskRowIndex);
 	}
 }

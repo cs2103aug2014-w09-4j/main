@@ -1,8 +1,6 @@
 package edu.nus.comp.cs2103t.taskerino.common;
 
 public class Task{
-	public static int currentIndex;
-	private int taskIndex;
 	private String taskName;
 	private DateAndTime startDate;
 	private DateAndTime dueDate;
@@ -10,20 +8,14 @@ public class Task{
 	private boolean status;
 	
 	public Task() {
-		currentIndex++;
-		this.setTaskIndex(currentIndex);
 	}
 	
 	public Task(String description) {
-		currentIndex++;
-		this.setTaskIndex(currentIndex);
 		this.setTaskName(description);
 		this.setTaskType("floating");
 	}
 
 	public Task(String description, DateAndTime startDate, DateAndTime dueDate) {
-		currentIndex++;
-		this.setTaskIndex(currentIndex);
 		this.setTaskType("timed");
 		this.setTaskName(description);
 		this.setStartDate(startDate);
@@ -31,9 +23,7 @@ public class Task{
 	}
 	
 	public Task(String description, DateAndTime dueDate) {
-		currentIndex++;
 		this.setTaskType("deadline");
-		this.setTaskIndex(currentIndex);
 		this.setTaskName(description);
 		this.setDueDate(dueDate);
 	}
@@ -78,11 +68,4 @@ public class Task{
 		this.dueDate = date;
 	}
 
-	public int getTaskIndex() {
-		return taskIndex;
-	}
-
-	public void setTaskIndex(int taskIndex) {
-		this.taskIndex = taskIndex;
-	}
 }

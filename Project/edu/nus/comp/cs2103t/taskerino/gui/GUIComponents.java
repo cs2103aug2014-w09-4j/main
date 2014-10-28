@@ -102,6 +102,7 @@ import edu.nus.comp.cs2103t.taskerino.common.Task;
 
 public class GUIComponents implements ItemListener {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
+	private static GUIComponents singletonGUIComponents;
 	private static Controller controller = Controller.getController();
 	private CommandHistory commandHistory = CommandHistory.getCommandHistory();
 
@@ -161,8 +162,25 @@ public class GUIComponents implements ItemListener {
 		userInputArea.requestFocusInWindow();
 	}
 	
-	// constructor
-	public GUIComponents() {
+	// private constructor
+	private GUIComponents() {
+		repaint();
+	}
+	
+	/**
+	 * Returns GUIComponents singleton instance.
+	 */
+	public static GUIComponents getGUIComponents() {
+		if (singletonGUIComponents == null) {
+			singletonGUIComponents = new GUIComponents();
+		}
+		return singletonGUIComponents;
+	}
+	
+	/**
+	 * Update and repaint all GUI components.
+	 */
+	public void repaint() {
 		setTagBox();
 		setUserTask();
 		setUserInput();
@@ -467,14 +485,14 @@ public class GUIComponents implements ItemListener {
 
 		LoggerFactory.logp(Level.CONFIG, className, methodName, "Reset tasks in userTask table.");
 		// reset table data
-		for (Task useTask: userTasks) {
+		for (int i=0; i<userTasks.size(); i++) {
 			String[] data = new String[5];
 
-			data[0] = "" + useTask.getTaskIndex();
-			data[1] = useTask.getTaskName();
-			data[2] = useTask.getStartDate() != null ? "" + useTask.getStartDate() : "";
-			data[3] = useTask.getDueDate() != null ? "" + useTask.getDueDate() : "";
-			data[4] = "" + useTask.getStatus();
+			data[0] = (1 + i) + "";
+			data[1] = userTasks.get(i).getTaskName();
+			data[2] = userTasks.get(i).getStartDate() != null ? "" + userTasks.get(i).getStartDate() : "";
+			data[3] = userTasks.get(i).getDueDate() != null ? "" + userTasks.get(i).getDueDate() : "";
+			data[4] = "" + userTasks.get(i).getStatus();
 
 			dataModel.addRow(data);
 		}
@@ -649,7 +667,7 @@ public class GUIComponents implements ItemListener {
 				rootPane.getContentPane().remove(component);
 
 				UIManager.setLookAndFeel(laf);
-				GUIComponents bindings = new GUIComponents();
+				GUIComponents bindings = GUIComponents.getGUIComponents();
 				rootPane.getContentPane().add(bindings.getContentPanel());
 				SwingUtilities.updateComponentTreeUI(rootPane);
 				rootPane.requestFocusInWindow();
@@ -690,5 +708,26 @@ public class GUIComponents implements ItemListener {
 	 */
 	private void changeTableModel(String className) {
 		// dummy class, will implement in future if logic has support this funciton
+	}
+	
+	
+	/**
+	 * Return corresponding task name based on user's input of JTable's rowIndex.
+	 * @param int rowIndex
+	 * @return String TaskName
+	 */
+	public String getTaskName(int rowIndex) throws IllegalArgumentException {
+		int realRowIndex = rowIndex - 1;
+
+		if (userTaskTable.getRowCount() < realRowIndex) {
+			// throw exception
+			IllegalArgumentException e = new IllegalArgumentException("Unacceptable rowIndex input: " + rowIndex);
+			LoggerFactory.logp(Level.WARNING, className, "getTaskName", e.getMessage());
+			throw e;
+		}
+		
+		String taskName = (String) userTaskTable.getModel().getValueAt(realRowIndex, 1);
+		
+		return taskName;
 	}
 }

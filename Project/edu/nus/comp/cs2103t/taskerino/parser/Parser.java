@@ -3,6 +3,7 @@ package edu.nus.comp.cs2103t.taskerino.parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import edu.nus.comp.cs2103t.taskerino.common.Controller;
 import edu.nus.comp.cs2103t.taskerino.common.Data;
 
 /**
@@ -15,7 +16,7 @@ import edu.nus.comp.cs2103t.taskerino.common.Data;
 */
 
 public class Parser {
-	
+	private static Controller controller = Controller.getController();
 	/**
 	
 		Method parse a raw user input that is of type String
@@ -70,7 +71,7 @@ public class Parser {
 		return month;
 	}
 	
-	public void parse(){
+	public void parse() throws NumberFormatException, IllegalArgumentException {
 		
 		String raw = Data.getInput();
 		
@@ -220,7 +221,9 @@ public class Parser {
 
 				String from_year = m.group(4);
 				
-				String task = m.group(5);
+				int taskRowIndex = Integer.parseInt((m.group(5)));
+				
+				String task = controller.getTaskNameAtRowIndex(taskRowIndex);
 				
 				int from_month_int = convert_date(from_month);
 				
