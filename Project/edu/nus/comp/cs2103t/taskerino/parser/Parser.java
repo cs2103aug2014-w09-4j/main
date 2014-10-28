@@ -143,6 +143,8 @@ public class Parser {
 				
 				Data.setToYear(Integer.parseInt(to_year));
 				
+				Data.setType("timed");
+				
 				return;
 			}
 			
@@ -173,6 +175,8 @@ public class Parser {
 				
 				Data.setByYear(Integer.parseInt(by_year));
 				
+				Data.setType("deadline");
+				
 				return;		
 			}
 			
@@ -190,6 +194,8 @@ public class Parser {
 				String add = m.group(2);
 				
 				Data.setDescription(add.trim());			
+				
+				Data.setType("floating");
 				
 				return;			
 			}			
