@@ -28,7 +28,7 @@ public class Logic {
 		if(type.equals("taskName")) {
 			try {
 				Data.updateTask(description, newDescription);
-				return "update task successfully from " + description + " to " + newDescription;
+				return "Update task successfully from " + description + " to " + newDescription;
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "Task with name: " + description + " not found!";
 			}
@@ -39,7 +39,7 @@ public class Logic {
 				int year = Data.getFromYear();
 				DateAndTime newStartDate = new DateAndTime(year,month,day);
 				Data.getTask(description).setStartDate(newStartDate);
-				return "updated " + description + " start time successfully to " + day + "/" + month + "/" + year;
+				return "Updated " + description + " start time successfully to " + day + "/" + month + "/" + year;
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "Task with name: " + description + " not found!";
 			}
@@ -50,7 +50,7 @@ public class Logic {
 				int year = Data.getToYear();
 				DateAndTime newEndDate = new DateAndTime(year,month,day);
 				Data.getTask(description).setDueDate(newEndDate);
-				return "updated " + description + " end time successfully to " + day + "/" + month + "/" + year;
+				return "Updated " + description + " end time successfully to " + day + "/" + month + "/" + year;
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "Task with name: " + description + " not found!";
 			}
@@ -67,7 +67,7 @@ public class Logic {
 		String description = Data.getDescription();
 		try {
 			Data.removeTask(description);
-			return "delete task " + description + " successfully";
+			return "Delete task " + description + " successfully";
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return "Task with name: " + description + " not found!";
 		}
@@ -102,13 +102,11 @@ public class Logic {
 			newTask.setTaskName(description);
 			int fromDay = Data.getFromDay();
 			int fromMonth = Data.getFromMonth();
-			System.out.println(fromMonth);
 			int fromYear = Data.getFromYear();
 			DateAndTime fromDateAndTime = new DateAndTime(fromYear,fromMonth,fromDay);
 			newTask.setStartDate(fromDateAndTime);
 			int toDay = Data.getToDay();
 			int toMonth = Data.getToMonth();
-			System.out.println(toMonth);
 			int toYear = Data.getToYear();
 			DateAndTime toDateAndTime = new DateAndTime(toYear,toMonth,toDay);
 			newTask.setDueDate(toDateAndTime);
@@ -116,7 +114,7 @@ public class Logic {
 			Data.addTask(newTask);
 		}
 		// dummy
-		return "add task " + newTask.getTaskName() + " successfully";
+		return "Add task " + newTask.getTaskName() + " successfully";
 	}
 	
 	/**
@@ -128,7 +126,7 @@ public class Logic {
 		Task toBeCompleted = Data.getTask(description);
 		if(toBeCompleted != null) {
 			toBeCompleted.setStatus(true);
-			return "complete task " + description;
+			return "Complete task " + description;
 		} else {
 			return "Task with name: " + description + " not found!";
 		}

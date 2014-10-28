@@ -85,16 +85,11 @@ public class Controller {
 	
 	
 	public static void main(String[] args) {
-		String methodName = "Main";
+		final String methodName = "Main";
 		LoggerFactory.logp(Level.INFO, className, methodName, "Start logger!");
 		
 		LoggerFactory.logp(Level.INFO, className, methodName, "Loading user Tasks...");
-		try {
-			Data.task = Storage.loadTasksFromFile();
-		} catch (JsonSyntaxException | IOException e) {
-			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
-			e.printStackTrace();
-		}
+		loadData();
 		
 		LoggerFactory.logp(Level.INFO, className, methodName, "Initialize GUI!");
 		new GUIFrame();
@@ -103,7 +98,20 @@ public class Controller {
 
 
 	
-	
+	/**
+	 * Load existing user data from local file.
+	 */
+	public static void loadData() {
+		final String methodName = "Main";
+		try {
+			Data.task = Storage.loadTasksFromFile();
+		} catch (JsonSyntaxException | IOException e) {
+			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+
 	/**
 	 * Execute user command by passing the input userCommand String to
 	 * Parser and Logic classes.

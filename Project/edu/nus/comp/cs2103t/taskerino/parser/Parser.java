@@ -221,9 +221,16 @@ public class Parser {
 
 				String from_year = m.group(4);
 				
-				int taskRowIndex = Integer.parseInt((m.group(5))) - 1;
+				String task = m.group(5);
 				
-				String task = Data.task.get(taskRowIndex).getTaskName();
+				try {
+					int taskRowIndex = Integer.parseInt(task) - 1;
+					Data.setDescription(Data.task.get(taskRowIndex).getTaskName());
+				} catch (NumberFormatException e) {
+					// task name input command
+					Data.setDescription(task.trim());
+				}
+				
 				
 				int from_month_int = convert_date(from_month);
 				
@@ -232,8 +239,6 @@ public class Parser {
 				Data.setFromMonth(from_month_int);
 
 				Data.setFromYear(Integer.parseInt(from_year));
-				
-				Data.setDescription(task.trim());
 				
 				Data.setChangeType("startTime");
 
@@ -258,9 +263,15 @@ public class Parser {
 
 				String to_year = m.group(4);
 				
-				int taskRowIndex = Integer.parseInt((m.group(5))) - 1;
+				String task = m.group(5);
 				
-				String task = Data.task.get(taskRowIndex).getTaskName();
+				try {
+					int taskRowIndex = Integer.parseInt(task) - 1;
+					Data.setDescription(Data.task.get(taskRowIndex).getTaskName());
+				} catch (NumberFormatException e) {
+					// task name input command
+					Data.setDescription(task.trim());
+				}
 				
 				int to_month_int = convert_date(to_month);
 				
@@ -269,8 +280,6 @@ public class Parser {
 				Data.setToMonth(to_month_int);
 
 				Data.setToYear(Integer.parseInt(to_year));
-				
-				Data.setDescription(task.trim());
 				
 				Data.setChangeType("endTime");
 				
