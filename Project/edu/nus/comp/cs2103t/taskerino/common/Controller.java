@@ -47,7 +47,7 @@ import edu.nus.comp.cs2103t.taskerino.storage.Storage;
  * @author Wang YanHao
  *
  */
-public class Controller implements Runnable {
+public class Controller {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static final String INVALID_COMMAND_FEEDBACK = "Invalid Command!";
 	private static final String COMMAND_ADD = "add";
@@ -59,21 +59,12 @@ public class Controller implements Runnable {
 	
 	private static Controller singletonController;
 	private CommandHistory commandHistory;
-	private static GUIFrame gui;
 	private Logic logic;
 	private Parser parser;
 	private String outputFeedBack = "";
 	
 	// private constructor
 	private Controller(){
-		LoggerFactory.logp(Level.INFO, className, "Controller", "Loading user Tasks...");
-		try {
-			Data.task = Storage.loadTasksFromFile();
-		} catch (JsonSyntaxException | IOException e) {
-			LoggerFactory.logp(Level.SEVERE, className, "Controller", e.getMessage());
-			e.printStackTrace();
-		}
-		
 		logic = new Logic();
 		parser = new Parser();
 		commandHistory = CommandHistory.getCommandHistory();
@@ -93,21 +84,25 @@ public class Controller implements Runnable {
 	}
 	
 	
-	public static void main(String[] args) throws JsonSyntaxException, IOException {
-		Controller controller = Controller.getController();
-		controller.run();
+	public static void main(String[] args) {
+		String methodName = "Main";
+		LoggerFactory.logp(Level.INFO, className, methodName, "Start logger!");
+		
+		LoggerFactory.logp(Level.INFO, className, methodName, "Loading user Tasks...");
+		try {
+			Data.task = Storage.loadTasksFromFile();
+		} catch (JsonSyntaxException | IOException e) {
+			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		LoggerFactory.logp(Level.INFO, className, methodName, "Initialize GUI!");
+		new GUIFrame();
 	}
 	
 
 
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	@Override
-	public void run() {
-		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
-		gui = new GUIFrame();
-	}
+	
 	
 	/**
 	 * Execute user command by passing the input userCommand String to
@@ -151,10 +146,14 @@ public class Controller implements Runnable {
 		}
 		
 		LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
+		
+		// clear Data
+		Data.resetAll();
 	}
 	
 	
 	/**
+	 * Based on user's input command Parser has parsed, call different methods from different classes to execute the command.
 	 * @param command
 	 * @throws UnsupportedEncodingException 
 	 * @throws FileNotFoundException 
@@ -211,17 +210,6 @@ public class Controller implements Runnable {
 	 */
 	public ArrayList<Task> getUserTasks() {
 		return Data.task;
-	}
-
-
-	/**
-	 * Wrapper method which communicates with GUI class and get one of user's task names
-	 * based on input row index.
-	 * @param taskRowIndex
-	 * @return taskName
-	 */
-	public String getTaskNameAtRowIndex(int taskRowIndex) throws IllegalArgumentException {
-		return gui.getTaskNameAtRowIndex(taskRowIndex);
 	}
 
 }

@@ -28,31 +28,31 @@ public class Parser {
 		int month;
 		
 		switch (the_month.toLowerCase()) {
-            case "january": case "1": month = 1;
+            case "january": case "1": case "01": month = 1;
             					break;
 					
-            case "february": case "2": month = 2;
+            case "february": case "2": case "02": month = 2;
             					break;
 					
-            case "march": case "3": month = 3;
+            case "march": case "3": case "03": month = 3;
 					 			break;
 
-            case "april": case "4":	month = 4;
+            case "april": case "4":	case "04": month = 4;
             					break;
 
-            case "may":	 case "5":	month = 5;
+            case "may":	 case "5":	case "05": month = 5;
 					 			break;
 
-            case "june": case "6":	month = 6;
+            case "june": case "6":	case "06": month = 6;
 					 			break;
 
-            case "july": case "7":	month = 7;
+            case "july": case "7":	case "07": month = 7;
 					 			break;
 
-            case "august": case "8":	month = 8;
+            case "august": case "8": case "08": month = 8;
 					 			break;
 
-            case "september":  case "9": month = 9;
+            case "september":  case "9": case "09": month = 9;
 					 			break;
 
             case "october":	 case "10": month = 10;
@@ -71,7 +71,7 @@ public class Parser {
 		return month;
 	}
 	
-	public void parse() throws NumberFormatException, IllegalArgumentException {
+	public void parse() {
 		
 		String raw = Data.getInput();
 		
@@ -204,7 +204,7 @@ public class Parser {
 		
 		if (command.equals("change")){
 			
-			pattern = "(change) starting time to~ (.*) (.*) (.*) from~ (.*)";
+			pattern = "(change) start date to~ (.*) (.*) (.*) from~ (.*)";
 
 			r = Pattern.compile(pattern);
 
@@ -221,9 +221,9 @@ public class Parser {
 
 				String from_year = m.group(4);
 				
-				int taskRowIndex = Integer.parseInt((m.group(5)));
+				int taskRowIndex = Integer.parseInt((m.group(5))) - 1;
 				
-				String task = controller.getTaskNameAtRowIndex(taskRowIndex);
+				String task = Data.task.get(taskRowIndex).getTaskName();
 				
 				int from_month_int = convert_date(from_month);
 				
@@ -241,7 +241,7 @@ public class Parser {
 			}
 			
 			
-			pattern = "(change) ending time to~ (.*) (.*) (.*) from~ (.*)";
+			pattern = "(change) due date to~ (.*) (.*) (.*) from~ (.*)";
 
 			r = Pattern.compile(pattern);
 
@@ -258,9 +258,9 @@ public class Parser {
 
 				String to_year = m.group(4);
 				
-				int taskRowIndex = Integer.parseInt((m.group(5)));
+				int taskRowIndex = Integer.parseInt((m.group(5))) - 1;
 				
-				String task = controller.getTaskNameAtRowIndex(taskRowIndex);
+				String task = Data.task.get(taskRowIndex).getTaskName();
 				
 				int to_month_int = convert_date(to_month);
 				
@@ -293,8 +293,14 @@ public class Parser {
 
 				String _new = m.group(3);
 				
-				
-				Data.setDescription(old.trim());
+				try {
+					// task index input command
+					int index = Integer.parseInt(old) - 1;
+					Data.setDescription(Data.task.get(index).getTaskName());
+				} catch (NumberFormatException e) {
+					// task name input command
+					Data.setDescription(old.trim());
+				}
 				
 				Data.setNewDescription(_new.trim());
 				
@@ -358,8 +364,16 @@ public class Parser {
 			if (m.find()) {
 
 				String task = m.group(2);
-
-				Data.setDescription(task.trim());
+				
+				try {
+					// task index input command
+					int index = Integer.parseInt(task) - 1;
+					Data.setDescription(Data.task.get(index).getTaskName());
+				} catch (NumberFormatException e) {
+					// task name input command
+					Data.setDescription(task.trim());
+				}
+				
 
 				return;
 			}				

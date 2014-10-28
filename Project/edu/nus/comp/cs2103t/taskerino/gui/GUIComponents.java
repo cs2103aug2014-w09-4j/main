@@ -102,7 +102,6 @@ import edu.nus.comp.cs2103t.taskerino.common.Task;
 
 public class GUIComponents implements ItemListener {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
-	private static GUIComponents singletonGUIComponents;
 	private static Controller controller = Controller.getController();
 	private CommandHistory commandHistory = CommandHistory.getCommandHistory();
 
@@ -158,29 +157,9 @@ public class GUIComponents implements ItemListener {
 	private static final String CTRL_UP = "Ctrl_Up";
 	private static final String CTRL_DOWN = "Ctrl_Down";
 	
-	public void focusInputTextField(){
-		userInputArea.requestFocusInWindow();
-	}
 	
-	// private constructor
-	private GUIComponents() {
-		repaint();
-	}
-	
-	/**
-	 * Returns GUIComponents singleton instance.
-	 */
-	public static GUIComponents getGUIComponents() {
-		if (singletonGUIComponents == null) {
-			singletonGUIComponents = new GUIComponents();
-		}
-		return singletonGUIComponents;
-	}
-	
-	/**
-	 * Update and repaint all GUI components.
-	 */
-	public void repaint() {
+	// constructor
+	protected GUIComponents() {
 		setTagBox();
 		setUserTask();
 		setUserInput();
@@ -213,6 +192,14 @@ public class GUIComponents implements ItemListener {
 		return contentPanel;
 	}
 
+
+	/**
+	 * Make input text filed to be the default focused component.
+	 */
+	public void focusInputTextField() {
+		userInputArea.requestFocusInWindow();
+	}
+	
 	
 	/**
 	 * Set up content panel: <br>
@@ -667,10 +654,10 @@ public class GUIComponents implements ItemListener {
 				rootPane.getContentPane().remove(component);
 
 				UIManager.setLookAndFeel(laf);
-				GUIComponents bindings = GUIComponents.getGUIComponents();
+				GUIComponents bindings = new GUIComponents();
 				rootPane.getContentPane().add(bindings.getContentPanel());
 				SwingUtilities.updateComponentTreeUI(rootPane);
-				rootPane.requestFocusInWindow();
+				bindings.focusInputTextField();
 			} catch (Exception exception) {
 				LoggerFactory.logp(Level.SEVERE, innerClassName, "Action Listener", 
 						"Failed to load Look & Feel." + exception.getMessage());
@@ -710,24 +697,4 @@ public class GUIComponents implements ItemListener {
 		// dummy class, will implement in future if logic has support this funciton
 	}
 	
-	
-	/**
-	 * Return corresponding task name based on user's input of JTable's rowIndex.
-	 * @param int rowIndex
-	 * @return String TaskName
-	 */
-	public String getTaskName(int rowIndex) throws IllegalArgumentException {
-		int realRowIndex = rowIndex - 1;
-
-		if (userTaskTable.getRowCount() < realRowIndex) {
-			// throw exception
-			IllegalArgumentException e = new IllegalArgumentException("Unacceptable rowIndex input: " + rowIndex);
-			LoggerFactory.logp(Level.WARNING, className, "getTaskName", e.getMessage());
-			throw e;
-		}
-		
-		String taskName = (String) userTaskTable.getModel().getValueAt(realRowIndex, 1);
-		
-		return taskName;
-	}
 }

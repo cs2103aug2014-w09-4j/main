@@ -26,34 +26,25 @@ public class Data {
 /*****************
  Static Variables 
 ******************/
-	private static String command;
+	private static String command;	
+	private static String input;	
 	
-	private static String input;
-	
-	private static String description;
-	
+	private static String description;	
 	private static String newDescription;
 	
-	public static String addType;
+	public static String addType;	
+	public static String changeType;	
 	
-	public static String changeType;
+	public static int fromDay;		
+	public static int fromMonth;	
+	public static int fromYear;	
 	
-	public static int fromDay;
-		
-	public static int fromMonth;
+	public static int toDay;		
+	public static int toMonth;	
+	public static int toYear;	
 	
-	public static int fromYear;
-	
-	public static int toDay;
-		
-	public static int toMonth;
-	
-	public static int toYear;
-	
-	public static int byDay;
-		
-	public static int byMonth;
-	
+	public static int byDay;		
+	public static int byMonth;	
 	public static int byYear;
 	
 	
@@ -186,11 +177,36 @@ public class Data {
 	public static void setByYear(int newByYear){
 		byYear = newByYear;
 	}
-
+	
 /*****************
      Functions 
 ******************/	
 	
+	/**
+	 * Clear all attributes.
+	 */
+	public static void resetAll() {
+		command = "";	
+		input = "";	
+		description = "";	
+		newDescription = "";
+		
+		addType = "";	
+		changeType = "";	
+		
+		fromDay = -1;		
+		fromMonth = -1;	
+		fromYear = -1;	
+		
+		toDay = -1;		
+		toMonth = -1;	
+		toYear = -1;	
+		
+		byDay = -1;		
+		byMonth = -1;	
+		byYear = -1;
+	}
+
 	/**
 	 * Adds task into the temporary arraylist
 	 */
