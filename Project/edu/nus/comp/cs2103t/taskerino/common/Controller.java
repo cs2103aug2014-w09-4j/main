@@ -47,7 +47,7 @@ import edu.nus.comp.cs2103t.taskerino.storage.Storage;
  * @author Wang YanHao
  *
  */
-public class Controller {
+public class Controller implements Runnable {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static final String INVALID_COMMAND_FEEDBACK = "Invalid Command!";
 	private static final String COMMAND_ADD = "add";
@@ -66,6 +66,14 @@ public class Controller {
 	
 	// private constructor
 	private Controller(){
+		LoggerFactory.logp(Level.INFO, className, "Controller", "Loading user Tasks...");
+		try {
+			Data.task = Storage.loadTasksFromFile();
+		} catch (JsonSyntaxException | IOException e) {
+			LoggerFactory.logp(Level.SEVERE, className, "Controller", e.getMessage());
+			e.printStackTrace();
+		}
+		
 		logic = new Logic();
 		parser = new Parser();
 		commandHistory = CommandHistory.getCommandHistory();
@@ -86,15 +94,20 @@ public class Controller {
 	
 	
 	public static void main(String[] args) throws JsonSyntaxException, IOException {
-		LoggerFactory.logp(Level.INFO, className, "Main", "Start logger!");
-		
-		LoggerFactory.logp(Level.INFO, className, "Main", "Loading user Tasks...");
-		Data.task = Storage.loadTasksFromFile();
-		
+		Controller controller = Controller.getController();
+		controller.run();
+	}
+	
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
 		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
 		gui = new GUIFrame();
 	}
-	
 	
 	/**
 	 * Execute user command by passing the input userCommand String to
@@ -210,4 +223,5 @@ public class Controller {
 	public String getTaskNameAtRowIndex(int taskRowIndex) throws IllegalArgumentException {
 		return gui.getTaskNameAtRowIndex(taskRowIndex);
 	}
+
 }

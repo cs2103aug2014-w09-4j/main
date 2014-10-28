@@ -9,34 +9,21 @@ public class SystemTest {
 
 	@Test
 	public void add() throws FileNotFoundException, UnsupportedEncodingException{
-		Data data = new Data();
-		Controller controller = new Controller();
-		data.setDescription("do tutorial");
-		controller.executeCommand("add")
+		Controller controller = Controller.getController();
+		controller.executeUserCommand("add do tutorial");
 		assertEquals("add task do tutorial successfully", controller.getUserFeedback());
-	}
-	
-	@Test
-	public void delete() throws FileNotFoundException, UnsupportedEncodingException{
-		Data data = new Data();
-		Controller controller = new Controller();
-		data.setDescription("do tutorial");
-		controller.executeCommand("delete");
+
+		controller.executeUserCommand("delete do tutorial");
 		assertEquals("delete task do tutorial successfully", controller.getUserFeedback());
-		controller.executeCommand("delete");
+		
+		controller.executeUserCommand("delete do tutorial");
 		assertEquals("Task with name: do tutorial not found!", controller.getUserFeedback());
-	}
-	
-	@Test
-	public void change() throws FileNotFoundException, UnsupportedEncodingException{
-		Data data = new Data();
-		Controller controller = new Controller();
-		data.setDescription("help");
-		controller.executeCommand("add");
-		data.setNewDescription("no help");
-		controller.executeCommand("change");
+		
+		controller.executeUserCommand("add help");
+		controller.executeUserCommand("change help to no help");
 		assertEquals("Update task from help to no help", controller.getUserFeedback());
-		controller.executeCommand("change");
+		
+		controller.executeUserCommand("change help to no help");
 		assertEquals("Task with name: help not found!", controller.getUserFeedback());
 	}
 }
