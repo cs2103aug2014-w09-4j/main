@@ -137,7 +137,11 @@ public class Data {
 		newDescription = newNewDescription;
 	}
 	
+<<<<<<< HEAD
 	public static void setNewType(String newAddType){
+=======
+	public static void setAddType(String newAddType){
+>>>>>>> origin/master
 		addType = newAddType;
 	}
 
