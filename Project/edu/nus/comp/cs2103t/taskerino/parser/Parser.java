@@ -130,6 +130,7 @@ public class Parser {
 			
 				String to_year = m.group(8);
 				
+				Data.setNewType("timed");
 				
 				Data.setFromDay(Integer.parseInt(from_day));
 				
@@ -169,6 +170,8 @@ public class Parser {
 			
 				String by_year = m.group(5);
 				
+				Data.setNewType("deadline");
+				
 				Data.setByDay(Integer.parseInt(by_day));
 				
 				Data.setByMonth(by_month_int);
@@ -193,7 +196,9 @@ public class Parser {
 	
 				String add = m.group(2);
 				
-				Data.setDescription(add.trim());			
+				Data.setDescription(add.trim());
+				
+				Data.setNewType("floating");
 				
 				Data.setType("floating");
 				

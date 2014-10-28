@@ -6,6 +6,7 @@ public class Task{
 	private String taskName;
 	private DateAndTime startDate;
 	private DateAndTime dueDate;
+	private String taskType;
 	private boolean status;
 	
 	public Task() {
@@ -17,11 +18,13 @@ public class Task{
 		currentIndex++;
 		this.setTaskIndex(currentIndex);
 		this.setTaskName(description);
+		this.setTaskType("floating");
 	}
-	
+
 	public Task(String description, DateAndTime startDate, DateAndTime dueDate) {
 		currentIndex++;
 		this.setTaskIndex(currentIndex);
+		this.setTaskType("timed");
 		this.setTaskName(description);
 		this.setStartDate(startDate);
 		this.setDueDate(dueDate);
@@ -29,6 +32,7 @@ public class Task{
 	
 	public Task(String description, DateAndTime dueDate) {
 		currentIndex++;
+		this.setTaskType("deadline");
 		this.setTaskIndex(currentIndex);
 		this.setTaskName(description);
 		this.setDueDate(dueDate);
@@ -40,6 +44,15 @@ public class Task{
 
 	public void setTaskName(String taskName){
 		this.taskName = taskName;
+	}
+	
+	private String getTaskType() {
+		return this.taskType;
+		
+	}
+	
+	private void setTaskType(String string) {
+		this.taskType = string;
 	}
 	
 	public boolean getStatus(){
