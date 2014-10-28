@@ -205,6 +205,75 @@ public class Parser {
 		
 		
 		if (command.equals("change")){
+			
+			pattern = "(change) starting time to~ (.*) (.*) (.*) from~ (.*)";
+
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+
+			m = r.matcher(raw);
+
+			if (m.find()) {
+
+
+				String from_day = m.group(2);
+
+				String from_month = m.group(3);
+
+				String from_year = m.group(4);
+				
+				String task = m.group(5);
+				
+				int from_month_int = convert_date(from_month);
+				
+				Data.setFromDay(Integer.parseInt(from_day));
+
+				Data.setFromMonth(from_month_int);
+
+				Data.setFromYear(Integer.parseInt(from_year));
+				
+				Data.setDescription(task.trim());
+				
+
+				return;
+			}
+			
+			
+			pattern = "(change) ending time to~ (.*) (.*) (.*) from~ (.*)";
+
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+
+			m = r.matcher(raw);
+
+			if (m.find()) {
+
+
+				String to_day = m.group(2);
+
+				String to_month = m.group(3);
+
+				String to_year = m.group(4);
+				
+				String task = m.group(5);
+				
+				int to_month_int = convert_date(to_month);
+				
+				Data.setToDay(Integer.parseInt(to_day));
+
+				Data.setToMonth(to_month_int);
+
+				Data.setToYear(Integer.parseInt(to_year));
+				
+				Data.setDescription(task.trim());
+				
+
+				return;
+			}
+			
+			
 			pattern = "(change) (.*) to~ (.*)";
 
 			r = Pattern.compile(pattern);
