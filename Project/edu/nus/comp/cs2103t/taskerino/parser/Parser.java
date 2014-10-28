@@ -120,8 +120,7 @@ public class Parser {
 				
 				Data.setDescription(add.trim());
 				
-				Data.setNewType("timed");
-				
+				Data.setAddType("timed");
 								
 				Data.setFromDay(Integer.parseInt(from_day));
 				
@@ -163,7 +162,7 @@ public class Parser {
 				
 				Data.setDescription(add.trim());
 				
-				Data.setNewType("deadline");
+				Data.setAddType("deadline");
 				
 								
 				Data.setByDay(Integer.parseInt(by_day));
@@ -192,8 +191,6 @@ public class Parser {
 				
 				Data.setDescription(add.trim());
 				
-				Data.setNewType("floating");
-								
 				Data.setAddType("floating");
 				
 				return;			

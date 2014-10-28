@@ -136,11 +136,8 @@ public class Data {
 	public static void setNewDescription(String newNewDescription){
 		newDescription = newNewDescription;
 	}
-	
-	public static void setNewType(String newAddType){
 
 	public static void setAddType(String newAddType){
-
 		addType = newAddType;
 	}
 
