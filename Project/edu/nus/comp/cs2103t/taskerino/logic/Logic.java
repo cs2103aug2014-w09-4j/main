@@ -23,12 +23,39 @@ public class Logic {
 	public String changeTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Data.getDescription();
 		String newDescription = Data.getNewDescription();
+		String type = Data.getChangeType();
 		
-		try {
-			Data.updateTask(description, newDescription);
-			return "update task successfully from " + description + " to " + newDescription;
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return "Task with name: " + description + " not found!";
+		if(type.equals("taskName")) {
+			try {
+				Data.updateTask(description, newDescription);
+				return "update task successfully from " + description + " to " + newDescription;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				return "Task with name: " + description + " not found!";
+			}
+		} else if(type.equals("startTime")) {
+			try {
+				int day = Data.getFromDay();
+				int month = Data.getFromMonth();
+				int year = Data.getFromYear();
+				DateAndTime newStartDate = new DateAndTime(year,month,day);
+				Data.getTask(description).setStartDate(newStartDate);
+				return "updated " + description + " start time successfully to " + day + "/" + month + "/" + year;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				return "Task with name: " + description + " not found!";
+			}
+		} else if(type.equals("endTime")) {
+			try {
+				int day = Data.getToDay();
+				int month = Data.getToMonth();
+				int year = Data.getToYear();
+				DateAndTime newEndDate = new DateAndTime(year,month,day);
+				Data.getTask(description).setDueDate(newEndDate);
+				return "updated " + description + " end time successfully to " + day + "/" + month + "/" + year;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				return "Task with name: " + description + " not found!";
+			}
+		} else {
+			return "User command not recognized, please try again!";
 		}
 	}
 	

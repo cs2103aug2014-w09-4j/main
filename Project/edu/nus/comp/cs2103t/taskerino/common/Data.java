@@ -36,6 +36,8 @@ public class Data {
 	
 	public static String addType;
 	
+	public static String changeType;
+	
 	public static int fromDay;
 		
 	public static int fromMonth;
@@ -79,6 +81,10 @@ public class Data {
 	
 	public static String getAddType(){
 		return addType;
+	}
+	
+	public static String getChangeType(){
+		return changeType;
 	}
 	
 	public static int getFromDay(){
@@ -139,6 +145,10 @@ public class Data {
 
 	public static void setAddType(String newAddType){
 		addType = newAddType;
+	}
+	
+	public static void setChangeType(String newChangeType){
+		changeType = newChangeType;
 	}
 
 	public static void setFromDay(int newFromDay){

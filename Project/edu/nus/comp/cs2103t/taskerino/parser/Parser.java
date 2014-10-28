@@ -235,6 +235,7 @@ public class Parser {
 				
 				Data.setDescription(task.trim());
 				
+				Data.setChangeType("startTime");
 
 				return;
 			}
@@ -257,7 +258,9 @@ public class Parser {
 
 				String to_year = m.group(4);
 				
-				String task = m.group(5);
+				int taskRowIndex = Integer.parseInt((m.group(5)));
+				
+				String task = controller.getTaskNameAtRowIndex(taskRowIndex);
 				
 				int to_month_int = convert_date(to_month);
 				
@@ -269,7 +272,8 @@ public class Parser {
 				
 				Data.setDescription(task.trim());
 				
-
+				Data.setChangeType("endTime");
+				
 				return;
 			}
 			
@@ -292,10 +296,9 @@ public class Parser {
 				
 				Data.setDescription(old.trim());
 				
-				
 				Data.setNewDescription(_new.trim());
 				
-
+				Data.setChangeType("taskName");
 				return;
 			}				
 		}	
