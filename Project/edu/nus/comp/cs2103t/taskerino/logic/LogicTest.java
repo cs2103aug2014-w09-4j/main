@@ -38,6 +38,7 @@ public class LogicTest {
 		Data.setAddType("floating");
 		Data.task = new ArrayList<Task>();
 		logic.addTask();
+		Data.setChangeType("taskName");
 		Data.setNewDescription("no help");
 		assertEquals("update task successfully from help to no help", logic.changeTask());
 		assertEquals("Task with name: help not found!", logic.changeTask());
