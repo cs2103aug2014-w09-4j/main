@@ -24,59 +24,47 @@ public class Parser {
 	
 	public int convert_date(String the_month){
 		
-		int month = 0;
+		int month;
 		
-		switch (month) {
-            case 1:  the_month = "january";
-                     month = 1;
-					 break;
+		switch (the_month.toLowerCase()) {
+            case "january": 	month = 1;
+            					break;
 					
-            case 2:  the_month = "february";
-                     month = 2;
-					 break;
+            case "february": 	month = 2;
+            					break;
 					
-            case 3:  the_month = "march";
-                     month = 3;
-					 break;
+            case "march":		month = 3;
+					 			break;
 
-            case 4:  the_month = "april";
-                     month = 4;
-					 break;
+            case "april":		month = 4;
+            					break;
 
-            case 5:  the_month = "may";
-                     month = 5;
-					 break;
+            case "may":			month = 5;
+					 			break;
 
-            case 6:  the_month = "june";
-                     month = 6;
-					 break;
+            case "june":		month = 6;
+					 			break;
 
-            case 7:  the_month = "july";
-                     month = 7;
-					 break;
+            case "july":		month = 7;
+					 			break;
 
-            case 8:  the_month = "august";
-                     month = 8;
-					 break;
+            case "august":		month = 8;
+					 			break;
 
-            case 9:  the_month = "september";
-                     month = 9;
-					 break;
+            case "september":	month = 9;
+					 			break;
 
-            case 10: the_month = "october";
-                     month = 10;
-					 break;
+            case "october":		month = 10;
+            					break;
 
-            case 11: the_month = "november";
-                     month = 11;
-					 break;
+            case "november": 	month = 11;
+					 			break;
 
-            case 12: the_month = "december";
-                     month = 12;
-					 break;
+            case "december":	month = 12;
+					 			break;
 
-            default: the_month = "Invalid month";
-                     break;
+            default: 			month = 0;
+                     			break;
         }
 
 		return month;
@@ -130,6 +118,8 @@ public class Parser {
 			
 				String to_year = m.group(8);
 				
+				Data.setDescription(add.trim());
+				
 				Data.setNewType("timed");
 				
 				Data.setFromDay(Integer.parseInt(from_day));
@@ -143,8 +133,6 @@ public class Parser {
 				Data.setToMonth(to_month_int);
 				
 				Data.setToYear(Integer.parseInt(to_year));
-				
-				Data.setType("timed");
 				
 				return;
 			}
@@ -170,6 +158,8 @@ public class Parser {
 			
 				String by_year = m.group(5);
 				
+				Data.setDescription(add.trim());
+				
 				Data.setNewType("deadline");
 				
 				Data.setByDay(Integer.parseInt(by_day));
@@ -177,8 +167,6 @@ public class Parser {
 				Data.setByMonth(by_month_int);
 				
 				Data.setByYear(Integer.parseInt(by_year));
-				
-				Data.setType("deadline");
 				
 				return;		
 			}
@@ -199,8 +187,6 @@ public class Parser {
 				Data.setDescription(add.trim());
 				
 				Data.setNewType("floating");
-				
-				Data.setType("floating");
 				
 				return;			
 			}			

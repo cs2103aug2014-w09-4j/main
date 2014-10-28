@@ -48,10 +48,9 @@ public class Task{
 	
 	private String getTaskType() {
 		return this.taskType;
-		
 	}
 	
-	private void setTaskType(String string) {
+	public void setTaskType(String string) {
 		this.taskType = string;
 	}
 	

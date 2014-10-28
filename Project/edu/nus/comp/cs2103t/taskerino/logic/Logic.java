@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import edu.nus.comp.cs2103t.taskerino.common.Data;
 import edu.nus.comp.cs2103t.taskerino.common.Task;
+import edu.nus.comp.cs2103t.taskerino.common.DateAndTime;
 
 
 /**
@@ -60,22 +61,32 @@ public class Logic {
 		}
 		else if (type.equals("deadline")) {
 			String description = Data.getDescription();
-			newTask.setTaskName(description);
-			Data.addTask(newTask);
 			int byDay = Data.getByDay();
 			int byMonth = Data.getByMonth();
 			int byYear = Data.getByYear();
+			DateAndTime byDateAndTime = new DateAndTime(byYear,byMonth,byDay);
+			newTask.setTaskName(description);
+			newTask.setDueDate(byDateAndTime);
+			newTask.setTaskType("deadline");
+			Data.addTask(newTask);	 
 		}
 		else if (type.equals("timed")) {
 			String description = Data.getDescription();
 			newTask.setTaskName(description);
-			Data.addTask(newTask);
 			int fromDay = Data.getFromDay();
 			int fromMonth = Data.getFromMonth();
+			System.out.println(fromMonth);
 			int fromYear = Data.getFromYear();
+			DateAndTime fromDateAndTime = new DateAndTime(fromYear,fromMonth,fromDay);
+			newTask.setStartDate(fromDateAndTime);
 			int toDay = Data.getToDay();
 			int toMonth = Data.getToMonth();
+			System.out.println(toMonth);
 			int toYear = Data.getToYear();
+			DateAndTime toDateAndTime = new DateAndTime(toYear,toMonth,toDay);
+			newTask.setDueDate(toDateAndTime);
+			newTask.setTaskType("timed");
+			Data.addTask(newTask);
 		}
 		// dummy
 		return "add task " + newTask.getTaskName() + " successfully";

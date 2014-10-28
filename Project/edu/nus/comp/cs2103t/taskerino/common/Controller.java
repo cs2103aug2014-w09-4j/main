@@ -86,8 +86,11 @@ public class Controller {
 		
 		LoggerFactory.logp(Level.INFO, className, "Main", "Loading user Tasks...");
 		Data.task = Storage.loadTasksFromFile();
-		Task.currentIndex = (Data.task == null ? 1 : Data.task.get(Data.task.size() - 1).getTaskIndex());
-		
+		if(Data.task.isEmpty()) {
+			Task.currentIndex = 1;
+		} else {
+			Task.currentIndex = Data.task.get(Data.task.size()-1).getTaskIndex();
+		}
 		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
 		new GUIFrame();
 	}
