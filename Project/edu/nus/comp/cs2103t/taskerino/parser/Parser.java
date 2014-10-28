@@ -117,15 +117,12 @@ public class Parser {
 				int to_month_int = convert_date(to_month);
 			
 				String to_year = m.group(8);
-<<<<<<< HEAD
 				
 				Data.setDescription(add.trim());
 				
 				Data.setNewType("timed");
 				
-=======
 								
->>>>>>> origin/master
 				Data.setFromDay(Integer.parseInt(from_day));
 				
 				Data.setFromMonth(from_month_int);
@@ -138,11 +135,8 @@ public class Parser {
 				
 				Data.setToYear(Integer.parseInt(to_year));
 				
-<<<<<<< HEAD
-=======
 				Data.setAddType("timed");
 				
->>>>>>> origin/master
 				return;
 			}
 			
@@ -166,26 +160,20 @@ public class Parser {
 				int by_month_int = convert_date(by_month);
 			
 				String by_year = m.group(5);
-<<<<<<< HEAD
 				
 				Data.setDescription(add.trim());
 				
 				Data.setNewType("deadline");
 				
-=======
 								
->>>>>>> origin/master
 				Data.setByDay(Integer.parseInt(by_day));
 				
 				Data.setByMonth(by_month_int);
 				
 				Data.setByYear(Integer.parseInt(by_year));
 				
-<<<<<<< HEAD
-=======
 				Data.setAddType("deadline");
 				
->>>>>>> origin/master
 				return;		
 			}
 			
@@ -203,13 +191,10 @@ public class Parser {
 				String add = m.group(2);
 				
 				Data.setDescription(add.trim());
-<<<<<<< HEAD
 				
 				Data.setNewType("floating");
-=======
 								
 				Data.setAddType("floating");
->>>>>>> origin/master
 				
 				return;			
 			}			
