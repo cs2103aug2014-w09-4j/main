@@ -28,40 +28,40 @@ public class Parser {
 		int month;
 		
 		switch (the_month.toLowerCase()) {
-            case "january": 	month = 1;
+            case "january": case "1": month = 1;
             					break;
 					
-            case "february": 	month = 2;
+            case "february": case "2": month = 2;
             					break;
 					
-            case "march":		month = 3;
+            case "march": case "3": month = 3;
 					 			break;
 
-            case "april":		month = 4;
+            case "april": case "4":	month = 4;
             					break;
 
-            case "may":			month = 5;
+            case "may":	 case "5":	month = 5;
 					 			break;
 
-            case "june":		month = 6;
+            case "june": case "6":	month = 6;
 					 			break;
 
-            case "july":		month = 7;
+            case "july": case "7":	month = 7;
 					 			break;
 
-            case "august":		month = 8;
+            case "august": case "8":	month = 8;
 					 			break;
 
-            case "september":	month = 9;
+            case "september":  case "9": month = 9;
 					 			break;
 
-            case "october":		month = 10;
+            case "october":	 case "10": month = 10;
             					break;
 
-            case "november": 	month = 11;
+            case "november":   case "11": month = 11;
 					 			break;
 
-            case "december":	month = 12;
+            case "december":  case "12": month = 12;
 					 			break;
 
             default: 			month = 0;
