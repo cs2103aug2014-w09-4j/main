@@ -49,6 +49,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.InputMap;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -67,6 +68,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import edu.nus.comp.cs2103t.taskerino.common.CommandHistory;
 import edu.nus.comp.cs2103t.taskerino.common.Controller;
 import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
 import edu.nus.comp.cs2103t.taskerino.common.Task;
@@ -101,6 +103,7 @@ import edu.nus.comp.cs2103t.taskerino.common.Task;
 public class GUIComponents implements ItemListener {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static Controller controller = Controller.getController();
+	private CommandHistory commandHistory = CommandHistory.getCommandHistory();
 
 	private static final Font font = new Font("SansSerif", Font.PLAIN, 20);
 
@@ -146,10 +149,14 @@ public class GUIComponents implements ItemListener {
 	private static final Color BASE_COLOR = Color.WHITE;
 	private static final Color ALTERNATIVE_COLOR = Color.LIGHT_GRAY;
 	
-	private static final String UP = "Up";
-	private static final String DOWN = "Down";
 	private static final int SCROLLABLE_INCREMENT = 20;
 
+	// variables for hotkeys
+	private static final String UP = "Up";
+	private static final String DOWN = "Down";
+	private static final String CTRL_UP = "Ctrl_Up";
+	private static final String CTRL_DOWN = "Ctrl_Down";
+	
 	
 	// constructor
 	public GUIComponents() {
@@ -320,6 +327,54 @@ public class GUIComponents implements ItemListener {
 				updateTaskTable();
 			}
 		});
+		
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set hotkeys for user input text field.");
+		// add key bindings to the JTextField which user type input commands
+		int condition = JComponent.WHEN_FOCUSED;
+		InputMap inMap = userInputArea.getInputMap(condition);
+		ActionMap actMap = userInputArea.getActionMap();
+		
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), UP);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), DOWN);
+		
+		actMap.put(UP, new UpDownAction(UP));
+		actMap.put(DOWN, new UpDownAction(DOWN));
+	}
+	
+	
+	/**
+	 * Set ActionListener for action performed when user press "up" or "down" on keyboard.
+	 */
+	@SuppressWarnings("serial")
+	private class UpDownAction extends AbstractAction {
+		public UpDownAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent ae) {
+			String name = getValue(AbstractAction.NAME).toString();
+
+			if (name.equals(UP)) {
+				String previousCommand = commandHistory.getPreCommand();
+				userInputArea.setText(previousCommand);
+				
+				if (previousCommand.isEmpty()) {
+					feedbackToUser.setText("No more command in the history!");
+				} else {
+					feedbackToUser.setText("");
+				}
+			} else if (name.equals(DOWN)) {
+				String postCommand = commandHistory.getPostCommand();
+				userInputArea.setText(postCommand);
+				
+				if (postCommand.isEmpty()) {
+					feedbackToUser.setText("You have reached the end of command history!");
+				} else {
+					feedbackToUser.setText("");
+				}
+			}
+		}
 	}
 	
 
@@ -339,12 +394,12 @@ public class GUIComponents implements ItemListener {
 		InputMap inMap = userTaskTable.getInputMap(condition);
 		ActionMap actMap = userTaskTable.getActionMap();
 
-		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), UP);
-		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), DOWN);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), CTRL_UP);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), CTRL_DOWN);
 
-		actMap.put(UP, new UpDownAction(UP, taskScrollPane.getVerticalScrollBar().getModel(), 
+		actMap.put(CTRL_UP, new CtrlUpDownAction(CTRL_UP, taskScrollPane.getVerticalScrollBar().getModel(), 
 				SCROLLABLE_INCREMENT));
-		actMap.put(DOWN, new UpDownAction(DOWN, taskScrollPane.getVerticalScrollBar().getModel(), 
+		actMap.put(CTRL_DOWN, new CtrlUpDownAction(CTRL_DOWN, taskScrollPane.getVerticalScrollBar().getModel(), 
 				SCROLLABLE_INCREMENT));
 	}
 
@@ -424,14 +479,14 @@ public class GUIComponents implements ItemListener {
 
 
 	/**
-	 * Set ActionListener for action performed when user press "up" or "down" on keyboard.
+	 * Set ActionListener for action performed when user press "Ctrl + up" or "Ctrl + down" on keyboard.
 	 */
 	@SuppressWarnings("serial")
-	private class UpDownAction extends AbstractAction {
+	private class CtrlUpDownAction extends AbstractAction {
 		private BoundedRangeModel vScrollBarModel;
 		private int scrollableIncrement;
 
-		public UpDownAction(String name, BoundedRangeModel model, int scrollableIncrement) {
+		public CtrlUpDownAction(String name, BoundedRangeModel model, int scrollableIncrement) {
 			super(name);
 			this.vScrollBarModel = model;
 			this.scrollableIncrement = scrollableIncrement;
@@ -442,10 +497,10 @@ public class GUIComponents implements ItemListener {
 			String name = getValue(AbstractAction.NAME).toString();
 			int value = vScrollBarModel.getValue();
 
-			if (name.equals(UP)) {
+			if (name.equals(CTRL_UP)) {
 				value -= scrollableIncrement;
 				vScrollBarModel.setValue(value);
-			} else if (name.equals(DOWN)) {
+			} else if (name.equals(CTRL_DOWN)) {
 				value += scrollableIncrement;
 				vScrollBarModel.setValue(value);
 			}

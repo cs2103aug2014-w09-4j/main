@@ -57,6 +57,7 @@ public class Controller {
 	private static final String COMMAND_EXIT = "exit";
 	
 	private static Controller singletonController;
+	private CommandHistory commandHistory;
 	private Logic logic;
 	private Parser parser;
 	private String outputFeedBack = "";
@@ -65,6 +66,7 @@ public class Controller {
 	private Controller(){
 		logic = new Logic();
 		parser = new Parser();
+		commandHistory = CommandHistory.getCommandHistory();
 	}
 	
 	
@@ -86,11 +88,8 @@ public class Controller {
 		
 		LoggerFactory.logp(Level.INFO, className, "Main", "Loading user Tasks...");
 		Data.task = Storage.loadTasksFromFile();
-		if(Data.task.isEmpty()) {
-			Task.currentIndex = 1;
-		} else {
-			Task.currentIndex = Data.task.get(Data.task.size()-1).getTaskIndex();
-		}
+		Task.currentIndex = (Data.task == null ? 1 : Data.task.get(Data.task.size() - 1).getTaskIndex());
+		
 		LoggerFactory.logp(Level.INFO, className, "Main", "Initialize GUI!");
 		new GUIFrame();
 	}
@@ -105,6 +104,12 @@ public class Controller {
 	public void executeUserCommand(String userCommand) {
 		String methodName = "executeUserCommand";
 		
+		// store user command if it is not empty
+		if (!userCommand.isEmpty()) {
+			LoggerFactory.logp(Level.INFO, className, methodName, "Store user command into commandHistory.");
+			commandHistory.storeCommand(userCommand);
+		}
+		
 		// inputCommand is passed into parser and logic
 		LoggerFactory.logp(Level.INFO, className, methodName, "Send user input commands to Data.");
 		Data.setInput(userCommand);
@@ -112,16 +117,14 @@ public class Controller {
 		LoggerFactory.logp(Level.INFO, className, methodName, "Calling Paser.");
 		parser.parse();
 
-		LoggerFactory.logp(Level.INFO, className, methodName, "Calling Logic and Storage.");
 		try {
+			LoggerFactory.logp(Level.INFO, className, methodName, "Calling Logic and Storage.");
 			execute((Data.getCommand()).toLowerCase());
-		} catch (FileNotFoundException e) {
-			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
 			e.printStackTrace();
 		}
+		
 		LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
 	}
 	
