@@ -116,7 +116,7 @@ public class Logic {
 			}
 		}
 		for(int a = 0; a < searches.size(); a++) {
-			tasksFound += a+1 +". " + searches.get(a) + "\n";
+			tasksFound += a+1 +". " + searches.get(a) + " \n";
 		}
 		if(tasksFound.equals("")){
 			return "Task with name: " + description + " not found!";
