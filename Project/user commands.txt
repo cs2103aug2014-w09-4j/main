@@ -15,10 +15,10 @@ e.g help add
 add <task name>
 
 // add a task with a deadline
-add <task name> by <date>
+add <task name> by~ <date>
 
 // add a task with timed duration
-add <task name> from <start date> to <due date>
+add <task name> from~ <start date> to~ <due date>
 
 
 
@@ -32,10 +32,10 @@ delete <task name>
 delete <task index>
 
 // delete start date from a task
-delete start date from <task index>
+delete start date from~ <task index>
 
 // delete due date from a task
-delete due date from <task index>
+delete due date from~ <task index>
 
 
 
@@ -43,13 +43,13 @@ delete due date from <task index>
 4. change 
 
 // rename existing task
-change <task index> to <new task name>
+change <task index> to~ <new task name>
 
 // change start date for a existing task
-change start date to <new date> from <task index>
+change start date to~ <new date> from~ <task index>
 
 // change due date for a existing task
-change due date to <new date> from <task index>
+change due date to~ <new date> from~ <task index>
 
 
 
@@ -59,7 +59,7 @@ change due date to <new date> from <task index>
 search <keywords>
 
 // search for tasks within a specific range of dates
-search <starting date> to <ending date>
+search from~ <start date> to~ <due date>
 
 
 
@@ -70,5 +70,3 @@ complete <task name>
 
 // mark a task as completed
 complete <task index>
-
-
