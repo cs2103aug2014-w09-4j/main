@@ -1,0 +1,11 @@
+Adds tasks to the task list. 
+Any additions are immediately saved into local file "Tasks.txt".
+
+1. To add a FLOATING task:
+>> add <TASK NAME>
+
+2. To add a DEADLINE task:
+>> add <TASK NAME> by~ <DATE>
+
+3. To add a TIMED task:
+>> add <TASK NAME> from~ <START DATE> to~ <DUE DATE>

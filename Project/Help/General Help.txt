@@ -1,0 +1,11 @@
+For more information on a specific command, type "help command-name"
+
+1. add - Adds a task to the task list. Supports floating, deadline and timed tasks
+
+2. delete - Removes a task from the task list.
+
+3. change - Changes the details of the task.
+
+4. complete - Marks task as completed
+
+5. search - Searches based on user input displays relevant tasks 

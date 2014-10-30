@@ -1,0 +1,13 @@
+Changes details of tasks.
+Possible changes are: TASK NAME, START DATE and DUE DATE 
+
+Any changes are immediately saved into local file "Tasks.txt".
+
+1. change TASK NAME of existing task
+>> change <TASK INDEX> to~ <NEW TASK NAME>
+
+2. change START DATE of existing task
+>> change start date to~ <NEW DATE> from~ <TASK INDEX>
+
+3. change DUE DATE of existing task
+>> change due date to~ <NEW DATE> from~ <TASK INDEX>

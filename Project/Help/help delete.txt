@@ -1,0 +1,22 @@
+Deletes:
+a. Task from task list
+b. Start/Due date from specific task
+
+Any changes are immediately saved into local file "Tasks.txt".
+
+Deleting task from task list:
+
+1. To delete task using TASK NAME
+>> delete <TASK NAME>
+
+2. To delete task using TASK INDEX
+>> delete <TASK INDEX>
+
+Deleting start/due date from task:
+
+1. To delete START DATE of a task
+>> delete start date from~ <TASK INDEX>
+
+2. To delete DUE DATE of a task
+>> delete due date from~ <TASK INDEX>
+

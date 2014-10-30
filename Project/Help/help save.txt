@@ -1,0 +1,7 @@
+Searches for tasks that matches criteria and displays them.
+
+1. searching for tasks containing a certain keyword
+>> search <KEYWORD>
+
+2. searching for tasks within a specific range of dates
+>> search from~ <START DATE> to~ <DUE DATE>

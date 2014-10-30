@@ -1,0 +1,11 @@
+Marks a task as complete.
+
+Any changes are immediately saved into local file "Tasks.txt".
+
+1. mark a task as completed using TASK NAME
+>> complete <TASK NAME>
+
+2. mark a task as completed using TASK INDEX
+>> complete <TASK INDEX>
+
+ 
