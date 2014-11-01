@@ -225,6 +225,13 @@ public class Data {
 	}
 	
 	/**
+	 * Clear all task from existing list
+	*/
+	public static void clearTask() throws FileNotFoundException, UnsupportedEncodingException {
+		Data.task.clear();
+	}
+	
+	/**
 	 * Searches for task and updates relevant fields
 	*/
 	public static void updateTask(String description, String newDescription) throws FileNotFoundException, UnsupportedEncodingException {

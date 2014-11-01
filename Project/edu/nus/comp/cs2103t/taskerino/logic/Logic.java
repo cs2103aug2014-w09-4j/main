@@ -160,5 +160,14 @@ public class Logic {
 			return tasksFound;
 		}
 	}
+	
+	/**
+     * clearTask clears the existing tasks list 
+	 * and return an empty list to GUI class
+     */
+	 public String clearTask() {
+		Data.clearTask();
+		return "Cleared all tasks";
+	}
 }
 	

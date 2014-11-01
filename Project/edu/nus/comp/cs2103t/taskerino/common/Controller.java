@@ -56,6 +56,7 @@ public class Controller {
 	private static final String COMMAND_COMPLETE = "complete";
 	private static final String COMMAND_SEARCH = "search";
 	private static final String COMMAND_EXIT = "exit";
+	private static final String COMMAND_CLEAR = "clear";
 	
 	private static Controller singletonController;
 	private CommandHistory commandHistory;
@@ -190,6 +191,11 @@ public class Controller {
 				
 			case COMMAND_SEARCH:
 				outputFeedBack = logic.searchTask();
+				break;
+				
+			case COMMAND_CLEAR:
+				outputFeedBack = logic.clearTask();
+				Storage.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_EXIT:
