@@ -49,6 +49,8 @@ public class Data {
 	
 	
 	public static ArrayList<Task> task;
+	public static ArrayList<Task> searchedTasks;
+	public static ArrayList<Task> completedTasks;
 		
 /*****************
      Getters 

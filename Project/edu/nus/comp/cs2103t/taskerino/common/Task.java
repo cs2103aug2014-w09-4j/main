@@ -44,8 +44,12 @@ public class Task{
 		this.taskType = string;
 	}
 	
-	public boolean getStatus(){
-		return this.status;
+	public String getStatus(){
+		if(this.status == true) {
+			return "completed";
+		} else {
+			return "uncompleted";
+		}
 	}
 
 	public void setStatus(boolean status){
