@@ -86,12 +86,12 @@ public class CommandHistory {
 				return userCommands.get(currentAccessedCommandIndex);
 			}
 		} else {
-			// decrease pointer value
-			currentAccessedCommandIndex--;
-			if (currentAccessedCommandIndex < 0) {
+			if (currentAccessedCommandIndex == 0) {
 				// no previous user command available
 				return "";
 			} else {
+				// decrease pointer value
+				currentAccessedCommandIndex--;
 				// return previous executed user command
 				return userCommands.get(currentAccessedCommandIndex);
 			}
@@ -109,11 +109,16 @@ public class CommandHistory {
 		currentAccessedCommandIndex++;
 		if (currentAccessedCommandIndex > (userCommands.size() - 1)) {
 			// invalid, reset pointer
-			currentAccessedCommandIndex = -1;
+			this.setPointerToLatestTask();
 			return "";
 		} else {
 			// return next executed user command
 			return userCommands.get(currentAccessedCommandIndex);
 		}
+	}
+
+	
+	public void setPointerToLatestTask() {
+		currentAccessedCommandIndex = userCommands.size();
 	}
 }

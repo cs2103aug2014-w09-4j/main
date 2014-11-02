@@ -157,6 +157,9 @@ public class Controller {
 			}
 		}
 		LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
+
+		// reset CommandHistory pointer
+		CommandHistory.getCommandHistory().setPointerToLatestTask();
 		
 		// clear Data
 		Data.resetAll();

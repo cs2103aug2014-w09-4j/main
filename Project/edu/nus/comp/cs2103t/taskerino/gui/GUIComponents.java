@@ -40,7 +40,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
