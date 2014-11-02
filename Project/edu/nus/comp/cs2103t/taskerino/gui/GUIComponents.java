@@ -156,6 +156,8 @@ public class GUIComponents implements ItemListener {
 	private static final String DOWN = "Down";
 	private static final String CTRL_UP = "Ctrl_Up";
 	private static final String CTRL_DOWN = "Ctrl_Down";
+	private static final String TAB = "Tab";
+	private static final String DELETE = "Delete";
 	
 	
 	// constructor
@@ -337,6 +339,9 @@ public class GUIComponents implements ItemListener {
 		});
 		
 		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set hotkeys for user input text field.");
+		// enable hotkey "tab"
+		userInputArea.setFocusTraversalKeysEnabled(false);
+		
 		// add key bindings to the JTextField which user type input commands
 		int condition = JComponent.WHEN_FOCUSED;
 		InputMap inMap = userInputArea.getInputMap(condition);
@@ -344,18 +349,22 @@ public class GUIComponents implements ItemListener {
 		
 		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), UP);
 		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), DOWN);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), TAB);
 		
-		actMap.put(UP, new UpDownAction(UP));
-		actMap.put(DOWN, new UpDownAction(DOWN));
+		actMap.put(UP, new UserInputAreaAction(UP));
+		actMap.put(DOWN, new UserInputAreaAction(DOWN));
+		actMap.put(TAB, new UserInputAreaAction(TAB));
 	}
 	
 	
 	/**
-	 * Set ActionListener for action performed when user press "up" or "down" on keyboard.
+	 * Set ActionListener for action performed when user press "up", "down" or "tab" on keyboard. <br>
+	 * If there is a hot key clash with other components, those actions will be invoked 
+	 * when userInputArea is in focus.
 	 */
 	@SuppressWarnings("serial")
-	private class UpDownAction extends AbstractAction {
-		public UpDownAction(String name) {
+	private class UserInputAreaAction extends AbstractAction {
+		public UserInputAreaAction(String name) {
 			super(name);
 		}
 
@@ -381,6 +390,9 @@ public class GUIComponents implements ItemListener {
 				} else {
 					feedbackToUser.setText(" ");
 				}
+			} else if (name.equals(TAB)) {
+				// change focus
+				userTaskTable.requestFocusInWindow();
 			}
 		}
 	}
@@ -397,18 +409,27 @@ public class GUIComponents implements ItemListener {
 		taskScrollPane = new JScrollPane(userTaskTable);
 
 		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set hotkeys for user task scroll pane.");
-		// add key bindings to the JLabel which display feedback to user
-		int condition = JLabel.WHEN_IN_FOCUSED_WINDOW;
+		// enable hot key "tab"
+		userTaskTable.setFocusTraversalKeysEnabled(false);
+		userTaskTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "none");
+		
+		// add key bindings to the JTable which display feedback to user
+		int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
 		InputMap inMap = userTaskTable.getInputMap(condition);
 		ActionMap actMap = userTaskTable.getActionMap();
 
 		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), CTRL_UP);
 		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), CTRL_DOWN);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), TAB);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), DELETE);
 
-		actMap.put(CTRL_UP, new CtrlUpDownAction(CTRL_UP, taskScrollPane.getVerticalScrollBar().getModel(), 
+		actMap.put(CTRL_UP, new UserTaskTableAction(CTRL_UP, taskScrollPane.getVerticalScrollBar().getModel(), 
 				SCROLLABLE_INCREMENT));
-		actMap.put(CTRL_DOWN, new CtrlUpDownAction(CTRL_DOWN, taskScrollPane.getVerticalScrollBar().getModel(), 
+		actMap.put(CTRL_DOWN, new UserTaskTableAction(CTRL_DOWN, taskScrollPane.getVerticalScrollBar().getModel(), 
 				SCROLLABLE_INCREMENT));
+		actMap.put(TAB, new UserTaskTableAction(TAB));
+		actMap.put(DELETE, new UserTaskTableAction(DELETE));
 	}
 
 
@@ -487,30 +508,48 @@ public class GUIComponents implements ItemListener {
 
 
 	/**
-	 * Set ActionListener for action performed when user press "Ctrl + up" or "Ctrl + down" on keyboard.
+	 * Set ActionListener for action performed when user press "Ctrl + up", "Ctrl + down",
+	 * "tab" or "delete" on keyboard. <br>
+	 * If there is a hot key clashes with other components, thosee actions will be invoked 
+	 * when userTaskTable is in focus.
 	 */
 	@SuppressWarnings("serial")
-	private class CtrlUpDownAction extends AbstractAction {
+	private class UserTaskTableAction extends AbstractAction {
 		private BoundedRangeModel vScrollBarModel;
 		private int scrollableIncrement;
 
-		public CtrlUpDownAction(String name, BoundedRangeModel model, int scrollableIncrement) {
+		public UserTaskTableAction(String name, BoundedRangeModel model, int scrollableIncrement) {
 			super(name);
 			this.vScrollBarModel = model;
 			this.scrollableIncrement = scrollableIncrement;
 		}
 
+		public UserTaskTableAction(String name) {
+			super(name);
+		}
+
 		@Override
 		public void actionPerformed(ActionEvent ae) {
 			String name = getValue(AbstractAction.NAME).toString();
-			int value = vScrollBarModel.getValue();
-
-			if (name.equals(CTRL_UP)) {
-				value -= scrollableIncrement;
-				vScrollBarModel.setValue(value);
-			} else if (name.equals(CTRL_DOWN)) {
-				value += scrollableIncrement;
-				vScrollBarModel.setValue(value);
+			
+			if (name.equals(CTRL_UP) || name.equals(CTRL_DOWN)) {
+				int value = vScrollBarModel.getValue();
+				
+				if (name.equals(CTRL_UP)) {
+					value -= scrollableIncrement;
+					vScrollBarModel.setValue(value);
+				} else if (name.equals(CTRL_DOWN)) {
+					value += scrollableIncrement;
+					vScrollBarModel.setValue(value);
+				} 
+				
+			} else if (name.equals(TAB)) {
+				// change focus
+				focusInputTextField();
+				
+			} else if (name.equals(DELETE)) {
+				// delete entire row
+				
 			}
 		}
 	}
