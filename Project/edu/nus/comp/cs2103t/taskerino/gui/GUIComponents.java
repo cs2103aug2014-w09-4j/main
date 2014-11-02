@@ -39,6 +39,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
@@ -550,8 +552,9 @@ public class GUIComponents implements ItemListener {
 			} else if (name.equals(DELETE)) {
 				// delete selected lines of rows
 				int[] selectedRowIndices = userTaskTable.getSelectedRows();
+				Arrays.sort(selectedRowIndices);
 				
-				for (int i=0; i<selectedRowIndices.length; i++) {
+				for (int i=selectedRowIndices.length-1; i>=0; i--) {
 					String inputCommand = "delete " + (selectedRowIndices[i] + 1);
 					controller.executeUserCommand(inputCommand);
 				}
