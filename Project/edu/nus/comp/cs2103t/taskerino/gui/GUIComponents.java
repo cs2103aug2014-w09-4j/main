@@ -548,8 +548,24 @@ public class GUIComponents implements ItemListener {
 				focusInputTextField();
 				
 			} else if (name.equals(DELETE)) {
-				// delete entire row
+				// delete selected lines of rows
+				int[] selectedRowIndices = userTaskTable.getSelectedRows();
 				
+				for (int i=0; i<selectedRowIndices.length; i++) {
+					String inputCommand = "delete " + (selectedRowIndices[i] + 1);
+					controller.executeUserCommand(inputCommand);
+				}
+				
+				// impossible to select non-existent rows, can safely set feedback here
+				String outputFeedBack = "Delete tasks with indices: ";
+				for (int i=0; i<selectedRowIndices.length; i++) {
+					outputFeedBack += (selectedRowIndices[i] + 1) + " ";
+				}
+				outputFeedBack += "successfully";
+				feedbackToUser.setText(outputFeedBack);
+				
+				// refresh userTaskTable
+				updateTaskTable();
 			}
 		}
 	}
