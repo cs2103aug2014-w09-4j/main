@@ -15,6 +15,8 @@ import edu.nus.comp.cs2103t.taskerino.common.DateAndTime;
  * and return a String feedback to GUI class.
  */
 public class Logic {
+	private boolean isHelpValid;
+	
 	/**
 	 * ChangeTask function replaces the exiting task details
 	 * with new task details
@@ -165,9 +167,34 @@ public class Logic {
      * clearTask clears the existing tasks list 
 	 * and return an empty list to GUI class
      */
-	 public String clearTask() {
+	 public String clearTask() throws FileNotFoundException, UnsupportedEncodingException {
 		Data.clearTask();
 		return "Cleared all tasks";
+	}
+
+	/**
+	 * Execute help command.
+	 */
+	public String help() {
+		String feedback = " ";
+		if (Data.getDescription() != null) {
+			String cmd = Data.getDescription();
+			if (cmd.equals("add") || cmd.equals("delete") || cmd.equals("change") || cmd.equals("search") 
+					|| cmd.equals("complete") || cmd.equals("goto")) {
+				isHelpValid = true;
+			} else {
+				isHelpValid = false;
+				feedback = "User command not recognized, please try again!";
+			}
+		}
+		return feedback;
+	}
+	
+	/**
+	 * Return if the help command user input is valid.
+	 */
+	public boolean isHelpValid() {
+		return isHelpValid;
 	}
 }
 	

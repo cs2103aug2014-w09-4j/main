@@ -41,8 +41,6 @@ public class GUIFrame extends JFrame {
 	private static final String APP_NAME = "Taskerino";
 	private static final int MAIN_FRAME_WIDTH = 800;
 	private static final int MAIN_FRAME_HEIGHT = 550;
-	private static final int HELP_FRAME_WIDTH = 400;
-	private static final int HELP_FRAME_HEIGHT = 300;
 	
 	public GUIFrame() {
 		JFrame.setDefaultLookAndFeelDecorated(true);
@@ -59,22 +57,5 @@ public class GUIFrame extends JFrame {
 		this.setVisible(true);
 		
 		components.focusInputTextField();
-	}
-	
-	/**
-	 * This class pop up a new JFrame which displays the a list of instructions
-	 * that gives the user a general guideline of how to use Taskerino.
-	 * @param String of helpType
-	 */
-	public GUIFrame(String helpType) {
-		JFrame.setDefaultLookAndFeelDecorated(false);
-		this.setTitle(APP_NAME);
-		HelpComponents components = new HelpComponents(helpType);
-		
-		this.getContentPane().add(components.getContentPanel());
-		this.pack();
-		this.setSize(HELP_FRAME_WIDTH, HELP_FRAME_HEIGHT);
-		this.setLocationRelativeTo(null);
-		this.setVisible(true);
 	}
 }

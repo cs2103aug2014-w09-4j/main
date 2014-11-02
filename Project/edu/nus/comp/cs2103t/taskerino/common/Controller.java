@@ -35,6 +35,7 @@ import java.util.logging.Level;
 import com.google.gson.JsonSyntaxException;
 
 import edu.nus.comp.cs2103t.taskerino.gui.GUIFrame;
+import edu.nus.comp.cs2103t.taskerino.gui.HelpFrame;
 import edu.nus.comp.cs2103t.taskerino.logic.Logic;
 import edu.nus.comp.cs2103t.taskerino.parser.Parser;
 import edu.nus.comp.cs2103t.taskerino.storage.Storage;
@@ -174,7 +175,10 @@ public class Controller {
 		switch (command) {
 			case COMMAND_HELP:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute help command.");
-				new GUIFrame(Data.getDescription());
+				outputFeedBack = logic.help();
+				if (logic.isHelpValid()) {
+					new HelpFrame(Data.getDescription());
+				}
 				break;
 		
 			case COMMAND_ADD:
