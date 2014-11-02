@@ -50,6 +50,8 @@ import edu.nus.comp.cs2103t.taskerino.storage.Storage;
 public class Controller {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static final String INVALID_COMMAND_FEEDBACK = "Invalid Command!";
+
+	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_ADD = "add";
 	private static final String COMMAND_DELETE = "delete";
 	private static final String COMMAND_CHANGE = "change";
@@ -120,7 +122,7 @@ public class Controller {
 	 * @param userCommand : user's input command
 	 */
 	public void executeUserCommand(String userCommand) {
-		String methodName = "executeUserCommand";
+		final String methodName = "executeUserCommand";
 		boolean isParseSuccessful = false;
 		
 		// store user command if it is not empty
@@ -145,7 +147,7 @@ public class Controller {
 
 		if (isParseSuccessful) {
 			try {
-				LoggerFactory.logp(Level.INFO, className, methodName, "Calling Logic and Storage.");
+				LoggerFactory.logp(Level.INFO, className, methodName, "Executing commands...");
 				execute((Data.getCommand()).toLowerCase());
 			} catch (Exception e) {
 				outputFeedBack = INVALID_COMMAND_FEEDBACK;
@@ -153,7 +155,6 @@ public class Controller {
 				e.printStackTrace();
 			}
 		}
-		
 		LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
 		
 		// clear Data
@@ -168,37 +169,51 @@ public class Controller {
 	 * @throws FileNotFoundException 
 	 */
 	private void execute(String command) throws FileNotFoundException, UnsupportedEncodingException {
+		final String methodName = "execute";
+		
 		switch (command) {
+			case COMMAND_HELP:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute help command.");
+				new GUIFrame(Data.getDescription());
+				break;
+		
 			case COMMAND_ADD:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute add command.");
 				outputFeedBack = logic.addTask();
 				Storage.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_DELETE:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute delete command.");
 				outputFeedBack = logic.deleteTask();
 				Storage.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_CHANGE:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute change command.");
 				outputFeedBack = logic.changeTask();
 				Storage.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_COMPLETE:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute complete command.");
 				outputFeedBack = logic.completeTask();
 				Storage.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_SEARCH:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute search command.");
 				outputFeedBack = logic.searchTask();
 				break;
 				
 			case COMMAND_CLEAR:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute clear command.");
 				outputFeedBack = logic.clearTask();
 				Storage.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_EXIT:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute exit command.");
 				System.exit(0);
 				
 			default:
