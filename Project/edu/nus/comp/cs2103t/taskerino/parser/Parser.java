@@ -376,6 +376,8 @@ public class Parser {
 
 				String task = m.group(2);
 
+				Data.setDeleteType("start");
+				
 				return;
 			}
 			
@@ -391,6 +393,8 @@ public class Parser {
 
 				String task = m.group(2);
 
+				Data.setDeleteType("end");
+
 				return;
 			}
 			
@@ -405,6 +409,8 @@ public class Parser {
 			if (m.find()) {
 
 				String task = m.group(2);
+				
+				Data.setDeleteType("none");
 				
 				try {
 					// task index input command
