@@ -5,6 +5,7 @@ public class Task{
 	private DateAndTime startDate;
 	private DateAndTime dueDate;
 	private String taskType;
+	private String tag;
 	private boolean status;
 	
 	public Task() {
@@ -34,6 +35,14 @@ public class Task{
 
 	public void setTaskName(String taskName){
 		this.taskName = taskName;
+	}
+	
+	public String getTag() {
+		return this.tag;
+	}
+	
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	
 	private String getTaskType() {

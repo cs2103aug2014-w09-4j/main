@@ -140,26 +140,24 @@ public class Logic {
 	 * and return the details of the tasks to GUI class
      */
 	public String searchTask() {
-		String description = Data.getDescription();
-		String tasksFound = "";
-		ArrayList<String> searches = new ArrayList<String>();
+		Data.searchedTasks.clear();
+		String description = Data.getDescription().toLowerCase();
+		int numberOfTasks = 0;
 		for(int i = 0; i < Data.task.size(); i++){
-			String details = Data.task.get(i).getTaskName();
+			String details = Data.task.get(i).getTaskName().toLowerCase();
 			String[] parts = details.split(" ");
 			for(int j = 0; j < parts.length; j++){
 				if(parts[j].equals(description)){
-					searches.add(details);
+					Data.searchedTasks.add(Data.task.get(i));
+					numberOfTasks++;
 					break;
 				}
 			}
 		}
-		for(int a = 0; a < searches.size(); a++) {
-			tasksFound += a+1 +". " + searches.get(a) + " \n";
-		}
-		if(tasksFound.equals("")){
+		if(numberOfTasks == 0){
 			return "Task with name: " + description + " not found!";
-		} else{
-			return tasksFound;
+		} else {
+			return numberOfTasks + " tasks found with given description. ";
 		}
 	}
 	

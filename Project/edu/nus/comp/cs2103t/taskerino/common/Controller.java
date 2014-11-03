@@ -107,6 +107,7 @@ public class Controller {
 	 */
 	public static void loadData() {
 		final String methodName = "Main";
+		Data.searchedTasks = new ArrayList<Task>();
 		try {
 			Data.task = Storage.loadTasksFromFile();
 		} catch (JsonSyntaxException | IOException e) {
