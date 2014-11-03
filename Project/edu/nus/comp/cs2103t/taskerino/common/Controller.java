@@ -60,6 +60,7 @@ public class Controller {
 	private static final String COMMAND_SEARCH = "search";
 	private static final String COMMAND_EXIT = "exit";
 	private static final String COMMAND_CLEAR = "clear";
+	private static final String COMMAND_UNDO = "undo";
 	
 	private static Controller singletonController;
 	private CommandHistory commandHistory;
@@ -108,8 +109,11 @@ public class Controller {
 	public static void loadData() {
 		final String methodName = "Main";
 		Data.searchedTasks = new ArrayList<Task>();
+		Data.undoTasks = new ArrayList<ArrayList<Task>();
 		try {
 			Data.task = Storage.loadTasksFromFile();
+			Data.undoTasks.add(Data.task);
+			Data.undoIndex = 0;
 		} catch (JsonSyntaxException | IOException e) {
 			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
 			e.printStackTrace();
@@ -217,6 +221,12 @@ public class Controller {
 			case COMMAND_CLEAR:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute clear command.");
 				outputFeedBack = logic.clearTask();
+				Storage.saveTasksIntoFile();
+				break;
+				
+			case COMMAND_UNDO:
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute undo command.");
+				outputFeedBack = logic.undoTask();
 				Storage.saveTasksIntoFile();
 				break;
 				

@@ -48,10 +48,12 @@ public class Data {
 	public static int byMonth;	
 	public static int byYear;
 	
+	public static int undoIndex;
 	
 	public static ArrayList<Task> task;
 	public static ArrayList<Task> searchedTasks;
 	public static ArrayList<Task> completedTasks;
+	public static ArrayList<ArrayList<Task> undoTasks;
 		
 /*****************
      Getters 
@@ -223,6 +225,8 @@ public class Data {
 	 */
 	public static void addTask(Task newTask) throws FileNotFoundException, UnsupportedEncodingException {
 		Data.task.add(newTask);
+		Data.undoTasks.add(Data.task);
+		Data.undoIndex++;
 	}
 	
 	/**
@@ -231,6 +235,8 @@ public class Data {
 	public static void removeTask(String description) throws ArrayIndexOutOfBoundsException, FileNotFoundException, UnsupportedEncodingException {
 		int indexOfTask = searchTask(description);
 		Data.task.remove(indexOfTask);
+		Data.undoTasks.add(Data.task);
+		Data.undoIndex++;
 	}
 	
 	/**
@@ -238,6 +244,8 @@ public class Data {
 	*/
 	public static void clearTask() throws FileNotFoundException, UnsupportedEncodingException {
 		Data.task.clear();
+		Data.undoTasks.add(Data.task);
+		Data.undoIndex++;
 	}
 	
 	/**
@@ -247,8 +255,18 @@ public class Data {
 		int indexOfTask = searchTask(description);
 		Task taskToBeUpdated = Data.task.get(indexOfTask);
 		taskToBeUpdated.setTaskName(newDescription);
+		Data.undoTasks.add(Data.task);
+		Data.undoIndex++;
 	}
-
+	
+	/**
+	 * Undo the previous command
+	*/
+	public static void undoTask(int index) throws FileNotFoundException, UnsupportedEncodingException {
+		Data.task = Data.undoTasks.get(index);
+		Data.undoTasks.remove(index);
+	}
+			
 	/**
 	 * Searches for task and if task exists, return the index of task. If not, return -1
 	*/

@@ -169,7 +169,21 @@ public class Logic {
 		Data.clearTask();
 		return "Cleared all tasks";
 	}
-
+	
+	/**
+     * undoTask undo the previous command input 
+	 * and return the previous list to GUI class
+     */
+	public String undoTask() throws FileNotFoundException, UnsupportedEncodingException {
+		int indexOfUndoTask = Data.undoTask().size() - 2;
+		if(indexOfUndoTask < 0) {
+			return "invalid command";
+		} else {
+			Data.undoTask();
+			return "Undo task completed";
+		}
+	}
+	
 	/**
 	 * Execute help command.
 	 */
