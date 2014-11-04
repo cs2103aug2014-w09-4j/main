@@ -1,7 +1,7 @@
 /** 
  *---------------------------------------------------------------------------------- DATA CLASS ----------------------------------------------------------------------------------
  *
- * @author Nicholas Low Jun Han
+ * @author A0110574N
  * 
  * This class handles any manipulation to the temporary list of task object.
  * 

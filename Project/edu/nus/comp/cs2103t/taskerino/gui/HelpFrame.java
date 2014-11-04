@@ -261,11 +261,4 @@ public class HelpFrame {
             return false;
         }
     }
-	
-	
-	// dummy main for easy testing
-	public static void main (String[] a) {
-		new HelpFrame("add");
-	}
-
 }
