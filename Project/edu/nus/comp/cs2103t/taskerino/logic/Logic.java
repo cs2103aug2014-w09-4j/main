@@ -2,7 +2,6 @@ package edu.nus.comp.cs2103t.taskerino.logic;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 import edu.nus.comp.cs2103t.taskerino.common.Command;
 import edu.nus.comp.cs2103t.taskerino.common.Data;
