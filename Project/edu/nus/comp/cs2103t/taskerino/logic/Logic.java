@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import edu.nus.comp.cs2103t.taskerino.common.Command;
 import edu.nus.comp.cs2103t.taskerino.common.Data;
 import edu.nus.comp.cs2103t.taskerino.common.Task;
 import edu.nus.comp.cs2103t.taskerino.common.DateAndTime;
@@ -35,6 +36,18 @@ public class Logic {
 		String description = Data.getDescription();
 		String newDescription = Data.getNewDescription();
 		String type = Data.getChangeType();
+		Command newCommand = new Command();
+		newCommand.setCommand("change");
+		newCommand.setDueDate(Data.getTask(description).getDueDate());
+		newCommand.setStartDate(Data.getTask(description).getStartDate());
+		newCommand.setNameOfTaskModified(Data.getTask(description).getTaskName());
+		if(Data.getTask(description).getStatus().equals("completed")) {
+			newCommand.setStatusOfTask(true);
+		} else {
+			newCommand.setStatusOfTask(false);
+		}
+		newCommand.setIndexOfTaskModified(Data.task.indexOf(Data.getTask(description)));
+		Data.commandList.add(newCommand);
 		
 		if(type.equals("taskName")) {
 			try {
@@ -77,6 +90,11 @@ public class Logic {
 	public String deleteTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String description = Data.getDescription();
 		try {
+			Command newCommand = new Command();
+			newCommand.setCommand("delete");
+			newCommand.setTaskModified(Data.getTask(description));
+			newCommand.setIndexOfTaskModified(Data.task.indexOf(Data.getTask(description)));
+			Data.commandList.add(newCommand);
 			Data.removeTask(description);
 			return "Delete task " + description + " successfully";
 		} catch (ArrayIndexOutOfBoundsException e) {
@@ -124,6 +142,10 @@ public class Logic {
 			newTask.setTaskType("timed");
 			Data.addTask(newTask);
 		}
+		Command newCommand = new Command();
+		newCommand.setCommand("add");
+		newCommand.setTaskModified(newTask);
+		Data.commandList.add(newCommand);
 		// dummy
 		return "Add task " + newTask.getTaskName() + " successfully";
 	}
@@ -137,6 +159,10 @@ public class Logic {
 		Task toBeCompleted = Data.getTask(description);
 		if(toBeCompleted != null) {
 			toBeCompleted.setStatus(true);
+			Command newCommand = new Command();
+			newCommand.setCommand("complete");
+			newCommand.setTaskModified(toBeCompleted);
+			Data.commandList.add(newCommand);
 			return "Complete task " + description;
 		} else {
 			return "Task with name: " + description + " not found!";
@@ -163,6 +189,9 @@ public class Logic {
 				}
 			}
 		}
+		Command newCommand = new Command();
+		newCommand.setCommand("search");
+		Data.commandList.add(newCommand);
 		if(numberOfTasks == 0){
 			return "Task with name: " + description + " not found!";
 		} else {
@@ -184,12 +213,42 @@ public class Logic {
 	 * and return the previous list to GUI class
      */
 	public String undoTask() throws FileNotFoundException, UnsupportedEncodingException {
-		int indexOfUndoTask = Data.undoTasks.size() - 2;
-		if(indexOfUndoTask < 0) {
-			return "invalid command";
+		int indexOfCommandToUndo = Data.commandList.size() - 1;
+		if(indexOfCommandToUndo < 0) {
+			return "No previous step detected!";
 		} else {
-			Data.undoTask(indexOfUndoTask);
-			return "Undo task completed";
+			Command commandToUndo = Data.commandList.get(indexOfCommandToUndo);
+			String commandType = commandToUndo.getCommand();
+			if(commandType.equals("add")) {
+				Data.removeTask(commandToUndo.getTask().getTaskName());
+				Data.commandList.remove(indexOfCommandToUndo);
+				return "Undo successful!";
+			}
+			else if(commandType.equals("delete")) {
+				Data.task.add(commandToUndo.getIndexOfTaskModified(), commandToUndo.getTask());
+				Data.commandList.remove(indexOfCommandToUndo);
+				return "Undo successful!";
+			}
+			else if(commandType.equals("change")) {
+				Task oldTask = new Task();
+				oldTask.setTaskName(commandToUndo.getNameOfTaskModified());
+				oldTask.setDueDate(commandToUndo.getDueDate());
+				oldTask.setStartDate(commandToUndo.getStartDate());
+				oldTask.setStatus(commandToUndo.getStatusOfTask());
+				Data.task.remove(commandToUndo.getIndexOfTaskModified());
+				Data.task.add(commandToUndo.getIndexOfTaskModified(), oldTask);
+				Data.commandList.remove(indexOfCommandToUndo);
+				return "Undo successful!";
+			}
+			else if(commandType.equals("complete")) {
+				Data.task.get(commandToUndo.getIndexOfTaskModified()).setStatus(false);
+				Data.commandList.remove(indexOfCommandToUndo);
+				return "Undo successful!";
+			}
+			else {
+				Data.commandList.remove(indexOfCommandToUndo);
+				return "Last action cannot be undone.";
+			}
 		}
 	}
 	

@@ -109,10 +109,9 @@ public class Controller {
 	public static void loadData() {
 		final String methodName = "Main";
 		Data.searchedTasks = new ArrayList<Task>();
-		Data.undoTasks = new ArrayList<ArrayList<Task>>();
+		Data.commandList = new ArrayList<Command>();
 		try {
 			Data.task = Storage.loadTasksFromFile();
-			Data.undoTasks.add(Data.task);
 		} catch (JsonSyntaxException | IOException e) {
 			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
 			e.printStackTrace();
