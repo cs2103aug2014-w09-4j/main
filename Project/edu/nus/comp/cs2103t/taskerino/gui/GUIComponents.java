@@ -33,6 +33,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.ItemSelectable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -101,7 +102,7 @@ import edu.nus.comp.cs2103t.taskerino.common.Task;
  * 
  */
 
-public class GUIComponents implements ItemListener {
+public class GUIComponents /*implements ItemListener*/ {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static Controller controller = Controller.getController();
 	private CommandHistory commandHistory = CommandHistory.getCommandHistory();
@@ -112,10 +113,9 @@ public class GUIComponents implements ItemListener {
 	private JPanel contentPanel = new JPanel();
 	
 	// variables for tags
-	private	static final String PACKAGE = "javax.swing.";
 	private JPanel tagPanel;
 
-	private static String[] tagBoxItems = {"ALL"};	// should be Vector DS, but declared as array for ease of implementation, will change if logic and storage support further such function
+	private static String[] tagBoxItems = {"All", "Search", "Complete", "Incomplete"};
 	private static String selectedItem;
 	private JComboBox<Object> tagBox;
 	
@@ -152,7 +152,7 @@ public class GUIComponents implements ItemListener {
 	
 	private static final int SCROLLABLE_INCREMENT = 20;
 
-	// variables for hotkeys
+	// variables for hot keys
 	private static final String UP = "Up";
 	private static final String DOWN = "Down";
 	private static final String CTRL_UP = "Ctrl_Up";
@@ -324,7 +324,7 @@ public class GUIComponents implements ItemListener {
 		// add action listener for event when user presses "enter" in keyboard
 		userInputArea.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent ae) {
+			public void actionPerformed(ActionEvent event) {
 				String inputCommand = userInputArea.getText();
 				LoggerFactory.logp(Level.INFO, className, methodName, "User input commands: \n" + inputCommand);
 				controller.executeUserCommand(inputCommand);
@@ -340,7 +340,7 @@ public class GUIComponents implements ItemListener {
 		});
 		
 		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set hotkeys for user input text field.");
-		// enable hotkey "tab"
+		// enable hot key "tab"
 		userInputArea.setFocusTraversalKeysEnabled(false);
 		
 		// add key bindings to the JTextField which user type input commands
@@ -370,7 +370,7 @@ public class GUIComponents implements ItemListener {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent ae) {
+		public void actionPerformed(ActionEvent event) {
 			String name = getValue(AbstractAction.NAME).toString();
 
 			if (name.equals(UP)) {
@@ -501,12 +501,20 @@ public class GUIComponents implements ItemListener {
 			data[1] = userTasks.get(i).getTaskName();
 			data[2] = userTasks.get(i).getStartDate() != null ? "" + userTasks.get(i).getStartDate() : "";
 			data[3] = userTasks.get(i).getDueDate() != null ? "" + userTasks.get(i).getDueDate() : "";
-			data[4] = "" + userTasks.get(i).getStatus();
+			data[4] = userTasks.get(i).getStatus();
 
 			dataModel.addRow(data);
 		}
 	}
 
+	/**
+	 * Set focus of JTable to the row with taskIndex.
+	 */
+	public void setTaskTableFocus(int taskIndex) {
+		userTaskTable.setRowSelectionInterval(taskIndex, taskIndex);
+		userTaskTable.scrollRectToVisible(userTaskTable.getCellRect(taskIndex, 0, true));
+	}
+	
 
 	/**
 	 * Set ActionListener for action performed when user press "Ctrl + up", "Ctrl + down",
@@ -530,7 +538,7 @@ public class GUIComponents implements ItemListener {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent ae) {
+		public void actionPerformed(ActionEvent event) {
 			String name = getValue(AbstractAction.NAME).toString();
 			
 			if (name.equals(CTRL_UP) || name.equals(CTRL_DOWN)) {
@@ -592,15 +600,36 @@ public class GUIComponents implements ItemListener {
 		tagPanel.add(tagBox);
 		
 		LoggerFactory.logp(Level.CONFIG, className, methodName, "Select tag in the tagBox.");
-		tagBox.removeItemListener(this);
 		tagBox.setModel(new DefaultComboBoxModel<Object>(tagBoxItems));
 		tagBox.setSelectedIndex(0);
-		tagBox.addItemListener(this);
+		setSelectedItem(tagBoxItems[0]);
 		tagBox.requestFocusInWindow();
+		
+		tagBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				ItemSelectable item = (ItemSelectable)event.getSource();
+				setSelectedItem(selectedString(item));
+			}
+		});
+	}
+	
+	/**
+	 * Get the selected tag's name in String representation.
+	 * @param item -- Selected Tag
+	 * @return Tag's name
+	 */
+	private String selectedString(ItemSelectable item) {
+	    Object selected[] = item.getSelectedObjects();
+	    return ((selected.length == 0) ? "null" : (String)selected[0]);
+	}  
 
-		if (selectedItem != null) {
-			tagBox.setSelectedItem(selectedItem);
-		}
+	
+	public static String getSelectedItem() {
+		return selectedItem;
+	}
+
+	public static void setSelectedItem(String selectedItem) {
+		GUIComponents.selectedItem = selectedItem;
 	}
 	
 	
@@ -647,7 +676,7 @@ public class GUIComponents implements ItemListener {
 			putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_E));
 		}
 
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent event) {
 			System.exit(0);
 		}
 	}
@@ -684,7 +713,7 @@ public class GUIComponents implements ItemListener {
 		return menu;
 	}
 
-	
+
 	/**
 	 *  Change the LAF and recreate contentPanel in GUIComponents to update effect.
 	 */
@@ -721,37 +750,6 @@ public class GUIComponents implements ItemListener {
 				exception.printStackTrace();
 			}
 		}
-	}
-
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.ItemListener#itemStateChanged(java.awt.event.ItemEvent)
-	 */
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		// Implement the ItemListener interface
-		String componentName = (String)e.getItem();
-		changeTableModel(getClassName(componentName));
-		selectedItem = componentName;
-	}
-	
-	/**
-	 *  Use the component name to build the class name
-	 */
-	private String getClassName(String componentName) {
-		//  The table header is in a child package
-		if (componentName.equals("TableHeader")) {
-			return PACKAGE + "table.JTableHeader";
-		} else {
-			return PACKAGE + "J" + componentName;
-		}
-	}
-	
-	/**
-	 *  Change the TabelModel in the table for the selected component
-	 */
-	private void changeTableModel(String className) {
-		// dummy class, will implement in future if logic has support this funciton
 	}
 	
 }

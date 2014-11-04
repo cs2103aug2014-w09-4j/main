@@ -34,6 +34,7 @@ import java.util.logging.Level;
 
 import com.google.gson.JsonSyntaxException;
 
+import edu.nus.comp.cs2103t.taskerino.gui.GUIComponents;
 import edu.nus.comp.cs2103t.taskerino.gui.GUIFrame;
 import edu.nus.comp.cs2103t.taskerino.gui.HelpFrame;
 import edu.nus.comp.cs2103t.taskerino.logic.Logic;
@@ -61,6 +62,12 @@ public class Controller {
 	private static final String COMMAND_EXIT = "exit";
 	private static final String COMMAND_CLEAR = "clear";
 	private static final String COMMAND_UNDO = "undo";
+	private static final String COMMAND_GOTO = "goto";
+	
+	private static final String TAG_ALL = "All";
+	private static final String TAG_SEARCH = "Search";
+	private static final String TAG_COMPLETE = "Complete";
+	private static final String TAG_INCOMPLETE = "Incomplete";
 	
 	private static Controller singletonController;
 	private CommandHistory commandHistory;
@@ -100,8 +107,6 @@ public class Controller {
 		new GUIFrame();
 	}
 	
-
-
 	
 	/**
 	 * Load existing user data from local file.
@@ -228,6 +233,9 @@ public class Controller {
 				Storage.saveTasksIntoFile();
 				break;
 				
+			case COMMAND_GOTO:
+				
+				
 			case COMMAND_EXIT:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute exit command.");
 				System.exit(0);
@@ -254,7 +262,18 @@ public class Controller {
 	 * @return ArrayList of Tasks
 	 */
 	public ArrayList<Task> getUserTasks() {
-		return Data.task;
+		switch (GUIComponents.getSelectedItem()) {
+			case TAG_ALL:
+				return Data.task;
+			case TAG_SEARCH:
+				return Data.searchedTasks;
+			case TAG_COMPLETE:
+				return Data.completedTasks;
+			case TAG_INCOMPLETE:
+				
+			default:
+				return Data.task;
+		}
 	}
 
 }
