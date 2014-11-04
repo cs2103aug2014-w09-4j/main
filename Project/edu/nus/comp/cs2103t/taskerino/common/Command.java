@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * 
- * @author niggles
+ * @author A0110574N
  *
  * This class serves to help with the Undo functionality by keeping track of the commands entered.
  */

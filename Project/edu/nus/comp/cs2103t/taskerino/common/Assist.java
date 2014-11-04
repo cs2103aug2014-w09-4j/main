@@ -1,7 +1,7 @@
 package edu.nus.comp.cs2103t.taskerino.common;
 
 /**
- * @author Nicholas Low Jun Han
+ * @author A0110574N
  * 
  * This class contains all the text for the various help commands.
  */

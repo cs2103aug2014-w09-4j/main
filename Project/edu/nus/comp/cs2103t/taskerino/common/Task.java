@@ -2,7 +2,7 @@ package edu.nus.comp.cs2103t.taskerino.common;
 
 /**
  * 
- * @author niggles
+ * @author A0110574N
  *
  * This class contains the definition of the Object <Task> that will be used in this program.
  */
