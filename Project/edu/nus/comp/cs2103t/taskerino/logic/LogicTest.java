@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import edu.nus.comp.cs2103t.taskerino.common.Data;
 import edu.nus.comp.cs2103t.taskerino.common.Task;
+import edu.nus.comp.cs2103t.taskerino.common.Command;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
