@@ -109,7 +109,7 @@ public class Controller {
 	public static void loadData() {
 		final String methodName = "Main";
 		Data.searchedTasks = new ArrayList<Task>();
-		Data.undoTasks = new ArrayList<ArrayList<Task>();
+		Data.undoTasks = new ArrayList<ArrayList<Task>>();
 		try {
 			Data.task = Storage.loadTasksFromFile();
 			Data.undoTasks.add(Data.task);
