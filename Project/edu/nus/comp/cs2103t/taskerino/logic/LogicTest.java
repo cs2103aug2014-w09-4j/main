@@ -16,6 +16,10 @@ public class LogicTest {
 		Data.setAddType("floating");
 		Data.setDescription("do tutorial");
 		Data.task = new ArrayList<Task>();
+		Command newCommand = new Command();
+		newCommand.setCommand("add");
+		newCommand.setTaskModified(newTask);
+		Data.commandList.add(newCommand);
 		Logic logic = new Logic();
 		assertEquals("add task do tutorial successfully", logic.addTask());
 	}
@@ -26,7 +30,15 @@ public class LogicTest {
 		Data.setAddType("floating");
 		Data.task = new ArrayList<Task>();
 		Logic logic = new Logic();
+		Command newCommand = new Command();
+		newCommand.setCommand("add");
+		newCommand.setTaskModified(newTask);
+		Data.commandList.add(newCommand);
 		logic.addTask();
+		newCommand.setCommand("delete");
+		newCommand.setTaskModified(Data.getTask(description));
+		newCommand.setIndexOfTaskModified(Data.task.indexOf(Data.getTask(description)));
+		Data.commandList.add(newCommand);
 		assertEquals("delete task do tutorial successfully", logic.deleteTask());
 		assertEquals("Task with name: do tutorial not found!", logic.deleteTask());
 	}
@@ -37,9 +49,24 @@ public class LogicTest {
 		Data.setDescription("help");
 		Data.setAddType("floating");
 		Data.task = new ArrayList<Task>();
+		Command newCommand = new Command();
+		newCommand.setCommand("add");
+		newCommand.setTaskModified(newTask);
+		Data.commandList.add(newCommand);
 		logic.addTask();
 		Data.setChangeType("taskName");
 		Data.setNewDescription("no help");
+		newCommand.setCommand("change");
+		newCommand.setDueDate(Data.getTask(description).getDueDate());
+		newCommand.setStartDate(Data.getTask(description).getStartDate());
+		newCommand.setNameOfTaskModified(Data.getTask(description).getTaskName());
+		if(Data.getTask(description).getStatus().equals("completed")) {
+			newCommand.setStatusOfTask(true);
+		} else {
+			newCommand.setStatusOfTask(false);
+		}
+		newCommand.setIndexOfTaskModified(Data.task.indexOf(Data.getTask(description)));
+		Data.commandList.add(newCommand);
 		assertEquals("update task successfully from help to no help", logic.changeTask());
 		assertEquals("Task with name: help not found!", logic.changeTask());
 	}

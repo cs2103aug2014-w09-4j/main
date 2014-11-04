@@ -194,6 +194,8 @@ public class Logic {
 		Data.commandList.add(newCommand);
 		if(numberOfTasks == 0){
 			return "Task with name: " + description + " not found!";
+		} else if (numberOfTasks == 1){
+				return numberOfTasks + " task found with given description. ";
 		} else {
 			return numberOfTasks + " tasks found with given description. ";
 		}
