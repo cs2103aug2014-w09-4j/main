@@ -175,11 +175,11 @@ public class Logic {
 	 * and return the previous list to GUI class
      */
 	public String undoTask() throws FileNotFoundException, UnsupportedEncodingException {
-		int indexOfUndoTask = Data.undoTask().size() - 2;
+		int indexOfUndoTask = Data.undoTasks.size() - 2;
 		if(indexOfUndoTask < 0) {
 			return "invalid command";
 		} else {
-			Data.undoTask();
+			Data.undoTask(indexOfUndoTask);
 			return "Undo task completed";
 		}
 	}
