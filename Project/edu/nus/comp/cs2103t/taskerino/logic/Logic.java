@@ -1,3 +1,4 @@
+//@author A0108310Y
 package edu.nus.comp.cs2103t.taskerino.logic;
 
 import java.io.FileNotFoundException;
@@ -8,16 +9,6 @@ import edu.nus.comp.cs2103t.taskerino.common.Command;
 import edu.nus.comp.cs2103t.taskerino.common.Data;
 import edu.nus.comp.cs2103t.taskerino.common.Task;
 import edu.nus.comp.cs2103t.taskerino.common.DateAndTime;
-
-/**
-
-	Logic handles the parsed input and perform the respective functions
-	and return a feedback to the controller
-	
-	@author Jeremy
-
-
-*/
 
 /**
  * Logic class will retrieve user input from Common class, 

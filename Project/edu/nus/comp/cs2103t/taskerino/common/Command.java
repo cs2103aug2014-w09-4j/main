@@ -1,11 +1,10 @@
+//@Nicholas A0110574N
 package edu.nus.comp.cs2103t.taskerino.common;
 
 import java.util.ArrayList;
 
 /**
  * 
- * @author niggles
- *
  * This class serves to help with the Undo functionality by keeping track of the commands entered.
  */
 public class Command {

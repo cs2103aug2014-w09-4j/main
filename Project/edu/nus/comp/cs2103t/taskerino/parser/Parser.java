@@ -1,3 +1,4 @@
+//@author A0110594L
 package edu.nus.comp.cs2103t.taskerino.parser;
 
 import java.util.regex.Matcher;
@@ -11,8 +12,6 @@ import edu.nus.comp.cs2103t.taskerino.common.Data;
 	Parser accepts a String as input and modify the Data class to be used by other class
 
 */
-
-//@author A0110594L
 
 public class Parser {
 	private static Controller controller = Controller.getController();

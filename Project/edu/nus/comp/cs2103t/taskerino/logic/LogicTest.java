@@ -1,3 +1,4 @@
+//@author A0108310Y
 package edu.nus.comp.cs2103t.taskerino.logic;
 import static org.junit.Assert.*;
 
@@ -12,15 +13,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 /**
+ *
+ * LogicTest test the individual functions in the Logic component
+ *
+ */ 
 
-	LogicTest performs test on the individual functions and
-	return the correct feedback when the function is performed
-	correctly
-	
-	@author Jeremy
-
-
-*/
 public class LogicTest {
 
 	@Test
