@@ -426,6 +426,33 @@ public class Parser {
 			}				
 		}
 		
+		if (command.equals("goto")){
+			pattern = "(goto) (.*)";
+
+			r = Pattern.compile(pattern);
+
+			// Now create matcher object.
+
+			m = r.matcher(raw);
+
+			if (m.find()) {
+
+				String task = m.group(2);
+				
+				try {
+					// task index input command
+					int index = Integer.parseInt(task) - 1;
+					Data.setDescription(Data.task.get(index).getTaskName());
+				} catch (NumberFormatException e) {
+					// task name input command
+					Data.setDescription(task.trim());
+				}
+				
+
+				return;
+			}				
+		}
+		
 		if (command.equals("help")){
 			pattern = "(help) (.*)";
 
