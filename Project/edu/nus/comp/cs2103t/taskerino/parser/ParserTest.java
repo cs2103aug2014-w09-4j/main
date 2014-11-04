@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import edu.nus.comp.cs2103t.taskerino.common.Data;
 
+//@author A0110594L
+
 public class ParserTest {
 
 	@Test
