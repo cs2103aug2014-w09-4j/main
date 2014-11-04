@@ -130,8 +130,8 @@ public class GUIComponents {
 	private JMenuBar menuBar;
 	
 	// variables for user tasks
-	private JTable userTaskTable;
-	private JScrollPane taskScrollPane;
+	private static JTable userTaskTable;
+	private static JScrollPane taskScrollPane;
 	
 	private Object rowData[][] = {};
 	private static final int ROW_HEIGHT = 30;
@@ -508,7 +508,7 @@ public class GUIComponents {
 	/**
 	 * Set focus of JTable to the row with taskIndex.
 	 */
-	public void setTaskTableFocus(int taskIndex) {
+	public static void setTaskTableFocus(int taskIndex) {
 		userTaskTable.setRowSelectionInterval(taskIndex, taskIndex);
 		userTaskTable.scrollRectToVisible(userTaskTable.getCellRect(taskIndex, 0, true));
 	}
