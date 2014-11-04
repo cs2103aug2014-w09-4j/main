@@ -113,7 +113,6 @@ public class Controller {
 		try {
 			Data.task = Storage.loadTasksFromFile();
 			Data.undoTasks.add(Data.task);
-			Data.undoIndex = 0;
 		} catch (JsonSyntaxException | IOException e) {
 			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
 			e.printStackTrace();
@@ -142,7 +141,7 @@ public class Controller {
 		Data.setInput(userCommand);
 
 		try {
-			LoggerFactory.logp(Level.INFO, className, methodName, "Calling Paser.");
+			LoggerFactory.logp(Level.INFO, className, methodName, "Calling Parser.");
 			parser.parse();
 			isParseSuccessful = true;
 		} catch (Exception e) {
