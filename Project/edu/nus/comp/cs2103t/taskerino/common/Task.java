@@ -1,5 +1,12 @@
 package edu.nus.comp.cs2103t.taskerino.common;
 
+/**
+ * 
+ * @author niggles
+ *
+ * This class contains the definition of the Object <Task> that will be used in this program.
+ */
+
 public class Task{
 	private String taskName;
 	private DateAndTime startDate;

@@ -1,5 +1,13 @@
 package edu.nus.comp.cs2103t.taskerino.common;
 
+import java.util.ArrayList;
+
+/**
+ * 
+ * @author niggles
+ *
+ * This class serves to help with the Undo functionality by keeping track of the commands entered.
+ */
 public class Command {
 	
 	private static String commandType;
@@ -9,6 +17,7 @@ public class Command {
 	private static Task taskModified;
 	private static String nameOfTaskModified;
 	private static boolean statusOfTask;
+	private static ArrayList<Task> oldTaskList;
 	
 	public Command() {
 	}
@@ -41,6 +50,9 @@ public class Command {
 		return nameOfTaskModified;
 	}
 	
+	public ArrayList<Task> getOldTaskList() {
+		return oldTaskList;
+	}
 	public void setCommand(String command) {
 		commandType = command;
 	}
@@ -67,5 +79,9 @@ public class Command {
 	
 	public void setNameOfTaskModified(String name) {
 		nameOfTaskModified = name;
+	}
+	
+	public void setOldTaskList(ArrayList<Task> taskList) {
+		oldTaskList = taskList;
 	}
 }

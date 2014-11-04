@@ -12,7 +12,7 @@
  * -getTask <retrieve specific task from list of tasks>
  * -searchTask <retrives the index of the the specific task from the list of tasks>
  * -updateTask <retrieves specific task and updates relevant fields>
- *
+ * -clearTask <removes all tasks within the existing task arraylist
  *
 **/
 package edu.nus.comp.cs2103t.taskerino.common;

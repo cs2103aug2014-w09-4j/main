@@ -2,6 +2,7 @@ package edu.nus.comp.cs2103t.taskerino.logic;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import edu.nus.comp.cs2103t.taskerino.common.Command;
 import edu.nus.comp.cs2103t.taskerino.common.Data;
@@ -214,7 +215,14 @@ public class Logic {
      * clearTask clears the existing tasks list 
 	 * and return an empty list to GUI class
      */
-	 public String clearTask() throws FileNotFoundException, UnsupportedEncodingException {
+	public String clearTask() throws FileNotFoundException, UnsupportedEncodingException {
+		Command newCommand = new Command();
+		ArrayList<Task> oldTaskList = new ArrayList<Task>();
+		for(int count = 0; count < Data.task.size(); count++) {
+			oldTaskList.add(Data.task.get(count));
+		}
+		newCommand.setOldTaskList(oldTaskList);
+		newCommand.setCommand("clear");
 		Data.clearTask();
 		return "Cleared all tasks";
 	}
@@ -256,6 +264,11 @@ public class Logic {
 				Data.commandList.remove(indexOfCommandToUndo);
 				return "Undo successful!";
 			}
+			else if(commandType.equals("clear")) {
+				Data.task = commandToUndo.getOldTaskList();
+				Data.commandList.remove(indexOfCommandToUndo);
+				return "Undo successful!";
+			}			
 			else {
 				Data.commandList.remove(indexOfCommandToUndo);
 				return "Last action cannot be undone.";
