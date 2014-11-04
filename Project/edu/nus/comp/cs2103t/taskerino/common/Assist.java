@@ -1,5 +1,11 @@
 package edu.nus.comp.cs2103t.taskerino.common;
 
+/**
+ * @author Nicholas Low Jun Han
+ * 
+ * This class contains all the text for the various help commands.
+ */
+
 import java.util.ArrayList;
 
 public class Assist {
@@ -18,12 +24,14 @@ public class Assist {
 	
 	private static final String TITLE_HELP_GOTO = "HELP GOTO";
 	
-	private static final String MESSAGE_GENERALHELP = "For more information on a specific command, type \"help command-name\""
-													+ "1. add - Adds a task to the task list. Supports floating, deadline and timed tasks"
-													+ "2. delete - Removes a task from the task list."
-													+ "3. change - Changes the details of the task."
-													+ "4. complete - Marks task as completed"
-													+ "5. search - Searches based on user input displays relevant tasks";
+	private static final String MESSAGE_GENERALHELP = "For more information on a specific command, type \"help command-name\" \n\n\n"
+													+ "1. add - Adds a task to the task list. Supports floating, deadline and timed tasks \n\n"
+													+ "2. delete - Removes a task from the task list. \n\n"
+													+ "3. change - Changes the details of the task. \n\n"
+													+ "4. complete - Marks task as completed. \n\n"
+													+ "5. search - Searches based on user input displays relevant tasks. \n\n"
+													+ "6. undo - Undo the latest change made to the task list. \n\n"
+													+ "7. goto - Switches display to the list of tasks with specified tag. \n";
 	private static final String MESSAGE_HELP_ADD = "Adds tasks to the task list." + "\n\n"
 												+ "Any additions are immediately saved into local file \"Tasks.txt\"." + "\n\n"
 												+ "1. To add a FLOATING task:" + "\n"

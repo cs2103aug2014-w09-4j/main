@@ -107,7 +107,7 @@ public class HelpFrame {
 
 
 	private void setDetailedDescription(String helpType) {
-		if (helpType == null) {
+		if (helpType.equals("")) {
 			// no specific helpType -> general help!
 			setGeneralHelpContent();
 		} else {

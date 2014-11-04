@@ -201,7 +201,7 @@ public class Logic {
 		if (Data.getDescription() != null) {
 			String cmd = Data.getDescription();
 			if (cmd.equals("add") || cmd.equals("delete") || cmd.equals("change") || cmd.equals("search") 
-					|| cmd.equals("complete") || cmd.equals("goto")) {
+					|| cmd.equals("complete") || cmd.equals("goto") || cmd.equalsIgnoreCase("")) {
 				isHelpValid = true;
 			} else {
 				isHelpValid = false;
