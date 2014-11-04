@@ -27,6 +27,7 @@
 package edu.nus.comp.cs2103t.taskerino.common;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.logging.Level;
 
 /**
@@ -35,7 +36,7 @@ import java.util.logging.Level;
  * @author Wang YanHao
  *
  */
-public class DateAndTime {
+public class DateAndTime implements Comparator<DateAndTime>, Comparable<DateAndTime> {
 	private String className = "edu.nus.comp.cs2103t.taskerino.common.DateAndTime";
 
 	private int year;
@@ -150,5 +151,68 @@ public class DateAndTime {
 	@Override
 	public String toString() {
 		return this.getDay() + "/" + this.getMonth() + "/" + this.getYear();
+	}
+
+	
+	/** 
+	 * Compares two DateAndTimes for ordering.
+	 * @param date1 -- first DateAndTime to be compared.
+	 * @param date2 -- second DateAndTime to be compared.
+	 * @return the value 0 if first DateAndTime is equal to second DateAndTime; <br>
+	 * 			a value less than 0 if first DateAndTime is before second DateAndTime argument; <br>
+	 * 			and a value greater than 0 if first DateAndTime is after second DateAndTime argument.
+	 */	
+	@Override
+	public int compare(DateAndTime date1, DateAndTime date2) {
+		if (date1.getYear() > date2.getYear()) {
+			return 1;
+		} else if (date1.getYear() < date2.getYear()) {
+			return -1;
+		}
+		
+		if (date1.getMonth() > date2.getMonth()) {
+			return 1;
+		} else if (date1.getMonth() < date2.getMonth()) {
+			return -1;
+		}
+		
+		if (date1.getDay() > date2.getDay()) {
+			return 1;
+		} else if (date1.getDay() < date2.getDay()) {
+			return -1;
+		}
+		
+		return 0;
+	}
+
+	
+	/** 
+	 * Compares two DateAndTimes for ordering.
+	 * @param date -- DateAndTime to be compared.
+	 * @return the value 0 if the argument DateAndTime is equal to this Date; <br>
+	 * 			a value less than 0 if this DateAndTime is before the DateAndTime argument; <br>
+	 * 			and a value greater than 0 if this DateAndTime is after the DateAndTime argument.
+	 */
+	@Override
+	public int compareTo(DateAndTime date) {
+		if (this.getYear() > date.getYear()) {
+			return 1;
+		} else if (this.getYear() < date.getYear()) {
+			return -1;
+		}
+		
+		if (this.getMonth() > date.getMonth()) {
+			return 1;
+		} else if (this.getMonth() < date.getMonth()) {
+			return -1;
+		}
+		
+		if (this.getDay() > date.getDay()) {
+			return 1;
+		} else if (this.getDay() < date.getDay()) {
+			return -1;
+		}
+		
+		return 0;
 	}
 }
