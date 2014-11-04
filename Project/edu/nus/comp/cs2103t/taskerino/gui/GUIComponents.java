@@ -73,33 +73,28 @@ import edu.nus.comp.cs2103t.taskerino.common.Controller;
 import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
 import edu.nus.comp.cs2103t.taskerino.common.Task;
 
-
+//@author A0113742N
 
 /**
- * This class specifies dimensions and other details for each component in GUI.
- * There are all together five categories for the components:
+ * This class specifies dimensions and other details for each component in GUI. <br>
+ * There are all together five categories for the components: <br>
  * 
- * 	1. Menu:
- * 		Enable user to change the outlook of the GUI display mode;
- * 		Enable user to have alternative ways of accessing certain functions (e.g exit the program).
+ * 	1. Menu: <br>
+ * 		Enable user to change the outlook of the GUI display mode; <br>
+ * 		Enable user to have alternative ways of accessing certain functions (e.g exit the program). <br>
  * 
- *  2. Tags:
- *  	Enable user to see existing tasks based on different task categories.
+ *  2. Tags: <br>
+ *  	Enable user to see existing tasks based on different task categories. <br>
  * 
- * 	3. User Task Area:
- * 		Enable user to see existing tasks in a form.
+ * 	3. User Task Area: <br>
+ * 		Enable user to see existing tasks in a form. <br>
  * 
- *  4. User Input Area:
- *  	Enable user to type commands.
+ *  4. User Input Area: <br>
+ *  	Enable user to type commands. <br>
  *  
- *  5. User Feedback Area:
- *  	Enable user to access the feedback given by the program after executing their commands.
- * 
- * 
- * @author Wang YanHao
- * 
+ *  5. User Feedback Area: <br>
+ *  	Enable user to access the feedback given by the program after executing their commands. <br>
  */
-
 public class GUIComponents {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static Controller controller = Controller.getController();

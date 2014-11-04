@@ -40,11 +40,10 @@ import java.io.PrintWriter;
 
 import org.junit.Test;
 
+//@author A0113742N
+
 /**
  * System testing for all components except classes in GUI package.
- * 
- * @author Wang YanHao
- *
  */
 public class SystemTest {
 	private Controller controller;

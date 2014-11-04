@@ -30,11 +30,10 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.logging.Level;
 
+//@author A0113742N
+
 /**
  * This class specifies the exact date and time for any events.
- * 
- * @author Wang YanHao
- *
  */
 public class DateAndTime implements Comparator<DateAndTime>, Comparable<DateAndTime> {
 	private String className = "edu.nus.comp.cs2103t.taskerino.common.DateAndTime";

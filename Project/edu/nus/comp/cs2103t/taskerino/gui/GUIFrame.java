@@ -29,13 +29,11 @@ package edu.nus.comp.cs2103t.taskerino.gui;
 
 import javax.swing.JFrame;
 
+//@author A0113742N
 
 /**
  * This class creates a frame for GUI with specified properties.
- * 
- * @author Wang YanHao
  */
-
 @SuppressWarnings("serial")
 public class GUIFrame extends JFrame {
 	private static final String APP_NAME = "Taskerino";

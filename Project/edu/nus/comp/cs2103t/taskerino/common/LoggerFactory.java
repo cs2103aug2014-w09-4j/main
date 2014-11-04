@@ -31,12 +31,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+//@author A0113742N
+
 /**
  * This class enable all the classes in a project to record down information
  * on a single local output file using a common logger.
- * 
- * @author Wang YanHao
- *
  */
 public class LoggerFactory {
 	private static final Logger logger = Logger.getLogger("Project.LoggerFactory");

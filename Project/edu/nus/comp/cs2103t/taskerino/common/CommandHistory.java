@@ -28,14 +28,13 @@ package edu.nus.comp.cs2103t.taskerino.common;
 
 import java.util.ArrayList;
 
+//@author A0113742N
+
 /**
- * This class make use of two Stacks to store all commands that user has executed.
- * Note:
+ * This class make use of two Stacks to store all commands that user has executed. <br>
+ * Note: <br>
  * All data stored in this class is temporary, once user terminates the software,
  * all history will be dumped.
- * 
- * @author Wang YanHao
- *
  */
 public class CommandHistory {
 	private static CommandHistory singletonCommandHistory;

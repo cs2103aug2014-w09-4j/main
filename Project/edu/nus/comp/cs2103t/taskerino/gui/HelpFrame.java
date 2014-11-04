@@ -46,14 +46,12 @@ import javax.swing.JTextArea;
 import edu.nus.comp.cs2103t.taskerino.common.Assist;
 import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
 
+//@author A0113742N
+
 /**
  * This class pop up a new JFrame which displays the a list of instructions
  * that gives the user a general guideline of how to use Taskerino.
- * 
- * @author Wang YanHao
- *
  */
-
 public class HelpFrame {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static final Assist assist = new Assist();

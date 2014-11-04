@@ -30,15 +30,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+//@author A0113742N
+
 /**
- * JUnit Testing class for DateAndTime class. 
- * Test cases consisting: 
- * 1. default date constructor
- * 2. valid specific date input constructor
+ * JUnit Testing class for DateAndTime class. <br>
+ * Test cases consisting: <br>
+ * 1. default date constructor <br>
+ * 2. valid specific date input constructor <br>
  * 3. invalid specific date input constructor
- * 
- * @author Wang YanHao
- *
  */
 public class DateAndTimeTest {
 	@Test

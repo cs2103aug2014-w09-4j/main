@@ -41,13 +41,12 @@ import edu.nus.comp.cs2103t.taskerino.logic.Logic;
 import edu.nus.comp.cs2103t.taskerino.parser.Parser;
 import edu.nus.comp.cs2103t.taskerino.storage.Storage;
 
+//@author A0113742N
+
 /**
  * Main class that initialize and controls the program Taskerino
  * by providing methods that integrating classes from different
  * packages together.
- * 
- * @author Wang YanHao
- *
  */
 public class Controller {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
@@ -173,7 +172,7 @@ public class Controller {
 		Data.resetAll();
 	}
 	
-	//@author A0108310Y
+	
 	/**
 	 * Based on user's input command Parser has parsed, call different methods from different classes to execute the command.
 	 * @param command
