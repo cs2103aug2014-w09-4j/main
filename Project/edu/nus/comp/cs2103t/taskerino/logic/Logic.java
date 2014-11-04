@@ -11,7 +11,7 @@ import edu.nus.comp.cs2103t.taskerino.common.DateAndTime;
 /**
 
 	Logic handles the parsed input and perform the respective functions
-	and return an output to the controller
+	and return a feedback to the controller
 	
 	@author Jeremy
 
@@ -37,17 +37,22 @@ public class Logic {
 		String type = Data.getChangeType();
 		Command newCommand = new Command();
 		newCommand.setCommand("change");
-		newCommand.setDueDate(Data.getTask(description).getDueDate());
-		newCommand.setStartDate(Data.getTask(description).getStartDate());
-		newCommand.setNameOfTaskModified(Data.getTask(description).getTaskName());
-		if(Data.getTask(description).getStatus().equals("completed")) {
-			newCommand.setStatusOfTask(true);
-		} else {
-			newCommand.setStatusOfTask(false);
+		try{
+			newCommand.setDueDate(Data.getTask(description).getDueDate());
+			newCommand.setStartDate(Data.getTask(description).getStartDate());
+			newCommand.setNameOfTaskModified(Data.getTask(description).getTaskName());
+			if(Data.getTask(description).getStatus().equals("completed")) {
+				newCommand.setStatusOfTask(true);
+			} else {
+				newCommand.setStatusOfTask(false);
+			}
+		}
+		catch (NullPointerException e) {
 		}
 		newCommand.setIndexOfTaskModified(Data.task.indexOf(Data.getTask(description)));
 		Data.commandList.add(newCommand);
 		
+		//changing of task details
 		if(type.equals("taskName")) {
 			try {
 				Data.updateTask(description, newDescription);
@@ -55,6 +60,7 @@ public class Logic {
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "Task with name: " + description + " not found!";
 			}
+		//changing of start date
 		} else if(type.equals("startTime")) {
 			try {
 				int day = Data.getFromDay();
@@ -66,6 +72,7 @@ public class Logic {
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "Task with name: " + description + " not found!";
 			}
+		//changing of due date
 		} else if(type.equals("endTime")) {
 			try {
 				int day = Data.getToDay();
@@ -109,11 +116,13 @@ public class Logic {
 		String type = Data.getAddType();
 		Task newTask = new Task();
 		
+		//adding of floating task without any start or due date
 		if (type.equals("floating")) {
 			String description = Data.getDescription();
 			newTask.setTaskName(description);
 			Data.addTask(newTask);
 		}
+		//adding of deadline tasks without a start but having a due date
 		else if (type.equals("deadline")) {
 			String description = Data.getDescription();
 			int byDay = Data.getByDay();
@@ -125,6 +134,7 @@ public class Logic {
 			newTask.setTaskType("deadline");
 			Data.addTask(newTask);	 
 		}
+		//adding of timed tasks with a start and due date
 		else if (type.equals("timed")) {
 			String description = Data.getDescription();
 			newTask.setTaskName(description);
@@ -145,7 +155,7 @@ public class Logic {
 		newCommand.setCommand("add");
 		newCommand.setTaskModified(newTask);
 		Data.commandList.add(newCommand);
-		// dummy
+		
 		return "Add task " + newTask.getTaskName() + " successfully";
 	}
 	
@@ -194,7 +204,7 @@ public class Logic {
 		if(numberOfTasks == 0){
 			return "Task with name: " + description + " not found!";
 		} else if (numberOfTasks == 1){
-				return numberOfTasks + " task found with given description. ";
+			return numberOfTasks + " task found with given description. ";
 		} else {
 			return numberOfTasks + " tasks found with given description. ";
 		}
