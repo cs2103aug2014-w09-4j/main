@@ -70,3 +70,8 @@ complete <task name>
 
 // mark a task as completed
 complete <task index>
+
+7.
+
+// go to a particular section
+goto <tagname>
