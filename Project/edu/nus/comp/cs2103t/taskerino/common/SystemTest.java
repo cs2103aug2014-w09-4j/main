@@ -62,7 +62,7 @@ public class SystemTest {
 			+ "\"dueDate\":{\"className\":\"" + DATE_CLASS_PATH + "\",\"year\":%2$s,\"month\":%3$s,\"day\":%4$s}," 
 			+ "\"taskType\":\"deadline\"," + "\"status\":%5$s}]";
 	private static final String TIMED_TASK_FORMAT = "[{\"taskName\":\"%1$s\"," 
-			+ "\"dueDate\":{\"className\":\"" + DATE_CLASS_PATH + "\",\"year\":%2$s,\"month\":%3$s,\"day\":%4$s}," 
+			+ "\"startDate\":{\"className\":\"" + DATE_CLASS_PATH + "\",\"year\":%2$s,\"month\":%3$s,\"day\":%4$s}," 
 			+ "\"dueDate\":{\"className\":\"" + DATE_CLASS_PATH + "\",\"year\":%5$s,\"month\":%6$s,\"day\":%7$s}," 
 			+ "\"taskType\":\"timed\"," + "\"status\":%8$s}]";
 	private static final String EMPTY_TASK_FORMAT = "[]";
@@ -84,7 +84,7 @@ public class SystemTest {
 		assertEquals(true, fileCompare(taskFile, testingFile));
 
 
-		// test for deleting floating task
+		// test for deleting floating task via task name
 		controller.executeUserCommand("delete do tutorial");
 		// check for feedback
 		expectedOutput = "Delete task do tutorial successfully";
@@ -119,22 +119,42 @@ public class SystemTest {
 		String[] expectedData04 = {"floating", "don" + QUOTATION_MARK + "t go to lecture", "false"};
 		writeTestFile(expectedData04);
 		assertEquals(true, fileCompare(taskFile, testingFile));
+		
 
+		// test for completing a existing task
+		controller.executeUserCommand("complete don't go to lecture");
+		// check for feedback
+		expectedOutput = "Complete task don't go to lecture";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData05 = {"floating", "don" + QUOTATION_MARK + "t go to lecture", "true"};
+		writeTestFile(expectedData05);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+		
+		// test for deleting a existing task via index
+		controller.executeUserCommand("delete 1");
+		// check for feedback
+		expectedOutput = "Delete task don't go to lecture successfully";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData06 = {"empty"};
+		writeTestFile(expectedData06);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+				
 
 		// test for changing none-existent task's description
 		controller.executeUserCommand("change test case 1 to~ hey!");
 		// check for feedback
 		expectedOutput = "Task with name: test case 1 not found!";
 		actualOutput = controller.getUserFeedback();
-		assertEquals(expectedOutput, actualOutput);
-
-
-		// delete test case to make local file clean
-		controller.executeUserCommand("delete don't go to lecture");
-		// check for feedback
-		expectedOutput = "Delete task don't go to lecture successfully";
-		actualOutput = controller.getUserFeedback();
-		assertEquals(expectedOutput, actualOutput);
+		assertEquals(expectedOutput, actualOutput);		
+		// check for file 
+		String[] expectedData07 = {"floating", "don" + QUOTATION_MARK + "t go to lecture", "true"};
+		writeTestFile(expectedData07);
+		assertEquals(true, fileCompare(taskFile, testingFile));
 
 		closeDown();
 	}
@@ -145,12 +165,15 @@ public class SystemTest {
 		setUp();
 
 		// test for adding timed task
-		controller.executeUserCommand("add test from~ 29 10 2014 to~ 30 10 2014");	
+		controller.executeUserCommand("add test from~ 29 10 2014 to~ 30 12 2014");	
 		// check for feedback
 		expectedOutput = "Add task test successfully";
 		actualOutput = controller.getUserFeedback();
 		assertEquals(expectedOutput, actualOutput);
-
+		// check for file 
+		String[] expectedData01 = {"timed", "test", "2014", "10", "29", "2014", "12", "30", "false"};
+		writeTestFile(expectedData01);
+		assertEquals(true, fileCompare(taskFile, testingFile));
 
 
 		// test for changing start date for timed task
@@ -158,28 +181,40 @@ public class SystemTest {
 		expectedOutput = "Updated test start time successfully to 30/11/2014";
 		actualOutput = controller.getUserFeedback();
 		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData02 = {"timed", "test", "2014", "11", "30", "2014", "12", "30", "false"};
+		writeTestFile(expectedData02);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
 
 		// test for changing start date for timed task for different input month format
 		controller.executeUserCommand("change start date to~ 12 December 2014 from~ test");
 		expectedOutput = "Updated test start time successfully to 12/12/2014";
 		actualOutput = controller.getUserFeedback();
 		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData03 = {"timed", "test", "2014", "12", "12", "2014", "12", "30", "false"};
+		writeTestFile(expectedData03);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
 
 		// test for changing due date for timed task
-		controller.executeUserCommand("change due date to~ 01 january 2014 from~ test");
-		expectedOutput = "Updated test end time successfully to 1/1/2014";
+		controller.executeUserCommand("change due date to~ 01 january 2015 from~ test");
+		expectedOutput = "Updated test end time successfully to 1/1/2015";
 		actualOutput = controller.getUserFeedback();
 		assertEquals(expectedOutput, actualOutput);
-
-		// delete test case to make local file clean
-		controller.executeUserCommand("delete test");
-		expectedOutput = "Delete task test successfully";
-		actualOutput = controller.getUserFeedback();
-		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData04 = {"timed", "test", "2014", "12", "12", "2015", "1", "1", "false"};
+		writeTestFile(expectedData04);
+		assertEquals(true, fileCompare(taskFile, testingFile));
 
 		closeDown();
 	}
 
+	
+/****************************************************
+    Functions facilitates system testing.
+*****************************************************/	
 
 	/**
 	 * Based on Data's type, format the expected output result, and write it into the testingFile.
@@ -194,23 +229,23 @@ public class SystemTest {
 		}
 
 		switch (expectedData[0]) {
-		case "floating":
-			printer.printf(FLOATING_TASK_FORMAT, expectedData[1], expectedData[2]);
-			printer.println("");
-			break;
-		case "deadline":
-			printer.printf(DEADLINE_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3],
-					expectedData[4], expectedData[5]);
-			printer.println("");
-			break;
-		case "timed":
-			printer.printf(TIMED_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3],
-					expectedData[4], expectedData[5], expectedData[6], expectedData[7], expectedData[8]);
-			printer.println("");
-			break;
-		case "empty":
-			printer.println(EMPTY_TASK_FORMAT);
-			break;
+			case "floating":
+				printer.printf(FLOATING_TASK_FORMAT, expectedData[1], expectedData[2]);
+				printer.println("");
+				break;
+			case "deadline":
+				printer.printf(DEADLINE_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3],
+						expectedData[4], expectedData[5]);
+				printer.println("");
+				break;
+			case "timed":
+				printer.printf(TIMED_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3],
+						expectedData[4], expectedData[5], expectedData[6], expectedData[7], expectedData[8]);
+				printer.println("");
+				break;
+			case "empty":
+				printer.println(EMPTY_TASK_FORMAT);
+				break;
 		}
 		printer.close();
 	}
