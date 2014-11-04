@@ -36,8 +36,6 @@ import java.awt.Insets;
 import java.awt.ItemSelectable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -102,7 +100,7 @@ import edu.nus.comp.cs2103t.taskerino.common.Task;
  * 
  */
 
-public class GUIComponents /*implements ItemListener*/ {
+public class GUIComponents {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static Controller controller = Controller.getController();
 	private CommandHistory commandHistory = CommandHistory.getCommandHistory();
@@ -139,7 +137,7 @@ public class GUIComponents /*implements ItemListener*/ {
 	private static final int ROW_HEIGHT = 30;
 	private static final int ROW_MARGIN = 0;
 	
-	private Object columnNames[] = { "Index", "Task Name", "Start Date", "Due Date", "Status" };
+	private static final Object[] columnNames = {"Index", "Task Name", "Start Date", "Due Date", "Status"};
 	private static final int COLUMN_ONE_SIZE = 50;
 	private static final int COLUMN_TWO_SIZE = 450;
 	private static final int COLUMN_THREE_SIZE = 70;
@@ -155,8 +153,8 @@ public class GUIComponents /*implements ItemListener*/ {
 	// variables for hot keys
 	private static final String UP = "Up";
 	private static final String DOWN = "Down";
-	private static final String CTRL_UP = "Ctrl_Up";
-	private static final String CTRL_DOWN = "Ctrl_Down";
+	private static final String ALT_UP = "Alt_Up";
+	private static final String ALT_DOWN = "Alt_Down";
 	private static final String TAB = "Tab";
 	private static final String DELETE = "Delete";
 	
@@ -420,14 +418,14 @@ public class GUIComponents /*implements ItemListener*/ {
 		InputMap inMap = userTaskTable.getInputMap(condition);
 		ActionMap actMap = userTaskTable.getActionMap();
 
-		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), CTRL_UP);
-		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), CTRL_DOWN);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), ALT_UP);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), ALT_DOWN);
 		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), TAB);
 		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), DELETE);
 
-		actMap.put(CTRL_UP, new UserTaskTableAction(CTRL_UP, taskScrollPane.getVerticalScrollBar().getModel(), 
+		actMap.put(ALT_UP, new UserTaskTableAction(ALT_UP, taskScrollPane.getVerticalScrollBar().getModel(), 
 				SCROLLABLE_INCREMENT));
-		actMap.put(CTRL_DOWN, new UserTaskTableAction(CTRL_DOWN, taskScrollPane.getVerticalScrollBar().getModel(), 
+		actMap.put(ALT_DOWN, new UserTaskTableAction(ALT_DOWN, taskScrollPane.getVerticalScrollBar().getModel(), 
 				SCROLLABLE_INCREMENT));
 		actMap.put(TAB, new UserTaskTableAction(TAB));
 		actMap.put(DELETE, new UserTaskTableAction(DELETE));
@@ -517,9 +515,9 @@ public class GUIComponents /*implements ItemListener*/ {
 	
 
 	/**
-	 * Set ActionListener for action performed when user press "Ctrl + up", "Ctrl + down",
+	 * Set ActionListener for action performed when user press "Alt + up", "Alt + down",
 	 * "tab" or "delete" on keyboard. <br>
-	 * If there is a hot key clashes with other components, thosee actions will be invoked 
+	 * If there is a hot key clashes with other components, those actions will be invoked 
 	 * when userTaskTable is in focus.
 	 */
 	@SuppressWarnings("serial")
@@ -541,13 +539,13 @@ public class GUIComponents /*implements ItemListener*/ {
 		public void actionPerformed(ActionEvent event) {
 			String name = getValue(AbstractAction.NAME).toString();
 			
-			if (name.equals(CTRL_UP) || name.equals(CTRL_DOWN)) {
+			if (name.equals(ALT_UP) || name.equals(ALT_DOWN)) {
 				int value = vScrollBarModel.getValue();
 				
-				if (name.equals(CTRL_UP)) {
+				if (name.equals(ALT_UP)) {
 					value -= scrollableIncrement;
 					vScrollBarModel.setValue(value);
-				} else if (name.equals(CTRL_DOWN)) {
+				} else if (name.equals(ALT_DOWN)) {
 					value += scrollableIncrement;
 					vScrollBarModel.setValue(value);
 				} 
@@ -609,6 +607,7 @@ public class GUIComponents /*implements ItemListener*/ {
 			public void actionPerformed(ActionEvent event) {
 				ItemSelectable item = (ItemSelectable)event.getSource();
 				setSelectedItem(selectedString(item));
+				updateTaskTable();
 			}
 		});
 	}

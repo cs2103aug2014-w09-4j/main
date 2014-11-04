@@ -107,29 +107,29 @@ public class HelpFrame {
 
 
 	private void setDetailedDescription(String helpType) {
-		if (helpType.equals("")) {
+		if (helpType == null || helpType.equals("")) {
 			// no specific helpType -> general help!
 			setGeneralHelpContent();
 		} else {
 			switch (helpType) {
-			case HELP_ADD:
-				setAddHelpContent();
-				break;
-			case HELP_DELETE:
-				setDeleteHelpContent();
-				break;
-			case HELP_CHANGE:
-				setChangeHelpContent();
-				break;
-			case HELP_COMPLETE:
-				setCompleteHelpContent();
-				break;
-			case HELP_SEARCH:
-				setSearchHelpContent();
-				break;
-			case HELP_GOTO:
-				setGotoHelpContent();
-				break;
+				case HELP_ADD:
+					setAddHelpContent();
+					break;
+				case HELP_DELETE:
+					setDeleteHelpContent();
+					break;
+				case HELP_CHANGE:
+					setChangeHelpContent();
+					break;
+				case HELP_COMPLETE:
+					setCompleteHelpContent();
+					break;
+				case HELP_SEARCH:
+					setSearchHelpContent();
+					break;
+				case HELP_GOTO:
+					setGotoHelpContent();
+					break;
 			}
 		}
 	}

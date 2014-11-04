@@ -50,8 +50,9 @@ public class Data {
 	
 	public static ArrayList<Command> commandList;
 	public static ArrayList<Task> task;
-	public static ArrayList<Task> searchedTasks;
-	public static ArrayList<Task> completedTasks;
+	public static ArrayList<Task> searchedTasks = new ArrayList<Task>();
+	public static ArrayList<Task> completedTasks = new ArrayList<Task>();
+	public static ArrayList<Task> incompletedTasks = new ArrayList<Task>();
 		
 /*****************
      Getters 

@@ -64,10 +64,10 @@ public class Controller {
 	private static final String COMMAND_UNDO = "undo";
 	private static final String COMMAND_GOTO = "goto";
 	
-	private static final String TAG_ALL = "All";
-	private static final String TAG_SEARCH = "Search";
-	private static final String TAG_COMPLETE = "Complete";
-	private static final String TAG_INCOMPLETE = "Incomplete";
+	private static final String TAG_ALL = "all";
+	private static final String TAG_SEARCH = "search";
+	private static final String TAG_COMPLETE = "complete";
+	private static final String TAG_INCOMPLETE = "incomplete";
 	
 	private static Controller singletonController;
 	private CommandHistory commandHistory;
@@ -183,7 +183,7 @@ public class Controller {
 	private void execute(String command) throws FileNotFoundException, UnsupportedEncodingException {
 		final String methodName = "execute";
 		
-		switch (command) {
+		switch (command.toLowerCase()) {
 			case COMMAND_HELP:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute help command.");
 				outputFeedBack = logic.help();
@@ -219,6 +219,7 @@ public class Controller {
 			case COMMAND_SEARCH:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute search command.");
 				outputFeedBack = logic.searchTask();
+				GUIComponents.setSelectedItem(TAG_SEARCH);
 				break;
 				
 			case COMMAND_CLEAR:
@@ -234,7 +235,12 @@ public class Controller {
 				break;
 				
 			case COMMAND_GOTO:
-				
+				LoggerFactory.logp(Level.INFO, className, methodName, "Execute goto command.");
+				outputFeedBack = logic.gotoTag();
+				if (logic.isTagValid()) {
+					GUIComponents.setSelectedItem(Data.getDescription());
+				}
+				break;
 				
 			case COMMAND_EXIT:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute exit command.");
@@ -262,15 +268,17 @@ public class Controller {
 	 * @return ArrayList of Tasks
 	 */
 	public ArrayList<Task> getUserTasks() {
-		switch (GUIComponents.getSelectedItem()) {
+		switch (GUIComponents.getSelectedItem().toLowerCase()) {
 			case TAG_ALL:
 				return Data.task;
 			case TAG_SEARCH:
 				return Data.searchedTasks;
 			case TAG_COMPLETE:
+				logic.sortTasksByStatus();
 				return Data.completedTasks;
 			case TAG_INCOMPLETE:
-				
+				logic.sortTasksByStatus();
+				return Data.incompletedTasks;
 			default:
 				return Data.task;
 		}

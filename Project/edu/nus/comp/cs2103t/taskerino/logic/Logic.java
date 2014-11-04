@@ -26,6 +26,7 @@ import edu.nus.comp.cs2103t.taskerino.common.DateAndTime;
  */
 public class Logic {
 	private boolean isHelpValid;
+	private boolean isTagValid;
 	
 	/**
 	 * ChangeTask function replaces the exiting task details
@@ -281,8 +282,9 @@ public class Logic {
 	 */
 	public String help() {
 		String feedback = " ";
+		isHelpValid = true;
 		if (Data.getDescription() != null) {
-			String cmd = Data.getDescription();
+			String cmd = Data.getDescription().toLowerCase();
 			if (cmd.equals("add") || cmd.equals("delete") || cmd.equals("change") || cmd.equals("search") 
 					|| cmd.equals("complete") || cmd.equals("goto") || cmd.equalsIgnoreCase("")) {
 				isHelpValid = true;
@@ -294,11 +296,45 @@ public class Logic {
 		return feedback;
 	}
 	
-	/**
-	 * Return if the help command user input is valid.
-	 */
 	public boolean isHelpValid() {
 		return isHelpValid;
+	}
+
+	/**
+	 * Update tasks in the selected tag file.
+	 */
+	public String gotoTag() {
+		String feedback = " ";
+		if (Data.getDescription() != null) {
+			String tag = Data.getDescription().toLowerCase();
+			if (tag.equals("all") || tag.equals("search") || tag.equals("complete") || tag.equals("incomplete")) {
+				isTagValid = true;
+			} else {
+				isTagValid = false;
+				feedback = "User command not recognized, please try again!";
+			}
+		}
+		sortTasksByStatus();
+		return feedback;
+	}
+	
+	public boolean isTagValid() {
+		return isTagValid;
+	}
+	
+	/**
+	 * Initialize and modify completedTasks and incompletedTasks ArrayLists.
+	 */
+	public void sortTasksByStatus() {
+		Data.completedTasks.clear();
+		Data.incompletedTasks.clear();
+		for (Task task: Data.task) {
+			if (task.getStatus().equalsIgnoreCase("completed")) {
+				Data.completedTasks.add(task);
+			} else {
+				Data.incompletedTasks.add(task);
+			}
+		}
 	}
 }
 	
