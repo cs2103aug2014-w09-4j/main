@@ -60,8 +60,13 @@ public class Logic {
 				int month = Data.getFromMonth();
 				int year = Data.getFromYear();
 				DateAndTime newStartDate = new DateAndTime(year,month,day);
-				Data.getTask(description).setStartDate(newStartDate);
-				return "Updated " + description + " start time successfully to " + day + "/" + month + "/" + year;
+				if (Data.getTask(description).getDueDate() == null ||
+						isValidDate(newStartDate, Data.getTask(description).getDueDate())) {
+					Data.getTask(description).setStartDate(newStartDate);
+					return "Updated " + description + " start time successfully to " + day + "/" + month + "/" + year;
+				} else {
+					return "Start date cannot be later than the due date!";
+				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "Task with name: " + description + " not found!";
 			}
@@ -72,8 +77,14 @@ public class Logic {
 				int month = Data.getToMonth();
 				int year = Data.getToYear();
 				DateAndTime newEndDate = new DateAndTime(year,month,day);
-				Data.getTask(description).setDueDate(newEndDate);
-				return "Updated " + description + " end time successfully to " + day + "/" + month + "/" + year;
+				
+				if (Data.getTask(description).getStartDate() == null || 
+						isValidDate(Data.getTask(description).getStartDate(), newEndDate)) {
+					Data.getTask(description).setDueDate(newEndDate);
+					return "Updated " + description + " end time successfully to " + day + "/" + month + "/" + year;
+				} else {
+					return "Due date cannot be earlier than the start date!";
+				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				return "Task with name: " + description + " not found!";
 			}
@@ -108,6 +119,7 @@ public class Logic {
 	public String addTask() throws FileNotFoundException, UnsupportedEncodingException {
 		String type = Data.getAddType();
 		Task newTask = new Task();
+		boolean isAddSuccess = true;
 		
 		//adding of floating task without any start or due date
 		if (type.equals("floating")) {
@@ -135,21 +147,30 @@ public class Logic {
 			int fromMonth = Data.getFromMonth();
 			int fromYear = Data.getFromYear();
 			DateAndTime fromDateAndTime = new DateAndTime(fromYear,fromMonth,fromDay);
-			newTask.setStartDate(fromDateAndTime);
 			int toDay = Data.getToDay();
 			int toMonth = Data.getToMonth();
 			int toYear = Data.getToYear();
 			DateAndTime toDateAndTime = new DateAndTime(toYear,toMonth,toDay);
-			newTask.setDueDate(toDateAndTime);
-			newTask.setTaskType("timed");
-			Data.addTask(newTask);
+
+			if (isValidDate(fromDateAndTime, toDateAndTime)) {
+				newTask.setStartDate(fromDateAndTime);
+				newTask.setDueDate(toDateAndTime);
+				newTask.setTaskType("timed");
+				Data.addTask(newTask);
+			} else {
+				isAddSuccess = false;
+			}
 		}
-		Command newCommand = new Command();
-		newCommand.setCommand("add");
-		newCommand.setTaskModified(newTask);
-		Data.commandList.add(newCommand);
 		
-		return "Add task " + newTask.getTaskName() + " successfully";
+		if (isAddSuccess) {
+			Command newCommand = new Command();
+			newCommand.setCommand("add");
+			newCommand.setTaskModified(newTask);
+			Data.commandList.add(newCommand);	
+			return "Add task " + newTask.getTaskName() + " successfully";
+		} else {
+			return "Start date cannot be later than the due date!";
+		}
 	}
 	
 	/**
@@ -328,6 +349,13 @@ public class Logic {
 				Data.incompletedTasks.add(task);
 			}
 		}
+	}
+	
+	/**
+	 * Check for validity of start date and due date.
+	 */
+	public boolean isValidDate(DateAndTime startDate, DateAndTime dueDate) {
+		return (startDate.compareTo(dueDate) <= 0);
 	}
 }
 	
