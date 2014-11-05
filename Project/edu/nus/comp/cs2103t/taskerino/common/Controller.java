@@ -50,7 +50,7 @@ import edu.nus.comp.cs2103t.taskerino.storage.Storage;
  */
 public class Controller {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
-	private static final String INVALID_COMMAND_FEEDBACK = "Invalid Command!";
+	private static final String INVALID_COMMAND_FEEDBACK = "User command not recognized, please try again!";
 
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_ADD = "add";
