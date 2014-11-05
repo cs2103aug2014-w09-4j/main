@@ -151,7 +151,7 @@ public class SystemTest {
 		actualOutput = controller.getUserFeedback();
 		assertEquals(expectedOutput, actualOutput);		
 		// check for file 
-		String[] expectedData07 = {"floating", "don" + QUOTATION_MARK + "t go to lecture", "true"};
+		String[] expectedData07 = {"empty"};
 		writeTestFile(expectedData07);
 		assertEquals(true, fileCompare(taskFile, testingFile));
 
