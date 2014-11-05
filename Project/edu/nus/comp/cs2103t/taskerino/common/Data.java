@@ -48,7 +48,7 @@ public class Data {
 	public static int byMonth;	
 	public static int byYear;
 	
-	public static ArrayList<Command> commandList;
+	public static ArrayList<Command> commandList = new ArrayList<Command>();
 	public static ArrayList<Task> task;
 	public static ArrayList<Task> searchedTasks = new ArrayList<Task>();
 	public static ArrayList<Task> completedTasks = new ArrayList<Task>();

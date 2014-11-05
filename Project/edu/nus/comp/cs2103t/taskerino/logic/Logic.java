@@ -236,6 +236,7 @@ public class Logic {
 		}
 		newCommand.setOldTaskList(oldTaskList);
 		newCommand.setCommand("clear");
+		Data.commandList.add(newCommand);
 		Data.clearTask();
 		return "Cleared all tasks";
 	}
