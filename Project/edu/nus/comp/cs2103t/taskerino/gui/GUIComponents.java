@@ -108,9 +108,17 @@ public class GUIComponents {
 	// variables for tags
 	private JPanel tagPanel;
 
-	private static String[] tagBoxItems = {"All", "Search", "Complete", "Incomplete"};
+	private static final String TAG_ALL = "all";
+	private static final int TAG_ALL_INDEX = 0;
+	private static final String TAG_SEARCH = "search";
+	private static final int TAG_SEARCH_INDEX = 1;
+	private static final String TAG_COMPLETE = "complete";
+	private static final int TAG_COMPLETE_INDEX = 2;
+	private static final String TAG_INCOMPLETE = "incomplete";
+	private static final int TAG_INCOMPLETE_INDEX = 3;
+	private static String[] tagBoxItems = {TAG_ALL, TAG_SEARCH, TAG_COMPLETE, TAG_INCOMPLETE};
 	private static String selectedItem;
-	private JComboBox<Object> tagBox;
+	private static JComboBox<Object> tagBox;
 	
 	// variable for user input
 	private JPanel inputPanel;
@@ -624,6 +632,24 @@ public class GUIComponents {
 
 	public static void setSelectedItem(String selectedItem) {
 		GUIComponents.selectedItem = selectedItem;
+		switch (selectedItem.toLowerCase()) {
+			case TAG_ALL:
+				tagBox.setSelectedIndex(TAG_ALL_INDEX);
+				break;
+			case TAG_SEARCH:
+				tagBox.setSelectedIndex(TAG_SEARCH_INDEX);
+				break;
+			case TAG_COMPLETE:
+				tagBox.setSelectedIndex(TAG_COMPLETE_INDEX);
+				break;
+			case TAG_INCOMPLETE:
+				tagBox.setSelectedIndex(TAG_INCOMPLETE_INDEX);
+				break;
+		}
+	}
+	
+	public static void setTagBoxItems(int itemIndex) {
+		tagBox.setSelectedIndex(itemIndex);
 	}
 	
 	
