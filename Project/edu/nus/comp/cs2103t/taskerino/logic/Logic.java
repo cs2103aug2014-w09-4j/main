@@ -321,7 +321,7 @@ public class Logic {
 		String feedback = " ";
 		if (Data.getDescription() != null) {
 			String tag = Data.getDescription().toLowerCase();
-			if (tag.equals("all") || tag.equals("search") || tag.equals("complete") || tag.equals("uncomplete")) {
+			if (tag.equals("all") || tag.equals("search") || tag.equals("completed") || tag.equals("uncompleted")) {
 				isTagValid = true;
 			} else {
 				isTagValid = false;
