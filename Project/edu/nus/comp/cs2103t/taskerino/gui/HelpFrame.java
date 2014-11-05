@@ -27,6 +27,7 @@
 package edu.nus.comp.cs2103t.taskerino.gui;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.KeyEventDispatcher;
@@ -58,8 +59,8 @@ public class HelpFrame {
 	private static final String APP_NAME = "Taskerino";
 
 	private final JFrame frame;
-	private static final int HELP_FRAME_WIDTH = 400;
-	private static final int HELP_FRAME_HEIGHT = 300;
+	private static final int HELP_FRAME_WIDTH = 600;
+	private static final int HELP_FRAME_HEIGHT = 500;
 
 	private String helpType;
 	private static final String HELP_ADD = "add";
@@ -73,6 +74,10 @@ public class HelpFrame {
 	private JLabel sessionTitle = new JLabel();
 	private JTextArea detailedDescription = new JTextArea();
 	private JButton exitButton = new JButton("Press any key to contunue.");
+	
+	private static final Font FONT_TITLE = new Font("SansSerif", Font.BOLD, 30);
+	private static final Font FONT_DESCRIPTION = new Font("SansSerif", Font.PLAIN, 16);
+	private static final Font FONT_BUTTON = new Font("SansSerif", Font.PLAIN, 14);
 
 
 	public HelpFrame(String helpType) {
@@ -171,7 +176,7 @@ public class HelpFrame {
 		gbc.gridwidth = 1;
 		gbc.gridheight = 5;
 		gbc.anchor = GridBagConstraints.CENTER;
-		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.fill = GridBagConstraints.BOTH;
 		contentPanel.add(detailedDescription, gbc);
 
 		//Add exitButton
@@ -244,8 +249,19 @@ public class HelpFrame {
 		setDetailedDescription(helpType);
 		setExitButton();
 		setPanelOverview();
+		setFont();
 
 		return contentPanel;
+	}
+
+
+	/**
+	 * Set Fond size and style for all sub-panel.
+	 */
+	private void setFont() {
+		sessionTitle.setFont(FONT_TITLE);
+		detailedDescription.setFont(FONT_DESCRIPTION);
+		exitButton.setFont(FONT_BUTTON);
 	}
 
 

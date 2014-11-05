@@ -100,7 +100,13 @@ public class GUIComponents {
 	private static Controller controller = Controller.getController();
 	private CommandHistory commandHistory = CommandHistory.getCommandHistory();
 
-	private static final Font font = new Font("SansSerif", Font.PLAIN, 20);
+	private static final Font FONT_CONTENT_TABLE_TITLE = new Font("SansSerif", Font.PLAIN, 15);
+	private static final Font FONT_CONTENT_TABLE = new Font("SansSerif", Font.PLAIN, 15);
+	private static final Font FONT_FEEDBACK = new Font("SansSerif", Font.PLAIN, 15);
+	private static final Font FONT_TAG_LABEL = new Font("SansSerif", Font.PLAIN, 15);
+	private static final Font FONT_TAG = new Font("SansSerif", Font.PLAIN, 15);
+	private static final Font FONT_INPUT_LABEL = new Font("SansSerif", Font.PLAIN, 15);
+	private static final Font FONT_INPUT_AREA = new Font("SansSerif", Font.PLAIN, 15);
 
 	// panel that combines all components
 	private JPanel contentPanel = new JPanel();
@@ -116,12 +122,14 @@ public class GUIComponents {
 	private static final int TAG_COMPLETE_INDEX = 2;
 	private static final String TAG_INCOMPLETE = "incomplete";
 	private static final int TAG_INCOMPLETE_INDEX = 3;
-	private static String[] tagBoxItems = {TAG_ALL, TAG_SEARCH, TAG_COMPLETE, TAG_INCOMPLETE};
+	private static final String[] tagBoxItems = {TAG_ALL, TAG_SEARCH, TAG_COMPLETE, TAG_INCOMPLETE};
 	private static String selectedItem;
+	private static JLabel tagLabel;
 	private static JComboBox<Object> tagBox;
 	
 	// variable for user input
 	private JPanel inputPanel;
+	private JLabel inputLabel;
 	private JTextField userInputArea = new JTextField();
 	
 	// variable for user output
@@ -141,11 +149,11 @@ public class GUIComponents {
 	private static final int ROW_MARGIN = 0;
 	
 	private static final Object[] columnNames = {"Index", "Task Name", "Start Date", "Due Date", "Status"};
-	private static final int COLUMN_ONE_SIZE = 50;
+	private static final int COLUMN_ONE_SIZE = 20;
 	private static final int COLUMN_TWO_SIZE = 450;
 	private static final int COLUMN_THREE_SIZE = 70;
 	private static final int COLUMN_FOUR_SIZE = 70;
-	private static final int COLUMN_FIVE_SIZE = 50;
+	private static final int COLUMN_FIVE_SIZE = 70;
 	
 	private DefaultTableModel dataModel;
 	private static final Color BASE_COLOR = Color.WHITE;
@@ -168,11 +176,12 @@ public class GUIComponents {
 		setUserTask();
 		setUserInput();
 		setUserFeedback();
+		setFont();
 		
 		setPanelOverview();
 	}
 
-	
+
 	/**
 	 * A menu which provides the ability to switch between different LAF's
 	 * and alternative ways of accessing certain functions.
@@ -206,6 +215,21 @@ public class GUIComponents {
 	
 	
 	/**
+	 * Set Fond size and style for all sub-panel.
+	 */
+	private void setFont() {
+		tagLabel.setFont(FONT_TAG_LABEL);
+		tagBox.setFont(FONT_TAG);
+		inputLabel.setFont(FONT_INPUT_LABEL);
+		userInputArea.setFont(FONT_INPUT_AREA);
+		
+		feedbackToUser.setFont(FONT_FEEDBACK);
+		userTaskTable.setFont(FONT_CONTENT_TABLE);
+		userTaskTable.getTableHeader().setFont(FONT_CONTENT_TABLE_TITLE);
+	}
+	
+	
+	/**
 	 * Set up content panel: <br>
 	 * 1. Set layout to GridBagLayout; <br>
 	 * 2. Specify dimension for each component; <br>
@@ -219,7 +243,6 @@ public class GUIComponents {
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		contentPanel.setFont(font);
 		contentPanel.setLayout(layout);
 		
 		//Add tagPanel
@@ -296,7 +319,7 @@ public class GUIComponents {
 		inputPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		
-		JLabel inputLabel = new JLabel("Input Area :");
+		inputLabel = new JLabel("Input Area :");
 		inputLabel.setDisplayedMnemonic(KeyEvent.VK_I);
 		inputLabel.setLabelFor(userInputArea);
 		
@@ -591,13 +614,13 @@ public class GUIComponents {
 		
 		tagBox = new JComboBox<Object>();
 		
-		JLabel label = new JLabel("Select Tags:");
-		label.setDisplayedMnemonic('S');
-		label.setLabelFor(tagBox);
+		tagLabel = new JLabel("Select Tags:");
+		tagLabel.setDisplayedMnemonic('S');
+		tagLabel.setLabelFor(tagBox);
 		
 		tagPanel = new JPanel();
 		tagPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
-		tagPanel.add(label);
+		tagPanel.add(tagLabel);
 		tagPanel.add(tagBox);
 		
 		LoggerFactory.logp(Level.CONFIG, className, methodName, "Select tag in the tagBox.");

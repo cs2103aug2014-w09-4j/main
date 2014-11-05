@@ -37,7 +37,7 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 public class GUIFrame extends JFrame {
 	private static final String APP_NAME = "Taskerino";
-	private static final int MAIN_FRAME_WIDTH = 900;
+	private static final int MAIN_FRAME_WIDTH = 1000;
 	private static final int MAIN_FRAME_HEIGHT = 650;
 	
 	public GUIFrame() {
