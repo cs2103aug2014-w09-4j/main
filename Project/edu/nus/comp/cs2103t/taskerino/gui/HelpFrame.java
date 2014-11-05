@@ -59,8 +59,8 @@ public class HelpFrame {
 	private static final String APP_NAME = "Taskerino";
 
 	private final JFrame frame;
-	private static final int HELP_FRAME_WIDTH = 600;
-	private static final int HELP_FRAME_HEIGHT = 500;
+	private static final int HELP_FRAME_WIDTH = 750;
+	private static final int HELP_FRAME_HEIGHT = 650;
 
 	private String helpType;
 	private static final String HELP_ADD = "add";

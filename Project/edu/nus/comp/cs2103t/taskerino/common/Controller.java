@@ -66,7 +66,7 @@ public class Controller {
 	private static final String TAG_ALL = "all";
 	private static final String TAG_SEARCH = "search";
 	private static final String TAG_COMPLETE = "complete";
-	private static final String TAG_INCOMPLETE = "incomplete";
+	private static final String TAG_UNCOMPLETE = "uncomplete";
 	
 	private static Controller singletonController;
 	private CommandHistory commandHistory;
@@ -275,9 +275,9 @@ public class Controller {
 			case TAG_COMPLETE:
 				logic.sortTasksByStatus();
 				return Data.completedTasks;
-			case TAG_INCOMPLETE:
+			case TAG_UNCOMPLETE:
 				logic.sortTasksByStatus();
-				return Data.incompletedTasks;
+				return Data.uncompletedTasks;
 			default:
 				return Data.task;
 		}

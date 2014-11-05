@@ -120,9 +120,9 @@ public class GUIComponents {
 	private static final int TAG_SEARCH_INDEX = 1;
 	private static final String TAG_COMPLETE = "complete";
 	private static final int TAG_COMPLETE_INDEX = 2;
-	private static final String TAG_INCOMPLETE = "incomplete";
-	private static final int TAG_INCOMPLETE_INDEX = 3;
-	private static final String[] tagBoxItems = {TAG_ALL, TAG_SEARCH, TAG_COMPLETE, TAG_INCOMPLETE};
+	private static final String TAG_UNCOMPLETE = "uncomplete";
+	private static final int TAG_UNCOMPLETE_INDEX = 3;
+	private static final String[] tagBoxItems = {TAG_ALL, TAG_SEARCH, TAG_COMPLETE, TAG_UNCOMPLETE};
 	private static String selectedItem;
 	private static JLabel tagLabel;
 	private static JComboBox<Object> tagBox;
@@ -669,8 +669,8 @@ public class GUIComponents {
 			case TAG_COMPLETE:
 				tagBox.setSelectedIndex(TAG_COMPLETE_INDEX);
 				break;
-			case TAG_INCOMPLETE:
-				tagBox.setSelectedIndex(TAG_INCOMPLETE_INDEX);
+			case TAG_UNCOMPLETE:
+				tagBox.setSelectedIndex(TAG_UNCOMPLETE_INDEX);
 				break;
 			default:
 			    assert false : selectedItem;

@@ -321,7 +321,7 @@ public class Logic {
 		String feedback = " ";
 		if (Data.getDescription() != null) {
 			String tag = Data.getDescription().toLowerCase();
-			if (tag.equals("all") || tag.equals("search") || tag.equals("complete") || tag.equals("incomplete")) {
+			if (tag.equals("all") || tag.equals("search") || tag.equals("complete") || tag.equals("uncomplete")) {
 				isTagValid = true;
 			} else {
 				isTagValid = false;
@@ -341,12 +341,12 @@ public class Logic {
 	 */
 	public void sortTasksByStatus() {
 		Data.completedTasks.clear();
-		Data.incompletedTasks.clear();
+		Data.uncompletedTasks.clear();
 		for (Task task: Data.task) {
 			if (task.getStatus().equalsIgnoreCase("completed")) {
 				Data.completedTasks.add(task);
 			} else {
-				Data.incompletedTasks.add(task);
+				Data.uncompletedTasks.add(task);
 			}
 		}
 	}

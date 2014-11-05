@@ -52,7 +52,7 @@ public class Data {
 	public static ArrayList<Task> task;
 	public static ArrayList<Task> searchedTasks = new ArrayList<Task>();
 	public static ArrayList<Task> completedTasks = new ArrayList<Task>();
-	public static ArrayList<Task> incompletedTasks = new ArrayList<Task>();
+	public static ArrayList<Task> uncompletedTasks = new ArrayList<Task>();
 		
 /*****************
      Getters 
