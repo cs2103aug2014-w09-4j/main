@@ -237,7 +237,7 @@ public class Controller {
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute goto command.");
 				outputFeedBack = logic.gotoTag();
 				if (logic.isTagValid()) {
-					GUIComponents.setSelectedItem(Data.getDescription());
+					GUIComponents.setSelectedItem(Data.getDescription().toLowerCase());
 				}
 				break;
 				

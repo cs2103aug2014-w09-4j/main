@@ -630,9 +630,13 @@ public class GUIComponents {
 		return selectedItem;
 	}
 
+	/**
+	 * Reset the seletectedItem and the tagBox in GUIComponents class.
+	 * @param selectedItem TagName
+	 */
 	public static void setSelectedItem(String selectedItem) {
 		GUIComponents.selectedItem = selectedItem;
-		switch (selectedItem.toLowerCase()) {
+		switch (selectedItem) {
 			case TAG_ALL:
 				tagBox.setSelectedIndex(TAG_ALL_INDEX);
 				break;
@@ -645,11 +649,9 @@ public class GUIComponents {
 			case TAG_INCOMPLETE:
 				tagBox.setSelectedIndex(TAG_INCOMPLETE_INDEX);
 				break;
+			default:
+			    assert false : selectedItem;
 		}
-	}
-	
-	public static void setTagBoxItems(int itemIndex) {
-		tagBox.setSelectedIndex(itemIndex);
 	}
 	
 	

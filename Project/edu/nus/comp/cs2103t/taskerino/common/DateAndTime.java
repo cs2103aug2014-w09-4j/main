@@ -121,7 +121,7 @@ public class DateAndTime implements Comparator<DateAndTime>, Comparable<DateAndT
 	public void setDay(int day) throws IllegalArgumentException {
 		boolean isValidInput = false;
 
-		switch (getMonth()) {
+		switch (this.getMonth()) {
 			case 1: case 3: case 5: case 7: case 8: case 10: case 12:
 				isValidInput = (day >= 1 && day <= 31);
 				break;
@@ -135,6 +135,8 @@ public class DateAndTime implements Comparator<DateAndTime>, Comparable<DateAndT
 				} else {
 					isValidInput = (day >= 1 && day <= 28);
 				}
+			default:
+			    assert false : "Month: " + this.getMonth() + " Day: " + day;
 		}
 
 		if (isValidInput) {

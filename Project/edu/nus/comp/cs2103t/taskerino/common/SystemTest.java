@@ -220,6 +220,9 @@ public class SystemTest {
 	 * @param expectedData String of Data's attributes.
 	 */
 	private void writeTestFile(String[] expectedData) {
+		// input String array should contain at least a command word
+		assert expectedData.length >= 1 : expectedData;
+		
 		PrintWriter printer = null;
 		try {
 			printer = new PrintWriter(new FileOutputStream(testingFile), true);
@@ -229,15 +232,21 @@ public class SystemTest {
 
 		switch (expectedData[0]) {
 			case "floating":
+				// String array length should be at least 3
+				assert expectedData.length >= 3 : expectedData;
 				printer.printf(FLOATING_TASK_FORMAT, expectedData[1], expectedData[2]);
 				printer.println("");
 				break;
 			case "deadline":
+				// String array length should be at least 6
+				assert expectedData.length >= 6 : expectedData;
 				printer.printf(DEADLINE_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3],
 						expectedData[4], expectedData[5]);
 				printer.println("");
 				break;
 			case "timed":
+				// String array length should be at least 9
+				assert expectedData.length >= 9 : expectedData;
 				printer.printf(TIMED_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3],
 						expectedData[4], expectedData[5], expectedData[6], expectedData[7], expectedData[8]);
 				printer.println("");
@@ -245,7 +254,10 @@ public class SystemTest {
 			case "empty":
 				printer.println(EMPTY_TASK_FORMAT);
 				break;
+			default :
+				assert false : expectedData[0];
 		}
+		
 		printer.close();
 	}
 

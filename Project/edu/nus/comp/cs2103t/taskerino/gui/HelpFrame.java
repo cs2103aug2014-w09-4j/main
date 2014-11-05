@@ -128,6 +128,8 @@ public class HelpFrame {
 				case HELP_GOTO:
 					setGotoHelpContent();
 					break;
+				default:
+					assert false : "HelpType: " + helpType;
 			}
 		}
 	}
