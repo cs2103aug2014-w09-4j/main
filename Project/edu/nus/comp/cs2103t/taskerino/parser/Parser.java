@@ -223,7 +223,7 @@ public class Parser {
 				
 				try {
 					int taskRowIndex = Integer.parseInt(task) - 1;
-					Data.setDescription(Data.task.get(taskRowIndex).getTaskName());
+					Data.setTaskIndexInList(taskRowIndex);
 				} catch (NumberFormatException e) {
 					// task name input command
 					Data.setDescription(task.trim());
