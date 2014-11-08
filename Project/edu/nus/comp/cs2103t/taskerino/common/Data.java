@@ -266,7 +266,7 @@ public class Data {
 	}
 	
 	/**
-	 * Searches for task and returns the specific task
+	 * Searches for task based on Description and returns the specific task
 	*/	
 	public static Task getTask(String description) {
 		int indexOfTask = searchTask(description);
@@ -274,6 +274,26 @@ public class Data {
 			return Data.task.get(indexOfTask);
 		}
 		return null;
+	}	
+	
+	/**
+	 * Searches for task based on Task Index and returns the specific task
+	*/	
+	public static Task getTask(int index) {
+		int indexOfTask = -1;
+		
+		for (int i=0; i<Data.task.size(); i++) {
+			if (Data.task.get(i).getTaskIndex() == index) {
+				indexOfTask = i;
+				break;
+			}
+		}
+		
+		if(indexOfTask != -1) {
+			return Data.task.get(indexOfTask);
+		} else {
+			return null;
+		}
 	}	
 
 }

@@ -114,8 +114,10 @@ public class Controller {
 		final String methodName = "Main";
 		Data.searchedTasks = new ArrayList<Task>();
 		Data.commandList = new ArrayList<Command>();
+		
 		try {
 			Data.task = Storage.loadTasksFromFile();
+			Task.currentIndex = (Data.task.isEmpty() ? 0 : Data.task.get(Data.task.size() - 1).getTaskIndex());
 		} catch (JsonSyntaxException | IOException e) {
 			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
 			e.printStackTrace();
