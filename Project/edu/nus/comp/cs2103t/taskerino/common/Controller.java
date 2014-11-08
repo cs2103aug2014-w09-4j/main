@@ -262,12 +262,12 @@ public class Controller {
 	
 	
 	/**
-	 * Get all user's tasks.
+	 * Get an ArrayList of tasks that user is currently accessing to.
 	 * 
 	 * @return ArrayList of Tasks
 	 */
 	public ArrayList<Task> getUserTasks() {
-		switch (GUIComponents.getSelectedItem().toLowerCase()) {
+		switch (GUIComponents.getSelectedTag().toLowerCase()) {
 			case TAG_ALL:
 				return Data.task;
 			case TAG_SEARCH:

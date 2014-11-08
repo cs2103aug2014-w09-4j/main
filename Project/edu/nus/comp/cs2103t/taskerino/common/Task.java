@@ -2,6 +2,7 @@
 package edu.nus.comp.cs2103t.taskerino.common;
 
 public class Task{
+	private int taskIndex;
 	private String taskName;
 	private DateAndTime startDate;
 	private DateAndTime dueDate;
@@ -80,6 +81,14 @@ public class Task{
 
 	public void setDueDate(DateAndTime date) {
 		this.dueDate = date;
+	}
+
+	public int getTaskIndex() {
+		return taskIndex;
+	}
+
+	public void setTaskIndex(int taskIndex) {
+		this.taskIndex = taskIndex;
 	}
 
 }

@@ -123,7 +123,7 @@ public class GUIComponents {
 	private static final String TAG_UNCOMPLETED = "uncompleted";
 	private static final int TAG_UNCOMPLETED_INDEX = 3;
 	private static final String[] tagBoxItems = {TAG_ALL, TAG_SEARCH, TAG_COMPLETED, TAG_UNCOMPLETED};
-	private static String selectedItem;
+	private static String selectedTag;
 	private static JLabel tagLabel;
 	private static JComboBox<Object> tagBox;
 	
@@ -649,8 +649,8 @@ public class GUIComponents {
 	}  
 
 	
-	public static String getSelectedItem() {
-		return selectedItem;
+	public static String getSelectedTag() {
+		return selectedTag;
 	}
 
 	/**
@@ -658,7 +658,7 @@ public class GUIComponents {
 	 * @param selectedItem TagName
 	 */
 	public static void setSelectedItem(String selectedItem) {
-		GUIComponents.selectedItem = selectedItem;
+		GUIComponents.selectedTag = selectedItem;
 		switch (selectedItem) {
 			case TAG_ALL:
 				tagBox.setSelectedIndex(TAG_ALL_INDEX);
