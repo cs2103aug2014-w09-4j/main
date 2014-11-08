@@ -39,7 +39,7 @@ import edu.nus.comp.cs2103t.taskerino.gui.GUIFrame;
 import edu.nus.comp.cs2103t.taskerino.gui.HelpFrame;
 import edu.nus.comp.cs2103t.taskerino.logic.Logic;
 import edu.nus.comp.cs2103t.taskerino.parser.Parser;
-import edu.nus.comp.cs2103t.taskerino.storage.Storage;
+import edu.nus.comp.cs2103t.taskerino.storage.TaskerinoIO;
 
 //@author A0113742N
 
@@ -116,7 +116,7 @@ public class Controller {
 		Data.commandList = new ArrayList<Command>();
 		
 		try {
-			Data.task = Storage.loadTasksFromFile();
+			Data.task = TaskerinoIO.loadTasksFromFile();
 			Task.currentIndex = (Data.task.isEmpty() ? 0 : Data.task.get(Data.task.size() - 1).getTaskIndex());
 		} catch (JsonSyntaxException | IOException e) {
 			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
@@ -196,25 +196,25 @@ public class Controller {
 			case COMMAND_ADD:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute add command.");
 				outputFeedBack = logic.addTask();
-				Storage.saveTasksIntoFile();
+				TaskerinoIO.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_DELETE:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute delete command.");
 				outputFeedBack = logic.deleteTask();
-				Storage.saveTasksIntoFile();
+				TaskerinoIO.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_CHANGE:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute change command.");
 				outputFeedBack = logic.changeTask();
-				Storage.saveTasksIntoFile();
+				TaskerinoIO.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_COMPLETE:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute complete command.");
 				outputFeedBack = logic.completeTask();
-				Storage.saveTasksIntoFile();
+				TaskerinoIO.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_SEARCH:
@@ -226,13 +226,13 @@ public class Controller {
 			case COMMAND_CLEAR:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute clear command.");
 				outputFeedBack = logic.clearTask();
-				Storage.saveTasksIntoFile();
+				TaskerinoIO.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_UNDO:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute undo command.");
 				outputFeedBack = logic.undoTask();
-				Storage.saveTasksIntoFile();
+				TaskerinoIO.saveTasksIntoFile();
 				break;
 				
 			case COMMAND_GOTO:

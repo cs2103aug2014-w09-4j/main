@@ -29,7 +29,7 @@ import com.google.gson.reflect.TypeToken;
 import edu.nus.comp.cs2103t.taskerino.common.*;
 
 
-public class Storage {
+public class TaskerinoIO {
 	/**
 	 * Use Gson library and BufferedReader to load content in local file into temporary arraylist of task objects
 	*/
