@@ -223,7 +223,7 @@ public class Parser {
 				
 				try {
 					int taskRowIndex = Integer.parseInt(task) - 1;
-					Data.setDescription(Controller.getUserTasks().get(taskRowIndex).getTaskName());
+					Data.setDescription(Data.task.get(taskRowIndex).getTaskName());
 				} catch (NumberFormatException e) {
 					// task name input command
 					Data.setDescription(task.trim());
@@ -265,7 +265,7 @@ public class Parser {
 				
 				try {
 					int taskRowIndex = Integer.parseInt(task) - 1;
-					Data.setDescription(Controller.getUserTasks().get(taskRowIndex).getTaskName());
+					Data.setDescription(Data.task.get(taskRowIndex).getTaskName());
 				} catch (NumberFormatException e) {
 					// task name input command
 					Data.setDescription(task.trim());
