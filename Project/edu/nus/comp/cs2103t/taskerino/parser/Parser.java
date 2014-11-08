@@ -303,7 +303,7 @@ public class Parser {
 				try {
 					// task index input command
 					int index = Integer.parseInt(old) - 1;
-					Data.setTaskIndexInList(index);
+					Data.setDescription(Data.task.get(Data.getTaskIndexInList()).getTaskName());
 				} catch (NumberFormatException e) {
 					// task name input command
 					Data.setDescription(old.trim());
@@ -413,7 +413,7 @@ public class Parser {
 				try {
 					// task index input command
 					int index = Integer.parseInt(task) - 1;
-					Data.setTaskIndexInList(index);
+					Data.setDescription(Data.task.get(Data.getTaskIndexInList()).getTaskName());
 				} catch (NumberFormatException e) {
 					// task name input command
 					Data.setDescription(task.trim());
@@ -440,7 +440,7 @@ public class Parser {
 				try {
 					// task index input command
 					int index = Integer.parseInt(task) - 1;
-					Data.setTaskIndexInList(index);
+					Data.setDescription(Data.task.get(Data.getTaskIndexInList()).getTaskName());
 				} catch (NumberFormatException e) {
 					// task name input command
 					Data.setDescription(task.trim());
@@ -467,7 +467,7 @@ public class Parser {
 				try {
 					// task index input command
 					int index = Integer.parseInt(task) - 1;
-					Data.setTaskIndexInList(index);
+					Data.setDescription(Data.task.get(Data.getTaskIndexInList()).getTaskName());
 				} catch (NumberFormatException e) {
 					// task name input command
 					Data.setDescription(task.trim());
@@ -494,7 +494,7 @@ public class Parser {
 				try {
 					// task index input command
 					int index = Integer.parseInt(task) - 1;
-					Data.setTaskIndexInList(index);
+					Data.setDescription(Data.task.get(Data.getTaskIndexInList()).getTaskName());
 				} catch (NumberFormatException e) {
 					// task name input command
 					Data.setDescription(task.trim());
