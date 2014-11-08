@@ -1,3 +1,4 @@
+//@author A0110594L
 package edu.nus.comp.cs2103t.taskerino.parser;
 
 import static org.junit.Assert.*;
@@ -5,8 +6,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import edu.nus.comp.cs2103t.taskerino.common.Data;
-
-//@author A0110594L
 
 public class ParserTest {
 

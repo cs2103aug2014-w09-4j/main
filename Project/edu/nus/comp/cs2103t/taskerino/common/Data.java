@@ -124,6 +124,10 @@ public class Data {
 		return byYear;
 	}
 	
+	public static int getTaskIndexInList(){
+		return taskIndexInList;
+	}
+	
 /*****************
       Setters 
 ******************/	
@@ -190,6 +194,10 @@ public class Data {
 
 	public static void setByYear(int newByYear){
 		byYear = newByYear;
+	}
+	
+	public static void setTaskIndexInList(int newTaskIndexInList){
+		taskIndexInList = newTaskIndexInList;
 	}
 	
 /*****************
