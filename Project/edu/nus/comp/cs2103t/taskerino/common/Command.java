@@ -9,14 +9,15 @@ import java.util.ArrayList;
  */
 public class Command {
 	
-	private static String commandType;
-	private static int indexOfTaskModified;
-	private static DateAndTime dueDate;
-	private static DateAndTime startDate;
-	private static Task taskModified;
-	private static String nameOfTaskModified;
-	private static boolean statusOfTask;
-	private static ArrayList<Task> oldTaskList;
+	private String commandType;
+	private int indexOfTaskModified;
+	private DateAndTime dueDate;
+	private DateAndTime startDate;
+	private Task taskModified;
+	private String nameOfTaskModified;
+	private boolean statusOfTask;
+	private String typeOfTaskModified;
+	private ArrayList<Task> oldTaskList;
 	
 	public Command() {
 	}
@@ -82,5 +83,13 @@ public class Command {
 	
 	public void setOldTaskList(ArrayList<Task> taskList) {
 		oldTaskList = taskList;
+	}
+
+	public String getTypeOfTaskModified() {
+		return typeOfTaskModified;
+	}
+
+	public void setTypeOfTaskModified(String typeOfTaskModified) {
+		this.typeOfTaskModified = typeOfTaskModified;
 	}
 }

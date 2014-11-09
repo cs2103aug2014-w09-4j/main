@@ -40,13 +40,17 @@ public class Logic {
 			newCommand.setNameOfTaskModified(modifiedTask.getTaskName());
 			newCommand.setStatusOfTask(modifiedTask.getStatus());
 			newCommand.setIndexOfTaskModified(Data.task.indexOf(modifiedTask));
-			Data.commandList.add(newCommand);
+			newCommand.setTypeOfTaskModified(modifiedTask.getTaskType());
 
+			String feedback = "";
+			boolean isChangeSuccess = false;
+			
 			//changing of task details
 			if(type.equals("taskName")) {
 				Data.setDescription(modifiedTask.getTaskName());
 				Data.updateTask(modifiedTask, Data.getNewDescription());
-				return "Update task successfully from " + Data.getDescription() + " to " + Data.getNewDescription();
+				isChangeSuccess = true;
+				feedback = "Update task successfully from " + Data.getDescription() + " to " + Data.getNewDescription();
 			} else if(type.equals("startTime")) {
 				int day = Data.getFromDay();
 				int month = Data.getFromMonth();
@@ -55,10 +59,18 @@ public class Logic {
 
 				if (modifiedTask.getDueDate() == null ||
 						isValidDate(newStartDate, modifiedTask.getDueDate())) {
-					modifiedTask.setStartDate(newStartDate);
-					return "Updated start date successfully to " + day + "/" + month + "/" + year;
+					
+					if (modifiedTask.getDueDate() == null) {
+						feedback = "Can not modify starting time for a floating task!";
+					} else {
+						modifiedTask.setTaskType("timed");
+						modifiedTask.setStartDate(newStartDate);
+						isChangeSuccess = true;
+						feedback = "Updated start date successfully to " + day + "/" + month + "/" + year;
+					}
+					
 				} else {
-					return "Start date cannot be later than the due date!";
+					feedback = "Start date cannot be later than the due date!";
 				} 
 			} else if(type.equals("endTime")) {
 				int day = Data.getToDay();
@@ -68,15 +80,27 @@ public class Logic {
 
 				if (modifiedTask.getStartDate() == null || 
 						isValidDate(modifiedTask.getStartDate(), newEndDate)) {
+					
+					if (modifiedTask.getStartDate() == null) {
+						modifiedTask.setTaskType("deadline");
+					} else {
+						modifiedTask.setTaskType("timed");
+					}
+					
 					modifiedTask.setDueDate(newEndDate);
-					return "Updated due date successfully to " + day + "/" + month + "/" + year;
+					isChangeSuccess = true;
+					feedback = "Updated due date successfully to " + day + "/" + month + "/" + year;
 				} else {
-					return "Due date cannot be earlier than the start date!";
+					feedback = "Due date cannot be earlier than the start date!";
 				}
 			} else {
-				return "User command not recognized, please try again!";
+				feedback = "User command not recognized, please try again!";
 			}
 
+			if (isChangeSuccess) {
+				Data.commandList.add(newCommand);
+			}
+			return feedback;
 		} catch (Exception e) {
 			return "User command not recognized, please try again!";
 		}
@@ -266,6 +290,7 @@ public class Logic {
 				oldTask.setDueDate(commandToUndo.getDueDate());
 				oldTask.setStartDate(commandToUndo.getStartDate());
 				oldTask.setStatus(commandToUndo.getStatusOfTask());
+				oldTask.setTaskType(commandToUndo.getTypeOfTaskModified());
 				Data.task.remove(commandToUndo.getIndexOfTaskModified());
 				Data.task.add(commandToUndo.getIndexOfTaskModified(), oldTask);
 				Data.commandList.remove(indexOfCommandToUndo);
