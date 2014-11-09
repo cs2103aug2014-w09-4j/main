@@ -665,7 +665,7 @@ public class GUIComponents {
 	 * @param selectedItem TagName
 	 */
 	public static void setSelectedItem(String selectedItem) {
-		GUIComponents.selectedTag = selectedItem;
+		GUIComponents.selectedTag = selectedItem.toLowerCase();
 		switch (selectedItem) {
 			case TAG_ALL:
 				tagBox.setSelectedIndex(TAG_ALL_INDEX);

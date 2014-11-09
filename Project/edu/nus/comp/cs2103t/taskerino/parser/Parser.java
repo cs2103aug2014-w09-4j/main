@@ -4,7 +4,6 @@ package edu.nus.comp.cs2103t.taskerino.parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import edu.nus.comp.cs2103t.taskerino.common.Controller;
 import edu.nus.comp.cs2103t.taskerino.common.Data;
 
 /**
@@ -14,7 +13,6 @@ import edu.nus.comp.cs2103t.taskerino.common.Data;
 */
 
 public class Parser {
-	private static Controller controller = Controller.getController();
 	/**
 	
 		Method parse a raw user input that is of type String
@@ -330,10 +328,9 @@ public class Parser {
 			m = r.matcher(raw);
 
 			if (m.find()) {
-
-				String start_date = m.group(2);
-
-				String end_date = m.group(3);
+				// to support search by date which didn't implement by logic
+				//String start_date = m.group(2);
+				//String end_date = m.group(3);
 
 				return;
 			}
@@ -360,8 +357,6 @@ public class Parser {
 		// delete + complete
 		
 		if (command.equals("delete")){
-			
-			
 			pattern = "(delete) start date from~ (.*)";
 
 			r = Pattern.compile(pattern);
@@ -372,8 +367,15 @@ public class Parser {
 
 			if (m.find()) {
 
-				String task = m.group(2);
-
+				try {
+					// task index input command
+					int index = Integer.parseInt(m.group(2)) - 1;
+					Data.setTaskIndexInList(index);
+				} catch (NumberFormatException e) {
+					// task name input command
+					Data.setDescription(m.group(2).trim());
+				}
+				
 				Data.setDeleteType("start");
 				
 				return;
@@ -389,8 +391,15 @@ public class Parser {
 
 			if (m.find()) {
 
-				String task = m.group(2);
-
+				try {
+					// task index input command
+					int index = Integer.parseInt(m.group(2)) - 1;
+					Data.setTaskIndexInList(index);
+				} catch (NumberFormatException e) {
+					// task name input command
+					Data.setDescription(m.group(2).trim());
+				}
+				
 				Data.setDeleteType("end");
 
 				return;

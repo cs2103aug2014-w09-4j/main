@@ -21,7 +21,8 @@ import java.util.ArrayList;
 public class LogicTest {
 
 	@Test
-	public void addFunction() throws FileNotFoundException, UnsupportedEncodingException{
+	public void addFunction() {
+		Data.resetAll();
 		Data.setAddType("floating");
 		Data.setDescription("do tutorial");
 		Data.task = new ArrayList<Task>();
@@ -39,7 +40,8 @@ public class LogicTest {
 		Data.commandList = new ArrayList<Command>();
 		logic.addTask();
 		assertEquals("Delete task do tutorial successfully", logic.deleteTask());
-		assertEquals("Task with name: do tutorial not found!", logic.deleteTask());
+		Data.resetAll();
+		assertEquals("Task not found!", logic.deleteTask());
 	}
 	
 	@Test
@@ -53,11 +55,14 @@ public class LogicTest {
 		Data.setNewDescription("no help");
 		Data.setChangeType("taskName");
 		assertEquals("Update task successfully from help to no help", logic.changeTask());
-		assertEquals("Task with name: help not found!", logic.changeTask());
+		Data.resetAll();
+		Data.setDescription("help");
+		Data.setChangeType("taskName");
+		assertEquals("Task not found!", logic.changeTask());
 	}
 	
 	@Test
-	public void searchFunction() throws FileNotFoundException, UnsupportedEncodingException{
+	public void searchFunction() {
 		Logic logic = new Logic();
 		Data.setDescription("an apple");
 		Data.setAddType("floating");
@@ -65,10 +70,9 @@ public class LogicTest {
 		Data.commandList = new ArrayList<Command>();
 		Data.searchedTasks = new ArrayList<Task>();
 		logic.addTask();
-		Data.setDescription("apple");
+		Data.setSearchedKeyWord("apple");
 		assertEquals("1 task found with given description. ", logic.searchTask());
-		Data.setDescription("pear");
-		assertEquals("Task with name: pear not found!", logic.searchTask());
-		
+		Data.setSearchedKeyWord("pear");
+		assertEquals("No search results found.", logic.searchTask());
 	}
 }

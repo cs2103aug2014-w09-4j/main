@@ -44,8 +44,9 @@ public class Logic {
 
 			//changing of task details
 			if(type.equals("taskName")) {
+				Data.setDescription(modifiedTask.getTaskName());
 				Data.updateTask(modifiedTask, Data.getNewDescription());
-				return "Update task successfully from " + modifiedTask.getTaskName() + " to " + Data.getNewDescription();
+				return "Update task successfully from " + Data.getDescription() + " to " + Data.getNewDescription();
 			} else if(type.equals("startTime")) {
 				int day = Data.getFromDay();
 				int month = Data.getFromMonth();
@@ -89,7 +90,6 @@ public class Logic {
 		try {
 			Task modifiedTask = getModifiedTask();
 			if (modifiedTask == null) {
-				System.out.println("null task");
 				return "Task not found!";
 			}
 
@@ -384,10 +384,18 @@ public class Logic {
 	 * @return Task or null if not found
 	 */	
 	private Task getTask(int index) {
-		if (index < 0 && index >= controller.getUserTasks().size()) {
+		ArrayList<Task> targetList;
+		try {
+			targetList = controller.getUserTasks();
+		} catch (NullPointerException e) {
+			// only occur when doing unit testing as GUIComponents is not initialized
+			targetList = Data.task;
+		}
+		
+		if (index < 0 || index >= targetList.size()) {
 			return null;
 		} else {
-			return controller.getUserTasks().get(index);
+			return targetList.get(index);
 		}
 	}	
 

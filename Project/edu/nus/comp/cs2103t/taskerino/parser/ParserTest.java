@@ -11,12 +11,9 @@ public class ParserTest {
 
 	@Test
 	public void testAdd() {
-		
-		Data data = new Data();
-		
 		Parser parser = new Parser();
 		
-		data.setInput("add do tutorial");
+		Data.setInput("add do tutorial");
 				
 		parser.parse();
 		
@@ -28,12 +25,9 @@ public class ParserTest {
 	
 	@Test
 	public void testDelete() {
-		
-		Data data = new Data();
-		
 		Parser parser = new Parser();
 		
-		data.setInput("delete do tutorial");
+		Data.setInput("delete do tutorial");
 				
 		parser.parse();
 		
@@ -45,12 +39,9 @@ public class ParserTest {
 	
 	@Test
 	public void testChange() {
-		
-		Data data = new Data();
-		
 		Parser parser = new Parser();
 		
-		data.setInput("change do tutorial to study for exams");
+		Data.setInput("change do tutorial to~ study for exams");
 				
 		parser.parse();
 		

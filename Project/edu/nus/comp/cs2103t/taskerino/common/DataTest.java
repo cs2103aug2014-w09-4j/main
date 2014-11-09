@@ -3,8 +3,6 @@ package edu.nus.comp.cs2103t.taskerino.common;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -49,7 +47,6 @@ public class DataTest {
 
 	@Test
 	public void testGetTask() {
-		new Data();
 		Data.task = new ArrayList<Task>();
 		Task testTask = new Task();
 		Task modifiedTask = new Task();
@@ -57,8 +54,7 @@ public class DataTest {
 		modifiedTask.setTaskName("modifiedTask");
 		Data.addTask(testTask);
 		Data.addTask(modifiedTask);
-		Task hi = Data.getTask("modifiedTask");
-		assertEquals(modifiedTask, hi);
+		assertEquals(modifiedTask, Data.getTask("modifiedTask"));
 	}
 
 }

@@ -272,8 +272,16 @@ public class Data {
 	*/
 	private static int searchTask(String description) {
 		int indexOfTask = -1;
-		for(int i = 0; i < controller.getUserTasks().size(); i++) {
-			if(controller.getUserTasks().get(i).getTaskName().equals(description)) {
+		ArrayList<Task> targetList;
+		try {
+			targetList = controller.getUserTasks();
+		} catch (NullPointerException e) {
+			// only occur when doing unit testing as GUIComponents is not initialized
+			targetList = Data.task;
+		}
+		
+		for(int i = 0; i < targetList.size(); i++) {
+			if(targetList.get(i).getTaskName().equals(description)) {
 				indexOfTask = i;
 			}
 		}
@@ -287,7 +295,16 @@ public class Data {
 		int indexOfTask = searchTask(description);
 		if(indexOfTask != -1) {
 			taskIndexInList = indexOfTask;
-			return controller.getUserTasks().get(indexOfTask);
+			
+			ArrayList<Task> targetList;
+			try {
+				targetList = controller.getUserTasks();
+			} catch (NullPointerException e) {
+				// only occur when doing unit testing as GUIComponents is not initialized
+				targetList = Data.task;
+			}
+			
+			return targetList.get(indexOfTask);
 		}
 		return null;
 	}	

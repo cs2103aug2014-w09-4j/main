@@ -60,7 +60,7 @@ public class Task{
 		this.tag = tag;
 	}
 	
-	private String getTaskType() {
+	public String getTaskType() {
 		return this.taskType;
 	}
 	
