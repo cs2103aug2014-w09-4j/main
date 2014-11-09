@@ -25,7 +25,7 @@ public class Assist {
 	
 	private static final String TITLE_HELP_GOTO = "HELP GOTO";
 	
-	private static final String MESSAGE_GENERALHELP = "For more information on a specific command, type \"help command-name\" \n\n\n"
+	private static final String MESSAGE_GENERALHELP = "\nFor more information on a specific command, type \"help command-name\" \n\n\n"
 													+ "1. add - Adds a task to the task list. Supports floating, deadline and timed tasks \n\n"
 													+ "2. delete - Removes a task from the task list. \n\n"
 													+ "3. change - Changes the details of the task. \n\n"
@@ -33,7 +33,7 @@ public class Assist {
 													+ "5. search - Searches based on user input displays relevant tasks. \n\n"
 													+ "6. undo - Undo the latest change made to the task list. \n\n"
 													+ "7. goto - Switches display to the list of tasks with specified tag. \n";
-	private static final String MESSAGE_HELP_ADD = "Adds tasks to the task list." + "\n\n"
+	private static final String MESSAGE_HELP_ADD = "\nAdds tasks to the task list." + "\n\n"
 												+ "Any additions are immediately saved into local file \"Tasks.txt\"." + "\n\n"
 												+ "1. To add a FLOATING task:" + "\n"
 												+ ">> add <TASK NAME>" + "\n\n"
@@ -41,7 +41,7 @@ public class Assist {
 												+ ">> add <TASK NAME> by~ <DATE>" + "\n\n"
 												+ "3. To add a TIMED task:" + "\n"
 												+ ">> add <TASK NAME> from~ <START DATE> to~ <DUE DATE>";
-	private static final String MESSAGE_HELP_DELETE = "Deletes: \n"
+	private static final String MESSAGE_HELP_DELETE = "\nDeletes: \n"
 													+ "a. Task from task list \n"
 													+ "b. Start/Due date from specific task \n\n"
 													+ "Any changes are immediately saved into local file \"Tasks.txt\".\n\n"
@@ -55,7 +55,7 @@ public class Assist {
 													+ ">> delete start date from~ <TASK INDEX> \n\n"
 													+ "2. To delete DUE DATE of a task \n"
 													+ ">>delete due date from~ <TASK INDEX> \n\n";
-	private static final String MESSAGE_HELP_CHANGE = "Changes details of tasks. \n\n"
+	private static final String MESSAGE_HELP_CHANGE = "\nChanges details of tasks. \n\n"
 													+ "Possible changes are: TASK NAME, START DATE and DUE DATE \n\n"
 													+ "Any changes are immediately saved into local file \"Tasks.txt\". \n\n"
 													+ "1. change TASK NAME of existing task \n"
@@ -64,18 +64,18 @@ public class Assist {
 													+ ">> change start date to~ <NEW DATE> from~ <TASK INDEX> \n\n"
 													+ "3. change DUE DATE of existing task \n"
 													+ ">> change due date to~ <NEW DATE> from~ <TASK INDEX> \n\n";
-	private static final String MESSAGE_HELP_COMPLETE = "Marks a task as complete. \n\n" 
+	private static final String MESSAGE_HELP_COMPLETE = "\nMarks a task as complete. \n\n" 
 													+ "Any changes are immediately saved into local file \"Tasks.txt\". \n\n"
 													+ "1. mark a task as completed using TASK NAME \n"
 													+ ">> complete <TASK NAME> \n\n"
 													+ "2. mark a task as completed using TASK INDEX \n"
 													+ ">> complete <TASK INDEX> \n\n";
-	private static final String MESSAGE_HELP_SEARCH = "Searches for tasks that matches criteria and displays them. \n\n"
+	private static final String MESSAGE_HELP_SEARCH = "\nSearches for tasks that matches criteria and displays them. \n\n"
 													+ "1. searching for tasks containing a certain keyword \n"
 													+ ">> search <KEYWORD> \n\n"
 													+ "2. searching for tasks within a specific range of dates \n"
 													+ ">> search from~ <START DATE> to~ <DUE DATE> \n\n";
-	private static final String MESSAGE_HELP_GOTO = "Changes tasks displayed to those with the specified attached tag. \n\n"
+	private static final String MESSAGE_HELP_GOTO = "\nChanges tasks displayed to those with the specified attached tag. \n\n"
 													+ "1. change tag to \"all\". \n"
 													+ ">> goto all \n\n"
 													+ "2. change tag to \"search\". \n"
