@@ -1,29 +1,4 @@
-/**
-// code is far away from bug with Buddha protection
-//
-//
-//                       _oo0oo_
-//                      o8888888o
-//                      88" . "88
-//                      (| -_- |) 
-//                      0\  =  /0
-//                    ___/`---'\___
-//                  .' \\|     |// '.
-//                 / \\|||  :  |||// \
-//                / _||||| -:- |||||- \
-//               |   | \\\  -  /// |   |
-//               | \_|  ''\---/''  |_/ |
-//               \  .-\__  '-'  ___/-. /
-//             ___'. .'  /--.--\  `. .'___
-//          ."" '<  `.___\_<|>_/___.' >' "".
-//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-//         \  \ `_.   \_ __\ /__ _/   .-` /  /
-//     =====`-.____`.___ \_____/___.-`___.-'=====
-//                       `=---='
-//
-//
-//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
+//@author A0113742N
 package edu.nus.comp.cs2103t.taskerino.common;
 
 import static org.junit.Assert.assertEquals;
@@ -39,8 +14,6 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import org.junit.Test;
-
-//@author A0113742N
 
 /**
  * System testing for all components except classes in GUI package.

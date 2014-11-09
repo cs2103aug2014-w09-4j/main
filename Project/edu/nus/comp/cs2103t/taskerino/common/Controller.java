@@ -1,29 +1,4 @@
-/**
-// code is far away from bug with Buddha protection
-//
-//
-//                       _oo0oo_
-//                      o8888888o
-//                      88" . "88
-//                      (| -_- |)
-//                      0\  =  /0
-//                    ___/`---'\___
-//                  .' \\|     |// '.
-//                 / \\|||  :  |||// \
-//                / _||||| -:- |||||- \
-//               |   | \\\  -  /// |   |
-//               | \_|  ''\---/''  |_/ |
-//               \  .-\__  '-'  ___/-. /
-//             ___'. .'  /--.--\  `. .'___
-//          ."" '<  `.___\_<|>_/___.' >' "".
-//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-//         \  \ `_.   \_ __\ /__ _/   .-` /  /
-//     =====`-.____`.___ \_____/___.-`___.-'=====
-//                       `=---='
-//
-//
-//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
+//@author A0113742N
 package edu.nus.comp.cs2103t.taskerino.common;
 
 import java.io.FileNotFoundException;
@@ -40,8 +15,6 @@ import edu.nus.comp.cs2103t.taskerino.gui.HelpFrame;
 import edu.nus.comp.cs2103t.taskerino.logic.Logic;
 import edu.nus.comp.cs2103t.taskerino.parser.Parser;
 import edu.nus.comp.cs2103t.taskerino.storage.TaskerinoIO;
-
-//@author A0113742N
 
 /**
  * Main class that initialize and controls the program Taskerino

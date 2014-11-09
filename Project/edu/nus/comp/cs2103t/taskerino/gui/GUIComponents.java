@@ -1,31 +1,5 @@
+//@author A0113742N
 package edu.nus.comp.cs2103t.taskerino.gui;
-/**
-// code is far away from bug with Buddha protection
-//
-//
-//                       _oo0oo_
-//                      o8888888o
-//                      88" . "88
-//                      (| -_- |)
-//                      0\  =  /0
-//                    ___/`---'\___
-//                  .' \\|     |// '.
-//                 / \\|||  :  |||// \
-//                / _||||| -:- |||||- \
-//               |   | \\\  -  /// |   |
-//               | \_|  ''\---/''  |_/ |
-//               \  .-\__  '-'  ___/-. /
-//             ___'. .'  /--.--\  `. .'___
-//          ."" '<  `.___\_<|>_/___.' >' "".
-//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-//         \  \ `_.   \_ __\ /__ _/   .-` /  /
-//     =====`-.____`.___ \_____/___.-`___.-'=====
-//                       `=---='
-//
-//
-//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
-
 
 import java.awt.Color;
 import java.awt.Component;
@@ -72,8 +46,6 @@ import edu.nus.comp.cs2103t.taskerino.common.CommandHistory;
 import edu.nus.comp.cs2103t.taskerino.common.Controller;
 import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
 import edu.nus.comp.cs2103t.taskerino.common.Task;
-
-//@author A0113742N
 
 /**
  * This class specifies dimensions and other details for each component in GUI. <br>

@@ -1,29 +1,4 @@
-/**
-// code is far away from bug with Buddha protection
-//
-//
-//                       _oo0oo_
-//                      o8888888o
-//                      88" . "88
-//                      (| -_- |)
-//                      0\  =  /0
-//                    ___/`---'\___
-//                  .' \\|     |// '.
-//                 / \\|||  :  |||// \
-//                / _||||| -:- |||||- \
-//               |   | \\\  -  /// |   |
-//               | \_|  ''\---/''  |_/ |
-//               \  .-\__  '-'  ___/-. /
-//             ___'. .'  /--.--\  `. .'___
-//          ."" '<  `.___\_<|>_/___.' >' "".
-//         | | :  `- \`.;`\ _ /`;.`/ - ` : | |
-//         \  \ `_.   \_ __\ /__ _/   .-` /  /
-//     =====`-.____`.___ \_____/___.-`___.-'=====
-//                       `=---='
-//
-//
-//     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- */
+//@author A0113742N
 package edu.nus.comp.cs2103t.taskerino.gui;
 
 import java.awt.Component;
@@ -46,8 +21,6 @@ import javax.swing.JTextArea;
 
 import edu.nus.comp.cs2103t.taskerino.common.Assist;
 import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
-
-//@author A0113742N
 
 /**
  * This class pop up a new JFrame which displays the a list of instructions

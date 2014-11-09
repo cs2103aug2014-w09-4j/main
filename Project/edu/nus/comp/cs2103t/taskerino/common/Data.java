@@ -1,8 +1,8 @@
+//@author A0110574N
+
 /** 
  *---------------------------------------------------------------------------------- DATA CLASS ----------------------------------------------------------------------------------
  *
- * @author A0110574N
- * 
  * This class handles any manipulation to the temporary list of task object.
  * 
  * Functions included within this class:
