@@ -12,7 +12,7 @@ import org.junit.Test;
 public class DataTest {
 
 	@Test
-	public void testAddTask() throws FileNotFoundException, UnsupportedEncodingException {
+	public void testAddTask() {
 		Task testTask = new Task();
 		testTask.setTaskName("test");
 		ArrayList<Task> test = new ArrayList<Task>();
@@ -23,18 +23,18 @@ public class DataTest {
 	}
 
 	@Test
-	public void testRemoveTask() throws FileNotFoundException, UnsupportedEncodingException {
+	public void testRemoveTask() {
 		Task testTask = new Task();
 		testTask.setTaskName("test");
 		ArrayList<Task> test = new ArrayList<Task>();
 		Data.task = new ArrayList<Task>();
 		Data.addTask(testTask);
-		Data.removeTask("test");
+		Data.removeTask(testTask);
 		assertEquals(test, Data.task);
 	}
 
 	@Test
-	public void testUpdateTask() throws FileNotFoundException, UnsupportedEncodingException {
+	public void testUpdateTask() {
 		Task testTask = new Task();
 		Task modifiedTask = new Task();
 		testTask.setTaskName("test");
@@ -43,12 +43,13 @@ public class DataTest {
 		test.add(modifiedTask);
 		Data.task = new ArrayList<Task>();
 		Data.addTask(testTask);
-		Data.updateTask("test", "modifiedTask");
+		Data.updateTask(testTask, "modifiedTask");
 		assertEquals(test.get(0).getTaskName(), Data.task.get(0).getTaskName());
 	}
 
 	@Test
-	public void testGetTask() throws FileNotFoundException, UnsupportedEncodingException {
+	public void testGetTask() {
+		new Data();
 		Data.task = new ArrayList<Task>();
 		Task testTask = new Task();
 		Task modifiedTask = new Task();
@@ -56,7 +57,8 @@ public class DataTest {
 		modifiedTask.setTaskName("modifiedTask");
 		Data.addTask(testTask);
 		Data.addTask(modifiedTask);
-		assertEquals(modifiedTask, Data.getTask("modifiedTask"));
+		Task hi = Data.getTask("modifiedTask");
+		assertEquals(modifiedTask, hi);
 	}
 
 }

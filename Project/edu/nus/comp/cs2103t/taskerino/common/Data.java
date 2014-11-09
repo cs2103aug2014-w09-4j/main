@@ -17,12 +17,11 @@
 **/
 package edu.nus.comp.cs2103t.taskerino.common;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 public class Data {
-
+	private static Controller controller = Controller.getController();
+	
 /*****************
  Static Variables 
 ******************/
@@ -31,6 +30,7 @@ public class Data {
 	
 	private static String description;	
 	private static String newDescription;
+	private static String searchedKeyWord;
 	
 	public static String addType;	
 	public static String changeType;	
@@ -74,6 +74,10 @@ public class Data {
 	
 	public static String getNewDescription(){
 		return newDescription;
+	}
+	
+	public static String getSearchedKeyWord(){
+		return searchedKeyWord;
 	}
 	
 	public static String getAddType(){
@@ -147,7 +151,11 @@ public class Data {
 	public static void setNewDescription(String newNewDescription){
 		newDescription = newNewDescription;
 	}
-
+	
+	public static void setSearchedKeyWord(String newSearchedKeyWord){
+		searchedKeyWord = newSearchedKeyWord;
+	}
+	
 	public static void setAddType(String newAddType){
 		addType = newAddType;
 	}
@@ -232,32 +240,29 @@ public class Data {
 	/**
 	 * Adds task into the temporary arraylist
 	 */
-	public static void addTask(Task newTask) throws FileNotFoundException, UnsupportedEncodingException {
+	public static void addTask(Task newTask) {
 		Data.task.add(newTask);
 	}
 	
 	/**
 	 * Searches for task and removes it
 	*/
-	public static Task removeTask(String description) throws ArrayIndexOutOfBoundsException, FileNotFoundException, UnsupportedEncodingException {
-		int indexOfTask = searchTask(description);
-		return Data.task.remove(indexOfTask);
+	public static boolean removeTask(Task task) throws ArrayIndexOutOfBoundsException {
+		return Data.task.remove(task);
 	}
 	
 	/**
 	 * Clear all task from existing list
 	*/
-	public static void clearTask() throws FileNotFoundException, UnsupportedEncodingException {
+	public static void clearTask() {
 		Data.task.clear();
 	}
 	
 	/**
-	 * Searches for task and updates relevant fields
+	 * Updates task's relevant fields
 	*/
-	public static void updateTask(String description, String newDescription) throws FileNotFoundException, UnsupportedEncodingException {
-		int indexOfTask = searchTask(description);
-		Task taskToBeUpdated = Data.task.get(indexOfTask);
-		taskToBeUpdated.setTaskName(newDescription);
+	public static void updateTask(Task task, String newDescription) {
+		task.setTaskName(newDescription);
 	}
 	
 	/**
@@ -265,8 +270,8 @@ public class Data {
 	*/
 	private static int searchTask(String description) {
 		int indexOfTask = -1;
-		for(int i = 0; i < Data.task.size(); i++) {
-			if(Data.task.get(i).getTaskName().equals(description)) {
+		for(int i = 0; i < controller.getUserTasks().size(); i++) {
+			if(controller.getUserTasks().get(i).getTaskName().equals(description)) {
 				indexOfTask = i;
 			}
 		}
@@ -279,29 +284,9 @@ public class Data {
 	public static Task getTask(String description) {
 		int indexOfTask = searchTask(description);
 		if(indexOfTask != -1) {
-			return Data.task.get(indexOfTask);
+			return controller.getUserTasks().get(indexOfTask);
 		}
 		return null;
-	}	
-	
-	/**
-	 * Searches for task based on Task Index and returns the specific task
-	*/	
-	public static Task getTask(int index) {
-		int indexOfTask = -1;
-		
-		for (int i=0; i<Data.task.size(); i++) {
-			if (Data.task.get(i).getTaskIndex() == index) {
-				indexOfTask = i;
-				break;
-			}
-		}
-		
-		if(indexOfTask != -1) {
-			return Data.task.get(indexOfTask);
-		} else {
-			return null;
-		}
 	}	
 
 }

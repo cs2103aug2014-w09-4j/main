@@ -273,6 +273,7 @@ public class Controller {
 			case TAG_ALL:
 				return Data.task;
 			case TAG_SEARCH:
+				logic.searchTask();
 				return Data.searchedTasks;
 			case TAG_COMPLETED:
 				logic.sortTasksByStatus();

@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import edu.nus.comp.cs2103t.taskerino.common.Command;
+import edu.nus.comp.cs2103t.taskerino.common.Controller;
 import edu.nus.comp.cs2103t.taskerino.common.Data;
 import edu.nus.comp.cs2103t.taskerino.common.Task;
 import edu.nus.comp.cs2103t.taskerino.common.DateAndTime;
@@ -16,111 +17,111 @@ import edu.nus.comp.cs2103t.taskerino.common.DateAndTime;
  * and return a String feedback to GUI class.
  */
 public class Logic {
+	private static Controller controller = Controller.getController();
 	private boolean isHelpValid;
 	private boolean isTagValid;
-	
+
 	/**
 	 * ChangeTask function replaces the exiting task details
 	 * with new task details
 	 * and return a String feedback to GUI class.
 	 */
-	public String changeTask() throws FileNotFoundException, UnsupportedEncodingException {
-		String description = Data.getDescription();
-		String newDescription = Data.getNewDescription();
-		String type = Data.getChangeType();
-		Command newCommand = new Command();
-		newCommand.setCommand("change");
-		try{
-			newCommand.setDueDate(Data.getTask(description).getDueDate());
-			newCommand.setStartDate(Data.getTask(description).getStartDate());
-			newCommand.setNameOfTaskModified(Data.getTask(description).getTaskName());
-			if(Data.getTask(description).getStatus().equals("completed")) {
+	public String changeTask() {
+		try {
+			Task modifiedTask = getModifiedTask();
+			if (modifiedTask == null) {
+				return "Task not found!";
+			}
+
+			String type = Data.getChangeType();
+
+			Command newCommand = new Command();
+			newCommand.setCommand("change");
+			newCommand.setDueDate(modifiedTask.getDueDate());
+			newCommand.setStartDate(modifiedTask.getStartDate());
+			newCommand.setNameOfTaskModified(modifiedTask.getTaskName());
+			if(modifiedTask.getStatus().equals("completed")) {
 				newCommand.setStatusOfTask(true);
 			} else {
 				newCommand.setStatusOfTask(false);
 			}
-		}
-		catch (NullPointerException e) {
-		}
-		newCommand.setIndexOfTaskModified(Data.task.indexOf(Data.getTask(description)));
-		Data.commandList.add(newCommand);
-		
-		//changing of task details
-		if(type.equals("taskName")) {
-			try {
-				Data.updateTask(description, newDescription);
-				return "Update task successfully from " + description + " to " + newDescription;
-			} catch (ArrayIndexOutOfBoundsException e) {
-				return "Task with name: " + description + " not found!";
-			}
-		//changing of start date
-		} else if(type.equals("startTime")) {
-			try {
+			newCommand.setIndexOfTaskModified(Data.task.indexOf(modifiedTask));
+			Data.commandList.add(newCommand);
+
+			//changing of task details
+			if(type.equals("taskName")) {
+				Data.updateTask(modifiedTask, Data.getNewDescription());
+				return "Update task successfully from " + modifiedTask.getTaskName() + " to " + Data.getNewDescription();
+			} else if(type.equals("startTime")) {
 				int day = Data.getFromDay();
 				int month = Data.getFromMonth();
 				int year = Data.getFromYear();
 				DateAndTime newStartDate = new DateAndTime(year,month,day);
-				if (Data.getTask(description).getDueDate() == null ||
-						isValidDate(newStartDate, Data.getTask(description).getDueDate())) {
-					Data.getTask(description).setStartDate(newStartDate);
-					return "Updated " + description + " start time successfully to " + day + "/" + month + "/" + year;
+
+				if (modifiedTask.getDueDate() == null ||
+						isValidDate(newStartDate, modifiedTask.getDueDate())) {
+					modifiedTask.setStartDate(newStartDate);
+					return "Updated start date successfully to " + day + "/" + month + "/" + year;
 				} else {
 					return "Start date cannot be later than the due date!";
-				}
-			} catch (ArrayIndexOutOfBoundsException e) {
-				return "Task with name: " + description + " not found!";
-			}
-		//changing of due date
-		} else if(type.equals("endTime")) {
-			try {
+				} 
+			} else if(type.equals("endTime")) {
 				int day = Data.getToDay();
 				int month = Data.getToMonth();
 				int year = Data.getToYear();
 				DateAndTime newEndDate = new DateAndTime(year,month,day);
-				
-				if (Data.getTask(description).getStartDate() == null || 
-						isValidDate(Data.getTask(description).getStartDate(), newEndDate)) {
-					Data.getTask(description).setDueDate(newEndDate);
-					return "Updated " + description + " end time successfully to " + day + "/" + month + "/" + year;
+
+				if (modifiedTask.getStartDate() == null || 
+						isValidDate(modifiedTask.getStartDate(), newEndDate)) {
+					modifiedTask.setDueDate(newEndDate);
+					return "Updated due date successfully to " + day + "/" + month + "/" + year;
 				} else {
 					return "Due date cannot be earlier than the start date!";
 				}
-			} catch (ArrayIndexOutOfBoundsException e) {
-				return "Task with name: " + description + " not found!";
+			} else {
+				return "User command not recognized, please try again!";
 			}
-		} else {
+
+		} catch (Exception e) {
 			return "User command not recognized, please try again!";
 		}
 	}
-	
+
 	/**
-     * deleteTask removes the task from the existing tasks list 
-     * and return a String feedback to GUI class.
-     */
-	public String deleteTask() throws FileNotFoundException, UnsupportedEncodingException {
-		String description = Data.getDescription();
+	 * deleteTask removes the task from the existing tasks list 
+	 * and return a String feedback to GUI class.
+	 */
+	public String deleteTask() {
 		try {
+			Task modifiedTask = getModifiedTask();
+			if (modifiedTask == null) {
+				System.out.println("null task");
+				return "Task not found!";
+			}
+
 			Command newCommand = new Command();
 			newCommand.setCommand("delete");
-			newCommand.setTaskModified(Data.getTask(description));
-			newCommand.setIndexOfTaskModified(Data.task.indexOf(Data.getTask(description)));
+			newCommand.setTaskModified(modifiedTask);
+			newCommand.setIndexOfTaskModified(Data.task.indexOf(modifiedTask));
 			Data.commandList.add(newCommand);
-			Data.removeTask(description);
-			return "Delete task " + description + " successfully";
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return "Task with name: " + description + " not found!";
+
+			Data.removeTask(modifiedTask);
+			return "Delete task " + modifiedTask.getTaskName() + " successfully";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Task not found!";
 		}
 	}
-	
+
 	/**
-     * addTask adds the task into the existing tasks list 
-     * and return a String feedback to GUI class.
-     */
-	public String addTask() throws FileNotFoundException, UnsupportedEncodingException {
+	 * addTask adds the task into the existing tasks list 
+	 * and return a String feedback to GUI class.
+	 */
+	public String addTask() {
 		String type = Data.getAddType();
 		Task newTask = new Task();
 		boolean isAddSuccess = true;
-		
+
 		//adding of floating task without any start or due date
 		if (type.equals("floating")) {
 			String description = Data.getDescription();
@@ -161,7 +162,7 @@ public class Logic {
 				isAddSuccess = false;
 			}
 		}
-		
+
 		if (isAddSuccess) {
 			Command newCommand = new Command();
 			newCommand.setCommand("add");
@@ -172,34 +173,34 @@ public class Logic {
 			return "Start date cannot be later than the due date!";
 		}
 	}
-	
+
 	/**
-     * completeTask marks the task from the existing tasks list 
-     * and return a String feedback to GUI class.
-     */
+	 * completeTask marks the task from the existing tasks list 
+	 * and return a String feedback to GUI class.
+	 */
 	public String completeTask() throws FileNotFoundException, UnsupportedEncodingException {
-		String description = Data.getDescription();
-		Task toBeCompleted = Data.getTask(description);
-		if(toBeCompleted != null) {
-			toBeCompleted.setStatus(true);
-			Command newCommand = new Command();
-			newCommand.setCommand("complete");
-			newCommand.setTaskModified(toBeCompleted);
-			Data.commandList.add(newCommand);
-			return "Complete task " + description;
-		} else {
-			return "Task with name: " + description + " not found!";
+		Task toBeCompleted = getModifiedTask();
+		if (toBeCompleted == null) {
+			return "Task not found!";
 		}
+
+		toBeCompleted.setStatus(true);
+		Command newCommand = new Command();
+		newCommand.setCommand("complete");
+		newCommand.setTaskModified(toBeCompleted);
+		Data.commandList.add(newCommand);
+		
+		return "Complete task " + toBeCompleted.getTaskName() + " successfully.";
 	}
-	
+
 	/**
-     * searchTask search the existing tasks list 
-     * obtain the tasks from the existing tasks list
+	 * searchTask search the existing tasks list 
+	 * obtain the tasks from the existing tasks list
 	 * and return the details of the tasks to GUI class
-     */
+	 */
 	public String searchTask() {
 		Data.searchedTasks.clear();
-		String description = Data.getDescription().toLowerCase();
+		String description = Data.getSearchedKeyWord().toLowerCase();
 		int numberOfTasks = 0;
 		for(int i = 0; i < Data.task.size(); i++){
 			String details = Data.task.get(i).getTaskName().toLowerCase();
@@ -212,9 +213,6 @@ public class Logic {
 				}
 			}
 		}
-		Command newCommand = new Command();
-		newCommand.setCommand("search");
-		Data.commandList.add(newCommand);
 		if(numberOfTasks == 0){
 			return "Task with name: " + description + " not found!";
 		} else if (numberOfTasks == 1){
@@ -223,12 +221,12 @@ public class Logic {
 			return numberOfTasks + " tasks found with given description. ";
 		}
 	}
-	
+
 	/**
-     * clearTask clears the existing tasks list 
+	 * clearTask clears the existing tasks list 
 	 * and return an empty list to GUI class
-     */
-	public String clearTask() throws FileNotFoundException, UnsupportedEncodingException {
+	 */
+	public String clearTask() {
 		Command newCommand = new Command();
 		ArrayList<Task> oldTaskList = new ArrayList<Task>();
 		for(int count = 0; count < Data.task.size(); count++) {
@@ -240,12 +238,12 @@ public class Logic {
 		Data.clearTask();
 		return "Cleared all tasks";
 	}
-	
+
 	/**
-     * undoTask undo the previous command input 
+	 * undoTask undo the previous command input 
 	 * and return the previous list to GUI class
-     */
-	public String undoTask() throws FileNotFoundException, UnsupportedEncodingException {
+	 */
+	public String undoTask() {
 		int indexOfCommandToUndo = Data.commandList.size() - 1;
 		if(indexOfCommandToUndo < 0) {
 			return "No previous step detected!";
@@ -253,7 +251,7 @@ public class Logic {
 			Command commandToUndo = Data.commandList.get(indexOfCommandToUndo);
 			String commandType = commandToUndo.getCommand();
 			if(commandType.equals("add")) {
-				Data.removeTask(commandToUndo.getTask().getTaskName());
+				Data.removeTask(commandToUndo.getTask());
 				Data.commandList.remove(indexOfCommandToUndo);
 				return "Undo successful!";
 			}
@@ -289,7 +287,7 @@ public class Logic {
 			}
 		}
 	}
-	
+
 
 	//@author A0113742N
 	/**
@@ -310,7 +308,7 @@ public class Logic {
 		}
 		return feedback;
 	}
-	
+
 	public boolean isHelpValid() {
 		return isHelpValid;
 	}
@@ -332,11 +330,11 @@ public class Logic {
 		sortTasksByStatus();
 		return feedback;
 	}
-	
+
 	public boolean isTagValid() {
 		return isTagValid;
 	}
-	
+
 	/**
 	 * Initialize and modify completedTasks and incompletedTasks ArrayLists.
 	 */
@@ -351,12 +349,44 @@ public class Logic {
 			}
 		}
 	}
-	
+
 	/**
 	 * Check for validity of start date and due date.
 	 */
 	public boolean isValidDate(DateAndTime startDate, DateAndTime dueDate) {
 		return (startDate.compareTo(dueDate) <= 0);
 	}
+
+	/**
+	 * Search for and return task result based on user input provided.
+	 * @return Task  
+	 */
+	private Task getModifiedTask() {
+		Task result = getTask(Data.taskIndexInList);
+
+		if (result != null) {
+			// user use valid index to access to task
+			return result;
+		} else {
+			// 1. user use description to access to task
+			// 2. user use invalid index to access to task
+			result = Data.getTask(Data.getDescription());
+			return result;
+		}
+	}
+
+
+	/**
+	 * Searches for task based on Task Index and returns the specific task.
+	 * @param int index of task in current ArrayList user in accessing to
+	 * @return Task or null if not found
+	 */	
+	private Task getTask(int index) {
+		if (index < 0 && index >= controller.getUserTasks().size()) {
+			return null;
+		} else {
+			return controller.getUserTasks().get(index);
+		}
+	}	
+
 }
-	

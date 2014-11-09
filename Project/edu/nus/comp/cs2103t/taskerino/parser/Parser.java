@@ -350,7 +350,7 @@ public class Parser {
 
 				String keywords = m.group(2);
 
-				Data.setDescription(keywords.trim());
+				Data.setSearchedKeyWord(keywords.trim());
 
 				return;
 			}			
