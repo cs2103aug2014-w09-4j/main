@@ -33,7 +33,7 @@ public class HelpFrame {
 
 	private final JFrame frame;
 	private static final int HELP_FRAME_WIDTH = 750;
-	private static final int HELP_FRAME_HEIGHT = 650;
+	private static final int HELP_FRAME_HEIGHT = 600;
 
 	private String helpType;
 	private static final String HELP_ADD = "add";

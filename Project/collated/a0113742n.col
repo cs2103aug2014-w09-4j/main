@@ -1,0 +1,2622 @@
+//@author: a0113742n
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\CommandHistory.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.common;
+
+import java.util.ArrayList;
+
+/**
+ * This class make use of two Stacks to store all commands that user has executed. <br>
+ * Note: <br>
+ * All data stored in this class is temporary, once user terminates the software,
+ * all history will be dumped.
+ */
+public class CommandHistory {
+	private static CommandHistory singletonCommandHistory;
+
+	private ArrayList<String> userCommands;
+	private int currentAccessedCommandIndex;
+
+	// private constructor
+	private CommandHistory(){
+		userCommands = new ArrayList<String>();
+		currentAccessedCommandIndex = -1;
+	}
+
+	/**
+	 * Returns CommandHistory singleton instance.
+	 * @return CommandHistory singleton
+	 */
+	public static CommandHistory getCommandHistory() {
+		if (singletonCommandHistory == null) {
+			singletonCommandHistory = new CommandHistory();
+		}
+		return singletonCommandHistory;
+	}
+
+
+	/**
+	 * Push a command into the userCommand ArrayList.
+	 */
+	public void storeCommand(String command) {
+		userCommands.add(command);
+	}
+	
+
+	/**
+	 * Returns user's previous executed command String if there are any 
+	 * or returns an empty String if there are none.
+	 * @return command String
+	 */
+	public String getPreCommand() {
+		if (currentAccessedCommandIndex == -1) {
+			// user have not accessing any command!
+			if (userCommands.isEmpty()) {
+				// no command has been executed!
+				return "";
+			} else {
+				// return last executed user command
+				currentAccessedCommandIndex = userCommands.size() - 1;
+				return userCommands.get(currentAccessedCommandIndex);
+			}
+		} else {
+			if (currentAccessedCommandIndex == 0) {
+				// no previous user command available
+				return "";
+			} else {
+				// decrease pointer value
+				currentAccessedCommandIndex--;
+				// return previous executed user command
+				return userCommands.get(currentAccessedCommandIndex);
+			}
+		}
+	}
+
+	
+	/**
+	 * Returns user's next executed command String if there are any 
+	 * or returns an empty String if there are none.
+	 * @return command String
+	 */
+	public String getPostCommand() {
+		// increase pointer value
+		currentAccessedCommandIndex++;
+		if (currentAccessedCommandIndex > (userCommands.size() - 1)) {
+			// invalid, reset pointer
+			this.setPointerToLatestTask();
+			return "";
+		} else {
+			// return next executed user command
+			return userCommands.get(currentAccessedCommandIndex);
+		}
+	}
+
+	
+	public void setPointerToLatestTask() {
+		currentAccessedCommandIndex = userCommands.size();
+	}
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\CommandHistory.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\Controller.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.common;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+
+import com.google.gson.JsonSyntaxException;
+
+import edu.nus.comp.cs2103t.taskerino.gui.GUIComponents;
+import edu.nus.comp.cs2103t.taskerino.gui.GUIFrame;
+import edu.nus.comp.cs2103t.taskerino.gui.HelpFrame;
+import edu.nus.comp.cs2103t.taskerino.logic.Logic;
+import edu.nus.comp.cs2103t.taskerino.parser.Parser;
+import edu.nus.comp.cs2103t.taskerino.storage.TaskerinoIO;
+
+/**
+ * Main class that initialize and controls the program Taskerino
+ * by providing methods that integrating classes from different
+ * packages together.
+ */
+public class Controller {
+	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
+	private static final String INVALID_COMMAND_FEEDBACK = "User command not recognized, please try again!";
+
+	private String userCommand;
+	private static final String COMMAND_HELP = "help";
+	private static final String COMMAND_ADD = "add";
+	private static final String COMMAND_DELETE = "delete";
+	private static final String COMMAND_CHANGE = "change";
+	private static final String COMMAND_COMPLETE = "complete";
+	private static final String COMMAND_SEARCH = "search";
+	private static final String COMMAND_EXIT = "exit";
+	private static final String COMMAND_CLEAR = "clear";
+	private static final String COMMAND_UNDO = "undo";
+	private static final String COMMAND_GOTO = "goto";
+	
+	private static final String TAG_ALL = "all";
+	private static final String TAG_SEARCH = "search";
+	private static final String TAG_COMPLETED = "completed";
+	private static final String TAG_UNCOMPLETED = "uncompleted";
+	
+	private static Controller singletonController;
+	private CommandHistory commandHistory;
+	private Logic logic;
+	private Parser parser;
+	private String outputFeedBack = "";
+	
+	// private constructor
+	private Controller(){
+		logic = new Logic();
+		parser = new Parser();
+		commandHistory = CommandHistory.getCommandHistory();
+	}
+	
+	
+	/**
+	 * Returns Controller singleton instance 
+	 * 
+	 * @return Controller singleton
+	 */
+	public static Controller getController() {
+		if (singletonController == null) {
+			singletonController = new Controller();
+		}
+		return singletonController;
+	}
+	
+	
+	public static void main(String[] args) {
+		final String methodName = "Main";
+		LoggerFactory.logp(Level.INFO, className, methodName, "Start logger!");
+		
+		LoggerFactory.logp(Level.INFO, className, methodName, "Loading user Tasks...");
+		loadData();
+		
+		LoggerFactory.logp(Level.INFO, className, methodName, "Initialize GUI!");
+		new GUIFrame();
+	}
+	
+	
+	/**
+	 * Load existing user data from local file.
+	 */
+	public static void loadData() {
+		final String methodName = "Main";
+		Data.searchedTasks = new ArrayList<Task>();
+		Data.commandList = new ArrayList<Command>();
+		
+		try {
+			Data.task = TaskerinoIO.loadTasksFromFile();
+			Task.currentIndex = (Data.task.isEmpty() ? 0 : Data.task.get(Data.task.size() - 1).getTaskIndex());
+		} catch (JsonSyntaxException | IOException e) {
+			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * Execute user command by passing the input userCommand String to
+	 * Parser and Logic classes.
+	 * 
+	 * @param userCommand : user's input command
+	 */
+	public void executeUserCommand(String userCommand) {
+		final String methodName = "executeUserCommand";
+		boolean isParseSuccessful = false;
+		
+		// clear Data
+		Data.resetAll();
+		
+		// store user command if it is not empty
+		if (!userCommand.isEmpty()) {
+			LoggerFactory.logp(Level.INFO, className, methodName, "Store user command into commandHistory.");
+			commandHistory.storeCommand(userCommand);
+		}
+		
+		// inputCommand is passed into parser and logic
+		LoggerFactory.logp(Level.INFO, className, methodName, "Send user input commands to Data.");
+		Data.setInput(userCommand);
+
+		try {
+			LoggerFactory.logp(Level.INFO, className, methodName, "Calling Parser.");
+			parser.parse();
+			isParseSuccessful = true;
+		} catch (Exception e) {
+			outputFeedBack = INVALID_COMMAND_FEEDBACK;
+			LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
+			e.printStackTrace();
+		}
+
+		if (isParseSuccessful) {
+			try {
+				LoggerFactory.logp(Level.INFO, className, methodName, "Executing commands...");
+				execute((Data.getCommand()).toLowerCase());
+			} catch (Exception e) {
+				outputFeedBack = INVALID_COMMAND_FEEDBACK;
+				LoggerFactory.logp(Level.SEVERE, className, methodName, e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		LoggerFactory.logp(Level.INFO, className, methodName, "Successfully get feedback from Logic: \n" + outputFeedBack);
+
+		// reset CommandHistory pointer
+		CommandHistory.getCommandHistory().setPointerToLatestTask();
+	}
+	
+	
+	/**
+	 * Based on user's input command Parser has parsed, call different methods from different classes to execute the command.
+	 * @param command
+	 * @throws UnsupportedEncodingException 
+	 * @throws FileNotFoundException 
+	 */
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\Controller.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\Controller.java
+	 */
+
+	/**
+	 * Get feedback to be displayed to user.
+	 * 
+	 * @return String outputFeedBack
+	 */
+	public String getUserFeedback() {
+		return outputFeedBack;
+	}
+	
+	
+	/**
+	 * Get an ArrayList of tasks that user is currently accessing to.
+	 * 
+	 * @return ArrayList of Tasks
+	 */
+	public ArrayList<Task> getUserTasks() {
+		switch (GUIComponents.getSelectedTag().toLowerCase()) {
+			case TAG_ALL:
+				return Data.task;
+			case TAG_SEARCH:
+				logic.searchTask();
+				return Data.searchedTasks;
+			case TAG_COMPLETED:
+				logic.sortTasksByStatus();
+				return Data.completedTasks;
+			case TAG_UNCOMPLETED:
+				logic.sortTasksByStatus();
+				return Data.uncompletedTasks;
+			default:
+				return Data.task;
+		}
+	}
+
+
+	/**
+	 * Reset GUI taskTable focus depending on user's command.
+	 */
+	public void resetGUIFocus() {
+		switch (userCommand) {
+			case COMMAND_ADD:
+				// return to tag ALL and set focus to newly added row
+				GUIComponents.setSelectedItem(TAG_ALL);
+				GUIComponents.setTaskTableFocus(Data.task.size() - 1);
+				break;
+			
+			case COMMAND_DELETE:
+				setDeleteFocus();
+				break;
+				
+			case COMMAND_CHANGE : case COMMAND_COMPLETE:
+				GUIComponents.setTaskTableFocus(Data.getTaskIndexInList());
+				break;
+		}
+	}
+
+
+	/**
+	 * Set focus for GUI TaskTable for delete command: <br>
+	 * 1. Focus on next row of task if exists. <br>
+	 * 2. Else focus on previous row of task if exists. <br> 
+	 * 3. Otherwise don't set focus.
+	 */
+	private void setDeleteFocus() {
+		int index = Data.getTaskIndexInList();
+		int size = getUserTasks().size();
+		if (index == size) {
+			GUIComponents.setTaskTableFocus(index - 1);
+		} else if (index < size && index >= 0) {
+			GUIComponents.setTaskTableFocus(index);
+		}
+	}
+
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\Controller.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\DateAndTime.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.common;
+
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.logging.Level;
+
+/**
+ * This class specifies the exact date and time for any events.
+ */
+public class DateAndTime implements Comparator<DateAndTime>, Comparable<DateAndTime> {
+	private String className = "edu.nus.comp.cs2103t.taskerino.common.DateAndTime";
+
+	private int year;
+	private int month;
+	private int day;
+
+	// constructors
+	/**
+	 * Construct DateAndTime instance with current time.
+	 */
+	public DateAndTime() {
+		Calendar tc = Calendar.getInstance();
+		this.year = tc.get(Calendar.YEAR);
+		this.month = tc.get(Calendar.MONTH) + 1;
+		this.day = tc.get(Calendar.DATE);
+	}
+	
+	/**
+	 * Construct DateAndTime instance with current year
+	 * and specified input month and day value.
+	 * @throws Exception indicating incorrect input format
+	 */
+	public DateAndTime(int month, int day) throws IllegalArgumentException {
+		Calendar tc = Calendar.getInstance();
+		this.year = tc.get(Calendar.YEAR);
+		this.setMonth(month);
+		this.setDay(day);
+	}
+
+	/**
+	 * Construct DateAndTime instance with specified input values.
+	 * @throws Exception indicating incorrect input format
+	 */
+	public DateAndTime(int year, int month, int day) throws IllegalArgumentException {
+		this.setYear(year);
+		this.setMonth(month);
+		this.setDay(day);
+	}
+
+	// getters and setters
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	/**
+	 * Reset month value if the input is valid.
+	 * 
+	 * @param int value month that is larger than or equals to 1
+	 * and smaller than or equals to 12 
+	 * 
+	 * @throws Exception 
+	 */
+	public void setMonth(int month) throws IllegalArgumentException {
+		if (month >= 1 && month <= 12) {
+			this.month = month;
+		} else {
+			// throw exception
+			IllegalArgumentException e = new IllegalArgumentException("Unacceptable value of month input: " + month);
+			LoggerFactory.logp(Level.WARNING, className, "setMonth", e.getMessage());
+			throw e;
+		}
+	}
+
+	public int getDay() {
+		return day;
+	}
+	
+	/**
+	 * Reset day value if the input is valid.
+	 * 
+	 * @param positive int day value which has upper bound value depends on month.
+	 * 
+	 * @throws Exception 
+	 */
+	public void setDay(int day) throws IllegalArgumentException {
+		boolean isValidInput = false;
+
+		switch (this.getMonth()) {
+			case 1: case 3: case 5: case 7: case 8: case 10: case 12:
+				isValidInput = (day >= 1 && day <= 31);
+				break;
+			case 4: case 6: case 9: case 11:
+				isValidInput = (day >= 1 && day <= 30);
+				break;
+			case 2:
+				// check for leap year
+				if ((year % 100 != 0 && year % 4 == 0) || (year % 400 == 0)) {
+					isValidInput = (day >= 1 && day <= 29);
+				} else {
+					isValidInput = (day >= 1 && day <= 28);
+				}
+				break;
+			default:
+			    assert false : "Month: " + this.getMonth() + " Day: " + day;
+		}
+
+		if (isValidInput) {
+			this.day = day;
+		} else {
+			// throw exception
+			IllegalArgumentException e = new IllegalArgumentException("Unacceptable value of day input: " + day);
+			LoggerFactory.logp(Level.WARNING, className, "setDay", e.getMessage());
+			throw e;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return this.getDay() + "/" + this.getMonth() + "/" + this.getYear();
+	}
+
+	
+	/** 
+	 * Compares two DateAndTimes for ordering.
+	 * @param date1 -- first DateAndTime to be compared.
+	 * @param date2 -- second DateAndTime to be compared.
+	 * @return the value 0 if first DateAndTime is equal to second DateAndTime; <br>
+	 * 			a value less than 0 if first DateAndTime is before second DateAndTime argument; <br>
+	 * 			and a value greater than 0 if first DateAndTime is after second DateAndTime argument.
+	 */	
+	@Override
+	public int compare(DateAndTime date1, DateAndTime date2) {
+		if (date1.getYear() > date2.getYear()) {
+			return 1;
+		} else if (date1.getYear() < date2.getYear()) {
+			return -1;
+		}
+		
+		if (date1.getMonth() > date2.getMonth()) {
+			return 1;
+		} else if (date1.getMonth() < date2.getMonth()) {
+			return -1;
+		}
+		
+		if (date1.getDay() > date2.getDay()) {
+			return 1;
+		} else if (date1.getDay() < date2.getDay()) {
+			return -1;
+		}
+		
+		return 0;
+	}
+
+	
+	/** 
+	 * Compares two DateAndTimes for ordering.
+	 * @param date -- DateAndTime to be compared.
+	 * @return the value 0 if the argument DateAndTime is equal to this Date; <br>
+	 * 			a value less than 0 if this DateAndTime is before the DateAndTime argument; <br>
+	 * 			and a value greater than 0 if this DateAndTime is after the DateAndTime argument.
+	 */
+	@Override
+	public int compareTo(DateAndTime date) {
+		if (this.getYear() > date.getYear()) {
+			return 1;
+		} else if (this.getYear() < date.getYear()) {
+			return -1;
+		}
+		
+		if (this.getMonth() > date.getMonth()) {
+			return 1;
+		} else if (this.getMonth() < date.getMonth()) {
+			return -1;
+		}
+		
+		if (this.getDay() > date.getDay()) {
+			return 1;
+		} else if (this.getDay() < date.getDay()) {
+			return -1;
+		}
+		
+		return 0;
+	}
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\DateAndTime.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\DateAndTimeTest.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.common;
+
+import static org.junit.Assert.*;
+
+import java.util.Calendar;
+
+import org.junit.Test;
+
+/**
+ * JUnit Testing class for DateAndTime class. <br>
+ * Test cases consisting: <br>
+ * 1. default date constructor <br>
+ * 2. valid specific date input constructor <br>
+ * 3. invalid specific date input constructor
+ */
+public class DateAndTimeTest {
+	@Test
+	public void testDefaultDateConstructor() {
+		DateAndTime testCase00 = new DateAndTime();
+		String testOutput = testCase00.toString();
+
+		Calendar calendar = Calendar.getInstance();
+		String expectedOutput = calendar.get(Calendar.DATE) + "/" + (calendar.get(Calendar.MONTH) + 1) 
+				+ "/" + calendar.get(Calendar.YEAR);
+		assertEquals("Test for default date constructor.", testOutput, expectedOutput);
+	}
+	
+	@Test
+	public void testValidSpecificDateInputConstructor() {
+		String testingName = "Test for valid specific date input constructor.";
+		
+		try {
+			// Test a valid specific date input
+			DateAndTime testCase01 = new DateAndTime(2014, 10, 29);
+			String testOutput = testCase01.toString();
+			String expectedOutput = "29/10/2014";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for lower boundary value for a valid specific month input
+			DateAndTime testCase02 = new DateAndTime(2014, 1, 15);
+			testOutput = testCase02.toString();
+			expectedOutput = "15/1/2014";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for lower boundary value for a valid specific month input
+			DateAndTime testCase03 = new DateAndTime(2014, 01, 15);
+			testOutput = testCase03.toString();
+			expectedOutput = "15/1/2014";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for upper boundary value for a valid specific month input
+			DateAndTime testCase04 = new DateAndTime(2014, 12, 15);
+			testOutput = testCase04.toString();
+			expectedOutput = "15/12/2014";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for lower boundary value for a valid specific day input
+			DateAndTime testCase05 = new DateAndTime(2014, 1, 1);
+			testOutput = testCase05.toString();
+			expectedOutput = "1/1/2014";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for upper boundary value for a valid specific day input
+			DateAndTime testCase06 = new DateAndTime(2014, 1, 31);
+			testOutput = testCase06.toString();
+			expectedOutput = "31/1/2014";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for upper boundary value for a valid specific day input
+			DateAndTime testCase07 = new DateAndTime(2014, 4, 30);
+			testOutput = testCase07.toString();
+			expectedOutput = "30/4/2014";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for upper boundary value for a valid specific day input for February
+			DateAndTime testCase08 = new DateAndTime(2012, 2, 29);
+			testOutput = testCase08.toString();
+			expectedOutput = "29/2/2012";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for upper boundary value for a valid specific day input for February
+			DateAndTime testCase09 = new DateAndTime(2014, 2, 28);
+			testOutput = testCase09.toString();
+			expectedOutput = "28/2/2014";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+			// Test for upper boundary value for a valid specific day input for February
+			DateAndTime testCase10 = new DateAndTime(2000, 2, 29);
+			testOutput = testCase10.toString();
+			expectedOutput = "29/2/2000";
+			assertEquals(testingName, testOutput, expectedOutput);
+
+		} catch (IllegalArgumentException e) {
+			// should not be executed
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testInvalidSpecificDateInputConstructor() {
+		String testingName = "Test for invalid specific date input constructor.";
+		String expectedError = "";
+
+		// Test for lower bound of invalid specific month input
+		try {
+			new DateAndTime(2014, 0, 30);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of month input: 0";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+
+		// Test for upper bound of invalid specific month input
+		try {
+			new DateAndTime(2014, 13, 31);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of month input: 13";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+
+		// Test for lower bound of invalid specific day input
+		try {
+			new DateAndTime(2014, 10, 0);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of day input: 0";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+
+		// Test for upper bound of invalid specific day input
+		try {
+			new DateAndTime(2014, 2, 31);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of day input: 31";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+
+		// Test for upper bound of invalid specific day input
+		try {
+			new DateAndTime(2014, 10, 32);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of day input: 32";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+
+		// Test for if both day and month are invalid specific inputs
+		try {
+			new DateAndTime(2014, 13, 32);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of month input: 13";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+
+		// Test for upper bound of invalid specific day input for February
+		try {
+			new DateAndTime(2014, 2, 30);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of day input: 30";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+
+		// Test for upper bound of invalid specific day input for February
+		try {
+			new DateAndTime(2013, 2, 29);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of day input: 29";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+
+		// Test for upper bound of invalid specific day input for February
+		try {
+			new DateAndTime(1900, 2, 29);
+		} catch (IllegalArgumentException e) {
+			expectedError = "Unacceptable value of day input: 29";
+			assertEquals(testingName, e.getMessage(), expectedError);
+		}
+	}
+	
+	@Test
+	public void testComparatorAndComparable() {
+		String testingComparator = "Test for Comparator interface";
+		String testingComparable = "Test for Comparable interface";
+		
+		try {
+			// Test for two date with equal value
+			DateAndTime testCase01a = new DateAndTime(2014, 10, 29);
+			DateAndTime testCase01b = new DateAndTime(2014, 10, 29);
+			// Test for Comparator
+			boolean testOutput01a = testCase01a.compare(testCase01a, testCase01b) == 0;
+			assertEquals(testingComparator, testOutput01a, true);
+			// Test for Comparator
+			boolean testOutput01b = testCase01a.compareTo(testCase01b) == 0;
+			assertEquals(testingComparable, testOutput01b, true);
+			
+			
+			// Test for two date with different year value
+			DateAndTime testCase02a = new DateAndTime(2016, 10, 29);
+			DateAndTime testCase02b = new DateAndTime(1987, 10, 29);
+			// Test for Comparator
+			boolean testOutput02a = testCase02a.compare(testCase02a, testCase02b) > 0;
+			assertEquals(testingComparator, testOutput02a, true);
+			// Test for Comparator
+			boolean testOutput02b = testCase02a.compareTo(testCase02b) > 0;
+			assertEquals(testingComparable, testOutput02b, true);
+			
+			
+			// Test for two date with same year but different month value
+			DateAndTime testCase03a = new DateAndTime(1992, 1, 29);
+			DateAndTime testCase03b = new DateAndTime(1992, 11, 29);
+			// Test for Comparator
+			boolean testOutput03a = testCase03a.compare(testCase03a, testCase03b) < 0;
+			assertEquals(testingComparator, testOutput03a, true);
+			// Test for Comparator
+			boolean testOutput03b = testCase03b.compareTo(testCase03a) > 0;
+			assertEquals(testingComparable, testOutput03b, true);
+			
+			
+			// Test for two date with same year and month but different day value
+			DateAndTime testCase04a = new DateAndTime(2014, 10, 31);
+			DateAndTime testCase04b = new DateAndTime(2014, 10, 01);
+			// Test for Comparator
+			boolean testOutput04a = testCase04a.compare(testCase04b, testCase04a) < 0;
+			assertEquals(testingComparator, testOutput04a, true);
+			// Test for Comparator
+			boolean testOutput04b = testCase04a.compareTo(testCase04b) > 0;
+			assertEquals(testingComparable, testOutput04b, true);
+			
+		} catch (IllegalArgumentException e) {
+			// should not be executed
+			e.printStackTrace();
+		}
+	}
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\DateAndTimeTest.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\LoggerFactory.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.common;
+
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
+
+/**
+ * This class enable all the classes in a project to record down information
+ * on a single local output file using a common logger.
+ */
+public class LoggerFactory {
+	private static final Logger logger = Logger.getLogger("Project.LoggerFactory");
+	private static final Level loggerLvl = Level.INFO;
+	
+	static {
+		logger.setLevel(loggerLvl);
+		
+		try {
+			FileHandler fh = new FileHandler("log.log", true);
+			// change output format
+			fh.setFormatter(new SimpleFormatter());
+			logger.addHandler(fh);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private LoggerFactory(){}
+	
+	public static void logp(Level level, String sourceClass, String sourceMethod, String msg) {
+		logger.logp(level, sourceClass, sourceMethod, msg);
+	}
+	
+	public static void logp(Level level, String sourceClass, String sourceMethod, String msg, Throwable thrown) {
+		logger.logp(level, sourceClass, sourceMethod, msg, thrown);
+	}
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\LoggerFactory.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\SystemTest.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.common;
+
+import static org.junit.Assert.assertEquals;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+
+import org.junit.Test;
+
+/**
+ * System testing for all components except classes in GUI package.
+ */
+public class SystemTest {
+	private Controller controller;
+	private File taskFile;
+	private File backupFile;
+	private File testingFile;
+	private String expectedOutput = "";
+	private String actualOutput = "";
+
+	// format of storage into Gson
+	private static final String DOLLAR_MARK = "\\u0026";
+	private static final String SINGLE_QUOTATION_MARK = "\\u0027";
+	private static final String DATE_CLASS_PATH = (new DateAndTime()).getClass().getName();
+
+	private static final String FLOATING_TASK_FORMAT = "[{\"taskIndex\":%1$s," + "\"taskName\":\"%2$s\"," + "\"status\":%3$s}]";
+	private static final String DEADLINE_TASK_FORMAT = "[{\"taskIndex\":%1$s," + "\"taskName\":\"%2$s\"," 
+			+ "\"dueDate\":{\"className\":\"" + DATE_CLASS_PATH + "\",\"year\":%3$s,\"month\":%4$s,\"day\":%5$s}," 
+			+ "\"taskType\":\"deadline\"," + "\"status\":%6$s}]";
+	private static final String TIMED_TASK_FORMAT = "[{\"taskIndex\":%1$s," + "\"taskName\":\"%2$s\"," 
+			+ "\"startDate\":{\"className\":\"" + DATE_CLASS_PATH + "\",\"year\":%3$s,\"month\":%4$s,\"day\":%5$s}," 
+			+ "\"dueDate\":{\"className\":\"" + DATE_CLASS_PATH + "\",\"year\":%6$s,\"month\":%7$s,\"day\":%8$s}," 
+			+ "\"taskType\":\"timed\"," + "\"status\":%9$s}]";
+	private static final String EMPTY_TASK_FORMAT = "[]";
+
+
+	@Test
+	public void testBasicTaskFunctions() {
+		setUp();
+
+		// test for adding floating task
+		controller.executeUserCommand("add do tutorial");
+		// check for feedback
+		expectedOutput = "Add task do tutorial successfully";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData01 = {"floating", "1", "do tutorial", "false"};
+		writeTestFile(expectedData01);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for deleting floating task via task name
+		controller.executeUserCommand("delete do tutorial");
+		// check for feedback
+		expectedOutput = "Delete task do tutorial successfully";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData02 = {"empty"};
+		writeTestFile(expectedData02);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for deleting none-existent task
+		controller.executeUserCommand("delete do tutorial");
+		// check for feedback
+		expectedOutput = "Task not found!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData03 = {"empty"};
+		writeTestFile(expectedData03);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing existing task's description
+		controller.executeUserCommand("add go to lecture");
+		controller.executeUserCommand("change go to lecture to~ don't go to lecture");
+		// check for feedback
+		expectedOutput = "Update task successfully from go to lecture to don't go to lecture";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData04 = {"floating", "2", "don" + SINGLE_QUOTATION_MARK + "t go to lecture", "false"};
+		writeTestFile(expectedData04);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for completing a existing task
+		controller.executeUserCommand("complete don't go to lecture");
+		// check for feedback
+		expectedOutput = "Complete task don't go to lecture successfully.";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData05 = {"floating", "2", "don" + SINGLE_QUOTATION_MARK + "t go to lecture", "true"};
+		writeTestFile(expectedData05);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for deleting a existing task via index
+		controller.executeUserCommand("delete 1");
+		// check for feedback
+		expectedOutput = "Delete task don't go to lecture successfully";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData06 = {"empty"};
+		writeTestFile(expectedData06);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing none-existent task's description
+		controller.executeUserCommand("change test case 1 to~ hey!");
+		// check for feedback
+		expectedOutput = "Task not found!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);		
+		// check for file 
+		String[] expectedData07 = {"empty"};
+		writeTestFile(expectedData07);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for adding task with random symbols
+		controller.executeUserCommand("add he.l~l,@$$^%&$$@'$%@%@%$#*()(!@!:\"{}|");// check for feedback
+		expectedOutput = "Add task he.l~l,@$$^%&$$@'$%@%@%$#*()(!@!:\"{}| successfully";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData08 = {"floating", "3", "he.l~l,@$$^%" + DOLLAR_MARK + "$$@"+ SINGLE_QUOTATION_MARK + 
+				"$%@%@%$#*()(!@!:\\\"{}|", "false"};
+		writeTestFile(expectedData08);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing start date for floating task (not allowed)
+		controller.executeUserCommand("change start date to~ 01 01 2014 from~ 1");
+		// check for feedback
+		expectedOutput = "Can not modify starting time for a floating task!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData09 = {"floating", "3", "he.l~l,@$$^%" + DOLLAR_MARK + "$$@"+ SINGLE_QUOTATION_MARK + 
+				"$%@%@%$#*()(!@!:\\\"{}|", "false"};
+		writeTestFile(expectedData09);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for clear command
+		controller.executeUserCommand("clear");
+		// check for feedback
+		expectedOutput = "Cleared all tasks";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);		
+		// check for file 
+		String[] expectedData10 = {"empty"};
+		writeTestFile(expectedData10);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+		closeDown();
+	}
+
+
+	@Test
+	public void testTimedTaskFuncions() {
+		setUp();
+
+		// test for adding timed task
+		controller.executeUserCommand("add test from~ 29 10 2014 to~ 30 12 2014");	
+		// check for feedback
+		expectedOutput = "Add task test successfully";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData01 = {"timed", "1", "test", "2014", "10", "29", "2014", "12", "30", "false"};
+		writeTestFile(expectedData01);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing start date for timed task
+		controller.executeUserCommand("change start date to~ 30 11 2014 from~ test");
+		expectedOutput = "Updated start date successfully to 30/11/2014";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData02 = {"timed", "1", "test", "2014", "11", "30", "2014", "12", "30", "false"};
+		writeTestFile(expectedData02);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing start date for timed task for different input month format
+		controller.executeUserCommand("change start date to~ 12 December 2014 from~ test");
+		expectedOutput = "Updated start date successfully to 12/12/2014";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData03 = {"timed", "1", "test", "2014", "12", "12", "2014", "12", "30", "false"};
+		writeTestFile(expectedData03);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing due date for timed task
+		controller.executeUserCommand("change due date to~ 01 january 2015 from~ test");
+		expectedOutput = "Updated due date successfully to 1/1/2015";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData04 = {"timed", "1", "test", "2014", "12", "12", "2015", "1", "1", "false"};
+		writeTestFile(expectedData04);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for change start date to later than due date
+		controller.executeUserCommand("change start date to~ 01 01 2020 from~ test");
+		expectedOutput = "Start date cannot be later than the due date!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData05 = {"timed", "1", "test", "2014", "12", "12", "2015", "1", "1", "false"};
+		writeTestFile(expectedData05);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for change due date to earlier than start date
+		controller.executeUserCommand("change due date to~ 01 01 1993 from~ test");
+		expectedOutput = "Due date cannot be earlier than the start date!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData06 = {"timed", "1", "test", "2014", "12", "12", "2015", "1", "1", "false"};
+		writeTestFile(expectedData06);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+		closeDown();
+	}
+
+	@Test
+	public void testDeadlineTaskFuncions() {
+		setUp();
+
+		// test for adding deadline task
+		controller.executeUserCommand("add deadlined task by~ 30 12 2014");	
+		// check for feedback
+		expectedOutput = "Add task deadlined task successfully";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData01 = {"deadline", "1", "deadlined task", "2014", "12", "30", "false"};
+		writeTestFile(expectedData01);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing due date for deadline task
+		controller.executeUserCommand("change due date to~ 01 01 1993 from~ 1");	
+		// check for feedback
+		expectedOutput = "Updated due date successfully to 1/1/1993";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData02 = {"deadline", "1", "deadlined task", "1993", "1", "1", "false"};
+		writeTestFile(expectedData02);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing deadline task to timed task via changing start date
+		controller.executeUserCommand("change start date to~ 01 10 1949 from~ 1");	
+		// check for feedback
+		expectedOutput = "Updated start date successfully to 1/10/1949";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData03 = {"timed", "1", "deadlined task", "1949", "10", "1", "1993", "1", "1", "false"};
+		writeTestFile(expectedData03);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for changing floating task to deadline task via changing due date
+		controller.executeUserCommand("clear");
+		controller.executeUserCommand("add deadlined task");
+		controller.executeUserCommand("change due date to~ 01 10 1949 from~ 1");	
+		// check for feedback
+		expectedOutput = "Updated due date successfully to 1/10/1949";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file 
+		String[] expectedData04 = {"deadline", "2", "deadlined task", "1949", "10", "1", "false"};
+		writeTestFile(expectedData04);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+		closeDown();
+	}
+
+
+	@Test
+	public void testUndoFunctions() {
+		setUp();
+
+		// test for undo adding task
+		controller.executeUserCommand("add temp");
+		controller.executeUserCommand("undo");
+		// check for feedback
+		expectedOutput = "Undo successful!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData01 = {"empty"};
+		writeTestFile(expectedData01);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for undo deleting task
+		controller.executeUserCommand("add temp");
+		controller.executeUserCommand("delete 1");
+		controller.executeUserCommand("undo");
+		// check for feedback
+		expectedOutput = "Undo successful!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData02 = {"floating", "2", "temp", "false"};
+		writeTestFile(expectedData02);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for undo complete task
+		controller.executeUserCommand("complete temp");
+		controller.executeUserCommand("undo");
+		// check for feedback
+		expectedOutput = "Undo successful!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData03 = {"floating", "2", "temp", "false"};
+		writeTestFile(expectedData03);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+
+		// test for undo change task
+		controller.executeUserCommand("complete temp");
+		controller.executeUserCommand("change due date to~ 10 11 2014 from~ 1");
+		controller.executeUserCommand("change start date to~ 10 10 2014 from~ 1");
+		controller.executeUserCommand("undo");
+		// check for feedback
+		expectedOutput = "Undo successful!";
+		actualOutput = controller.getUserFeedback();
+		assertEquals(expectedOutput, actualOutput);
+		// check for file
+		String[] expectedData04 = {"deadline", "2", "temp", "2014", "11", "10", "true"};
+		writeTestFile(expectedData04);
+		assertEquals(true, fileCompare(taskFile, testingFile));
+
+		
+		closeDown();
+	}
+
+	/****************************************************
+    Functions facilitates system testing.
+	 *****************************************************/	
+
+	/**
+	 * Based on Data's type, format the expected output result, and write it into the testingFile.
+	 * @param expectedData String of Data's attributes.
+	 */
+	private void writeTestFile(String[] expectedData) {
+		// input String array should contain at least a command word
+		assert expectedData.length >= 1 : expectedData;
+
+		PrintWriter printer = null;
+		try {
+			printer = new PrintWriter(new FileOutputStream(testingFile), true);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		switch (expectedData[0]) {
+		case "floating":
+			// String array length should be at least 4
+			assert expectedData.length >= 4 : expectedData;
+			printer.printf(FLOATING_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3]);
+			printer.println("");
+			break;
+		case "deadline":
+			// String array length should be at least 7
+			assert expectedData.length >= 7 : expectedData;
+			printer.printf(DEADLINE_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3],
+					expectedData[4], expectedData[5], expectedData[6]);
+			printer.println("");
+			break;
+		case "timed":
+			// String array length should be at least 10
+			assert expectedData.length >= 10 : expectedData;
+			printer.printf(TIMED_TASK_FORMAT, expectedData[1], expectedData[2], expectedData[3],
+					expectedData[4], expectedData[5], expectedData[6], 
+					expectedData[7], expectedData[8], expectedData[9]);
+			printer.println("");
+			break;
+		case "empty":
+			printer.println(EMPTY_TASK_FORMAT);
+			break;
+		default :
+			assert false : expectedData[0];
+		}
+
+		printer.close();
+	}
+
+
+	/**
+	 * Close down system testing, making sure local directory is clean: <br>
+	 * 1. Delete and re-create task file to make sure it is clean. <br>
+	 * 1. Copy backup file to original task file. <br>
+	 * 2. Delete testing file and backup file. <br>
+	 */
+	private void closeDown() {
+		taskFile.delete();
+		taskFile = new File("Tasks.txt");
+
+		try {
+			copyFile(backupFile, taskFile);		
+			backupFile.delete();
+			testingFile.delete();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	/**
+	 * Compare two local files byte by byte, check if they have the same content.
+	 * @param sourceFile
+	 * @param destFile
+	 * @return boolean indicating if two files are the same.
+	 * @throws IOException file too large to compare
+	 */
+	private boolean fileCompare(File sourceFile, File destFile) {
+		try {
+			InputStream srcIs = new FileInputStream(sourceFile);
+			BufferedInputStream srcBis = new BufferedInputStream(srcIs);
+			final byte[] srcByte = new byte[1024];
+
+			InputStream destIs = new FileInputStream(destFile);
+			BufferedInputStream destBis = new BufferedInputStream(destIs);
+			final byte[] destByte = new byte[1024];
+
+			int srcCount = srcBis.read(srcByte);
+			int destCount = destBis.read(destByte);
+
+			do {
+				// compare
+				if (srcCount != destCount) {
+					srcBis.close();
+					destBis.close();
+					return false;
+				}
+				for(int i = 0; i < srcCount; i++) {
+					if(srcByte[i] != destByte[i]) {
+						srcBis.close();
+						destBis.close();
+						return false;
+					}
+				}
+
+				srcCount = srcBis.read(srcByte);
+				destCount = destBis.read(destByte);
+
+			} while (srcCount > 0 && destCount > 0);
+
+			srcBis.close();
+			destBis.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+	/**
+	 * Set up file comparison necessities: <br>
+	 * 1. Load local file. <br>
+	 * 2. Initialize Controller. <br>
+	 * 3. Make copy for local file (ensure local data is not dirty after testing). <br>
+	 * 4. Clear the local file by deleting and recreating it. <br>
+	 * 5. Create testing file.
+	 */
+	private void setUp() {
+		Controller.loadData();
+		controller = Controller.getController();
+
+		taskFile = new File("Tasks.txt");
+		backupFile = new File("SystemTestingBackUp.txt"); 
+
+		try {
+			copyFile(taskFile, backupFile);
+		} catch (IOException e) {
+			// file not found exception
+			e.printStackTrace();
+		}
+
+		taskFile.delete();
+		taskFile = new File("Tasks.txt");
+		Controller.loadData();
+
+		testingFile = new File("SystemTesting.txt");
+	}
+
+
+	/**
+	 * Make copy of a local file.
+	 * @param sourceFile
+	 * @param destFile
+	 * @throws IOException
+	 */
+	private void copyFile(File sourceFile, File destFile) throws IOException {
+		InputStream inputStream = new FileInputStream(sourceFile);
+		BufferedInputStream bis = new BufferedInputStream(inputStream);
+		final byte[] bytes = new byte[1024];
+
+		FileOutputStream outputStream = new FileOutputStream(destFile);
+		BufferedOutputStream bos = new BufferedOutputStream(outputStream);
+
+		int count = bis.read(bytes);
+		while (count > 0) {
+			bos.write(bytes, 0, count);
+			count = bis.read(bytes);
+		}
+
+		bos.close();
+		bis.close();
+
+		inputStream.close();
+		outputStream.close();
+	}
+
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\common\SystemTest.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\gui\GUIComponents.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.gui;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.ItemSelectable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.BoundedRangeModel;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.InputMap;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+
+import edu.nus.comp.cs2103t.taskerino.common.CommandHistory;
+import edu.nus.comp.cs2103t.taskerino.common.Controller;
+import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
+import edu.nus.comp.cs2103t.taskerino.common.Task;
+
+/**
+ * This class specifies dimensions and other details for each component in GUI. <br>
+ * There are all together five categories for the components: <br>
+ * 
+ * 	1. Menu: <br>
+ * 		Enable user to change the outlook of the GUI display mode; <br>
+ * 		Enable user to have alternative ways of accessing certain functions (e.g exit the program). <br>
+ * 
+ *  2. Tags: <br>
+ *  	Enable user to see existing tasks based on different task categories. <br>
+ * 
+ * 	3. User Task Area: <br>
+ * 		Enable user to see existing tasks in a form. <br>
+ * 
+ *  4. User Input Area: <br>
+ *  	Enable user to type commands. <br>
+ *  
+ *  5. User Feedback Area: <br>
+ *  	Enable user to access the feedback given by the program after executing their commands. <br>
+ */
+public class GUIComponents {
+	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
+	private static Controller controller = Controller.getController();
+	private CommandHistory commandHistory = CommandHistory.getCommandHistory();
+
+	private static final Font FONT_CONTENT_TABLE_TITLE = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_CONTENT_TABLE = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_FEEDBACK = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_TAG_LABEL = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_TAG = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_INPUT_LABEL = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_INPUT_AREA = new Font("SansSerif", Font.PLAIN, 18);
+
+	// panel that combines all components
+	private JPanel contentPanel = new JPanel();
+	
+	// variables for tags
+	private JPanel tagPanel;
+
+	private static final String TAG_ALL = "all";
+	private static final int TAG_ALL_INDEX = 0;
+	private static final String TAG_SEARCH = "search";
+	private static final int TAG_SEARCH_INDEX = 1;
+	private static final String TAG_COMPLETED = "completed";
+	private static final int TAG_COMPLETED_INDEX = 2;
+	private static final String TAG_UNCOMPLETED = "uncompleted";
+	private static final int TAG_UNCOMPLETED_INDEX = 3;
+	private static final String[] tagBoxItems = {TAG_ALL, TAG_SEARCH, TAG_COMPLETED, TAG_UNCOMPLETED};
+	private static String selectedTag;
+	private static JLabel tagLabel;
+	private static JComboBox<Object> tagBox;
+	
+	// variable for user input
+	private JPanel inputPanel;
+	private JLabel inputLabel;
+	private JTextField userInputArea = new JTextField();
+	
+	// variable for user output
+	private JPanel feedbackPanel;
+	private JLabel feedbackToUser;
+	private static final String WELCOME_MESSAGE = "Welcome to TASKERINO !!";
+
+	// variable for menu
+	private JMenuBar menuBar;
+	
+	// variables for user tasks
+	private static JTable userTaskTable;
+	private static JScrollPane taskScrollPane;
+	
+	private Object rowData[][] = {};
+	private static final int ROW_HEIGHT = 30;
+	private static final int ROW_MARGIN = 0;
+	
+	private static final Object[] columnNames = {"Index", "Task Name", "Start Date", "Due Date", "Status"};
+	private static final int COLUMN_ONE_SIZE = 20;
+	private static final int COLUMN_TWO_SIZE = 450;
+	private static final int COLUMN_THREE_SIZE = 70;
+	private static final int COLUMN_FOUR_SIZE = 70;
+	private static final int COLUMN_FIVE_SIZE = 70;
+	
+	private DefaultTableModel dataModel;
+	private static final Color BASE_COLOR = Color.WHITE;
+	private static final Color ALTERNATIVE_COLOR = Color.LIGHT_GRAY;
+	
+	private static final int SCROLLABLE_INCREMENT = 20;
+
+	// variables for hot keys
+	private static final String UP = "Up";
+	private static final String DOWN = "Down";
+	private static final String ALT_UP = "Alt_Up";
+	private static final String ALT_DOWN = "Alt_Down";
+	private static final String TAB = "Tab";
+	private static final String DELETE = "Delete";
+	
+	
+	// constructor
+	protected GUIComponents() {
+		setTagBox();
+		setUserTask();
+		setUserInput();
+		setUserFeedback();
+		setFont();
+		
+		setPanelOverview();
+	}
+
+
+	/**
+	 * A menu which provides the ability to switch between different LAF's
+	 * and alternative ways of accessing certain functions.
+	 * 
+	 * @return menuBar
+	 */
+	public JMenuBar getMenuBar() {
+		if (menuBar == null) {
+			menuBar = createMenuBar();
+		}
+		return menuBar;
+	}
+
+	
+	/**
+	 * A content panel to be added into a high level container. (JFrame)
+	 * 
+	 * @return contentPanel
+	 */
+	public Component getContentPanel() {
+		return contentPanel;
+	}
+
+
+	/**
+	 * Make input text filed to be the default focused component.
+	 */
+	public void focusInputTextField() {
+		userInputArea.requestFocusInWindow();
+	}
+	
+	
+	/**
+	 * Set Fond size and style for all sub-panel.
+	 */
+	private void setFont() {
+		tagLabel.setFont(FONT_TAG_LABEL);
+		tagBox.setFont(FONT_TAG);
+		inputLabel.setFont(FONT_INPUT_LABEL);
+		userInputArea.setFont(FONT_INPUT_AREA);
+		
+		feedbackToUser.setFont(FONT_FEEDBACK);
+		userTaskTable.setFont(FONT_CONTENT_TABLE);
+		userTaskTable.getTableHeader().setFont(FONT_CONTENT_TABLE_TITLE);
+	}
+	
+	
+	/**
+	 * Set up content panel: <br>
+	 * 1. Set layout to GridBagLayout; <br>
+	 * 2. Specify dimension for each component; <br>
+	 * 3. Add Components into contentPanel.
+	 */
+	private void setPanelOverview() {
+		final String methodName = "setPanelOverview";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set up content panel overview.");
+		
+		// set layout for contentPanel
+		GridBagLayout layout = new GridBagLayout();
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		contentPanel.setLayout(layout);
+		
+		//Add tagPanel
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Add component tagPanel to contentPanel.");
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.anchor = GridBagConstraints.CENTER;
+		contentPanel.add(tagPanel, gbc);
+
+		//Add taskScrollPane
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Add component taskScrollPane to contentPanel.");
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.gridwidth = 3;
+		gbc.gridheight = 1;
+		gbc.anchor = GridBagConstraints.NORTH;
+		gbc.fill = GridBagConstraints.BOTH;
+		contentPanel.add(taskScrollPane, gbc);
+
+		//Add inputPanel
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Add component inputPanel to contentPanel.");
+		gbc.weightx = 1;
+		gbc.weighty = 0;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		contentPanel.add(inputPanel, gbc);
+		
+		//Add feedbackPanel
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Add component feedbackPanel to contentPanel.");
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.gridx = 0;
+		gbc.gridy = 3;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.insets = new Insets(0, 10, 10, 10);
+		gbc.anchor = GridBagConstraints.SOUTH;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		contentPanel.add(feedbackPanel, gbc);
+	}
+	
+	
+	/**
+	 * Set up JLabel which is used to display feedback to the user. 
+	 */
+	private void setUserFeedback() {
+		feedbackToUser = new JLabel(WELCOME_MESSAGE);
+		feedbackPanel = new JPanel();
+		feedbackPanel.add(feedbackToUser);
+	}
+	
+	
+	/**
+	 * Set up JTextField which executes user's input command by
+	 * initializing Parser and Logic classes, and display feedback 
+	 * to user after retrieving the feedback from Logic class.
+	 */
+	private void setUserInput() {
+		final String methodName = "setUserInput";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set up components for user inputs.");
+		
+		inputPanel = new JPanel();
+		inputPanel.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		inputLabel = new JLabel("Input Area :");
+		inputLabel.setDisplayedMnemonic(KeyEvent.VK_I);
+		inputLabel.setLabelFor(userInputArea);
+		
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.insets = new Insets(5, 5, 5, 10);
+		inputPanel.add(inputLabel, gbc);
+		
+		gbc.weightx = 1;
+		gbc.weighty = 0;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridwidth = 5;
+		gbc.gridheight = 1;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		inputPanel.add(userInputArea, gbc);
+		
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Add action listener for userInputArea.");
+		// add action listener for event when user presses "enter" in keyboard
+		userInputArea.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				String inputCommand = userInputArea.getText();
+				LoggerFactory.logp(Level.INFO, className, methodName, "User input commands: \n" + inputCommand);
+				controller.executeUserCommand(inputCommand);
+				
+				userInputArea.setText("");
+				
+				String outputFeedBack = controller.getUserFeedback();
+				feedbackToUser.setText(outputFeedBack);
+				
+				// refresh userTaskTable
+				updateTaskTable();
+				controller.resetGUIFocus();
+			}
+		});
+		
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set hotkeys for user input text field.");
+		// enable hot key "tab"
+		userInputArea.setFocusTraversalKeysEnabled(false);
+		
+		// add key bindings to the JTextField which user type input commands
+		int condition = JComponent.WHEN_FOCUSED;
+		InputMap inMap = userInputArea.getInputMap(condition);
+		ActionMap actMap = userInputArea.getActionMap();
+		
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), UP);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), DOWN);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), TAB);
+		
+		actMap.put(UP, new UserInputAreaAction(UP));
+		actMap.put(DOWN, new UserInputAreaAction(DOWN));
+		actMap.put(TAB, new UserInputAreaAction(TAB));
+	}
+	
+	
+	/**
+	 * Set ActionListener for action performed when user press "up", "down" or "tab" on keyboard. <br>
+	 * If there is a hot key clash with other components, those actions will be invoked 
+	 * when userInputArea is in focus.
+	 */
+	@SuppressWarnings("serial")
+	private class UserInputAreaAction extends AbstractAction {
+		public UserInputAreaAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			String name = getValue(AbstractAction.NAME).toString();
+
+			if (name.equals(UP)) {
+				String previousCommand = commandHistory.getPreCommand();
+				userInputArea.setText(previousCommand);
+				
+				if (previousCommand.isEmpty()) {
+					feedbackToUser.setText("No more command in the history!");
+				} else {
+					feedbackToUser.setText(" ");
+				}
+			} else if (name.equals(DOWN)) {
+				String postCommand = commandHistory.getPostCommand();
+				userInputArea.setText(postCommand);
+				
+				if (postCommand.isEmpty()) {
+					feedbackToUser.setText("You have reached the end of command history!");
+				} else {
+					feedbackToUser.setText(" ");
+				}
+			} else if (name.equals(TAB)) {
+				// change focus
+				userTaskTable.requestFocusInWindow();
+			}
+		}
+	}
+	
+
+	/**
+	 * Set up JScrollPane which is used to display all user's tasks.
+	 */
+	private void setUserTask() {
+		final String methodName = "setUserTask";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set up user task JScrollPane.");
+
+		setTable();
+		taskScrollPane = new JScrollPane(userTaskTable);
+
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set hotkeys for user task scroll pane.");
+		// enable hot key "tab"
+		userTaskTable.setFocusTraversalKeysEnabled(false);
+		userTaskTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), "none");
+		
+		// add key bindings to the JTable which display feedback to user
+		int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
+		InputMap inMap = userTaskTable.getInputMap(condition);
+		ActionMap actMap = userTaskTable.getActionMap();
+
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), ALT_UP);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), ALT_DOWN);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0), TAB);
+		inMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), DELETE);
+
+		actMap.put(ALT_UP, new UserTaskTableAction(ALT_UP, taskScrollPane.getVerticalScrollBar().getModel(), 
+				SCROLLABLE_INCREMENT));
+		actMap.put(ALT_DOWN, new UserTaskTableAction(ALT_DOWN, taskScrollPane.getVerticalScrollBar().getModel(), 
+				SCROLLABLE_INCREMENT));
+		actMap.put(TAB, new UserTaskTableAction(TAB));
+		actMap.put(DELETE, new UserTaskTableAction(DELETE));
+	}
+
+
+	/**
+	 * Initialize and set userTaskTable properties.
+	 */
+	@SuppressWarnings("serial")
+	private void setTable() {
+		final String methodName = "setTable";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Set up user task JTable.");
+
+		dataModel = new DefaultTableModel(rowData, columnNames);
+
+		userTaskTable = new JTable(dataModel){
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+
+			@Override
+			public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
+				LoggerFactory.logp(Level.CONFIG, className, methodName, "Create alternative coloring for rows in JTable.");
+				
+				Component returnComp = super.prepareRenderer(renderer, row, column);
+				if (!returnComp.getBackground().equals(getSelectionBackground())){
+					Color coloring = (row % 2 == 0 ? ALTERNATIVE_COLOR : BASE_COLOR);
+					returnComp.setBackground(coloring);
+					coloring = null;
+				}
+				return returnComp;
+			}
+		};
+
+		// set row size
+		userTaskTable.setRowHeight(ROW_HEIGHT);
+		userTaskTable.setRowMargin(ROW_MARGIN);
+
+		// set column size
+		userTaskTable.getColumnModel().getColumn(0).setPreferredWidth(COLUMN_ONE_SIZE);
+		userTaskTable.getColumnModel().getColumn(1).setPreferredWidth(COLUMN_TWO_SIZE);
+		userTaskTable.getColumnModel().getColumn(2).setPreferredWidth(COLUMN_THREE_SIZE);
+		userTaskTable.getColumnModel().getColumn(3).setPreferredWidth(COLUMN_FOUR_SIZE);
+		userTaskTable.getColumnModel().getColumn(4).setPreferredWidth(COLUMN_FIVE_SIZE);
+
+		updateTaskTable();
+	}
+
+
+	/**
+	 * Update userTaskTable entries.
+	 */
+	private void updateTaskTable() {
+		final String methodName = "updateTaskTable";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Update userTask table.");
+		
+		// get all user tasks
+		ArrayList<Task> userTasks = controller.getUserTasks();
+
+		// clear table data
+		dataModel.setRowCount(0);
+
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Reset tasks in userTask table.");
+		// reset table data
+		for (int i=0; i<userTasks.size(); i++) {
+			String[] data = new String[5];
+
+			data[0] = (1 + i) + "";
+			data[1] = userTasks.get(i).getTaskName();
+			data[2] = userTasks.get(i).getStartDate() != null ? "" + userTasks.get(i).getStartDate() : "";
+			data[3] = userTasks.get(i).getDueDate() != null ? "" + userTasks.get(i).getDueDate() : "";
+			data[4] = userTasks.get(i).getStringStatus();
+
+			dataModel.addRow(data);
+		}
+	}
+
+	/**
+	 * Set focus of JTable to the row with taskIndex.
+	 */
+	public static void setTaskTableFocus(int taskIndex) {
+		userTaskTable.setRowSelectionInterval(taskIndex, taskIndex);
+		userTaskTable.scrollRectToVisible(userTaskTable.getCellRect(taskIndex, 0, true));
+	}
+	
+
+	/**
+	 * Set ActionListener for action performed when user press "Alt + up", "Alt + down",
+	 * "tab" or "delete" on keyboard. <br>
+	 * If there is a hot key clashes with other components, those actions will be invoked 
+	 * when userTaskTable is in focus.
+	 */
+	@SuppressWarnings("serial")
+	private class UserTaskTableAction extends AbstractAction {
+		private BoundedRangeModel vScrollBarModel;
+		private int scrollableIncrement;
+
+		public UserTaskTableAction(String name, BoundedRangeModel model, int scrollableIncrement) {
+			super(name);
+			this.vScrollBarModel = model;
+			this.scrollableIncrement = scrollableIncrement;
+		}
+
+		public UserTaskTableAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			String name = getValue(AbstractAction.NAME).toString();
+			
+			if (name.equals(ALT_UP) || name.equals(ALT_DOWN)) {
+				int value = vScrollBarModel.getValue();
+				
+				if (name.equals(ALT_UP)) {
+					value -= scrollableIncrement;
+					vScrollBarModel.setValue(value);
+				} else if (name.equals(ALT_DOWN)) {
+					value += scrollableIncrement;
+					vScrollBarModel.setValue(value);
+				} 
+				
+			} else if (name.equals(TAB)) {
+				// change focus
+				focusInputTextField();
+				
+			} else if (name.equals(DELETE)) {
+				// delete selected lines of rows
+				int[] selectedRowIndices = userTaskTable.getSelectedRows();
+				Arrays.sort(selectedRowIndices);
+				
+				for (int i=selectedRowIndices.length-1; i>=0; i--) {
+					String inputCommand = "delete " + (selectedRowIndices[i] + 1);
+					controller.executeUserCommand(inputCommand);
+				}
+				
+				// impossible to select non-existent rows, can safely set feedback here
+				String outputFeedBack;
+				if (selectedRowIndices.length == 1) {
+					outputFeedBack = "Delete tasks with index: ";
+				} else {
+					outputFeedBack = "Delete tasks with indices: ";
+				}
+				
+				for (int i=0; i<selectedRowIndices.length; i++) {
+					outputFeedBack += (selectedRowIndices[i] + 1) + " ";
+				}
+				outputFeedBack += "successfully";
+				feedbackToUser.setText(outputFeedBack);
+				
+				// refresh userTaskTable
+				updateTaskTable();
+			}
+		}
+	}
+	
+	
+	/**
+	 * Set up JComboBox which display a set of tags.
+	 */
+	private void setTagBox() {
+		final String methodName = "setTagBox";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Setting up tagBox.");
+		
+		tagBox = new JComboBox<Object>();
+		
+		tagLabel = new JLabel("Select Tags:");
+		tagLabel.setDisplayedMnemonic('S');
+		tagLabel.setLabelFor(tagBox);
+		
+		tagPanel = new JPanel();
+		tagPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
+		tagPanel.add(tagLabel);
+		tagPanel.add(tagBox);
+		
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Select tag in the tagBox.");
+		tagBox.setModel(new DefaultComboBoxModel<Object>(tagBoxItems));
+		tagBox.setSelectedIndex(0);
+		setSelectedItem(tagBoxItems[0]);
+		tagBox.requestFocusInWindow();
+		
+		tagBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				ItemSelectable item = (ItemSelectable)event.getSource();
+				setSelectedItem(selectedString(item));
+				updateTaskTable();
+			}
+		});
+	}
+	
+	/**
+	 * Get the selected tag's name in String representation.
+	 * @param item -- Selected Tag
+	 * @return Tag's name
+	 */
+	private String selectedString(ItemSelectable item) {
+	    Object selected[] = item.getSelectedObjects();
+	    return ((selected.length == 0) ? "null" : (String)selected[0]);
+	}  
+
+	
+	public static String getSelectedTag() {
+		return selectedTag;
+	}
+
+	/**
+	 * Reset the seletectedItem and the tagBox in GUIComponents class.
+	 * @param selectedItem TagName
+	 */
+	public static void setSelectedItem(String selectedItem) {
+		GUIComponents.selectedTag = selectedItem.toLowerCase();
+		switch (selectedItem) {
+			case TAG_ALL:
+				tagBox.setSelectedIndex(TAG_ALL_INDEX);
+				break;
+			case TAG_SEARCH:
+				tagBox.setSelectedIndex(TAG_SEARCH_INDEX);
+				break;
+			case TAG_COMPLETED:
+				tagBox.setSelectedIndex(TAG_COMPLETED_INDEX);
+				break;
+			case TAG_UNCOMPLETED:
+				tagBox.setSelectedIndex(TAG_UNCOMPLETED_INDEX);
+				break;
+			default:
+			    assert false : selectedItem;
+		}
+	}
+	
+	
+	/**
+	 *  Create menu bar.
+	 */
+	private JMenuBar createMenuBar() {
+		final String methodName = "createMenuBar";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Creating menu bar.");
+		
+		JMenuBar menuBar = new JMenuBar();
+
+		menuBar.add(createFileMenu());
+		menuBar.add(createLAFMenu());
+
+		return menuBar;
+	}
+	
+	
+	/**
+	 *  Create menu items for the Application menu
+	 */
+	private JMenu createFileMenu() {
+		final String methodName = "createFileMenu";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Creating file bar.");
+		
+		JMenu menu = new JMenu("Application");
+		menu.setMnemonic(KeyEvent.VK_A);
+
+		menu.addSeparator();
+		menu.add(new ExitAction());
+
+		return menu;
+	}
+
+	/**
+	 *	Close the frame.
+	 */
+	@SuppressWarnings("serial")
+	class ExitAction extends AbstractAction {
+		public ExitAction()	{
+			putValue(Action.NAME, "Exit");
+			putValue(Action.SHORT_DESCRIPTION, getValue(Action.NAME));
+			putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_E));
+		}
+
+		public void actionPerformed(ActionEvent event) {
+			System.exit(0);
+		}
+	}
+	
+	/**
+	 *  Create menu items for the Look & Feel menu.
+	 */
+	private JMenu createLAFMenu() {
+		final String methodName = "createLAFMenu";
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Creating Look & Feel menu.");
+		
+		ButtonGroup buttons = new ButtonGroup();
+
+		JMenu menu = new JMenu("Look & Feel");
+		menu.setMnemonic(KeyEvent.VK_L);
+
+		String lafId = UIManager.getLookAndFeel().getID();
+		UIManager.LookAndFeelInfo[] lafInfo = UIManager.getInstalledLookAndFeels();
+
+		for (int i = 0; i < lafInfo.length; i++) {
+			String laf = lafInfo[i].getClassName();
+			String name= lafInfo[i].getName();
+
+			Action action = new ChangeLookAndFeelAction(laf, name);
+			JRadioButtonMenuItem menuItem = new JRadioButtonMenuItem(action);
+			menu.add(menuItem);
+			buttons.add(menuItem);
+
+			if (name.equals(lafId)) {
+				menuItem.setSelected(true);
+			}
+		}
+
+		return menu;
+	}
+
+
+	/**
+	 *  Change the LAF and recreate contentPanel in GUIComponents to update effect.
+	 */
+	@SuppressWarnings("serial")
+	class ChangeLookAndFeelAction extends AbstractAction {
+		final String innerClassName = className + "/ChangeLookAndFeelAction";
+		
+		private String laf;
+
+		protected ChangeLookAndFeelAction(String laf, String name) {
+			this.laf = laf;
+			putValue(Action.NAME, name);
+			putValue(Action.SHORT_DESCRIPTION, getValue(Action.NAME));
+		}
+
+		public void actionPerformed(ActionEvent event) {
+			LoggerFactory.logp(Level.CONFIG, innerClassName, "Action Listener", "Updating Look & Feel.");
+			
+			try {
+				JMenuItem menuItem = (JMenuItem)event.getSource();
+				JPopupMenu popup = (JPopupMenu)menuItem.getParent();
+				JRootPane rootPane = SwingUtilities.getRootPane(popup.getInvoker());
+				Component component = rootPane.getContentPane().getComponent(0);
+				rootPane.getContentPane().remove(component);
+
+				UIManager.setLookAndFeel(laf);
+				GUIComponents bindings = new GUIComponents();
+				rootPane.getContentPane().add(bindings.getContentPanel());
+				SwingUtilities.updateComponentTreeUI(rootPane);
+				bindings.focusInputTextField();
+			} catch (Exception exception) {
+				LoggerFactory.logp(Level.SEVERE, innerClassName, "Action Listener", 
+						"Failed to load Look & Feel." + exception.getMessage());
+				exception.printStackTrace();
+			}
+		}
+	}
+	
+}
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\gui\GUIComponents.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\gui\GUIFrame.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.gui;
+
+
+import javax.swing.JFrame;
+
+/**
+ * This class creates a frame for GUI with specified properties.
+ */
+@SuppressWarnings("serial")
+public class GUIFrame extends JFrame {
+	private static final String APP_NAME = "Taskerino";
+	private static final int MAIN_FRAME_WIDTH = 1000;
+	private static final int MAIN_FRAME_HEIGHT = 650;
+	
+	public GUIFrame() {
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		this.setTitle(APP_NAME);
+		
+		GUIComponents components = new GUIComponents();
+		this.setJMenuBar(components.getMenuBar());
+		this.getContentPane().add(components.getContentPanel());
+		
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.pack();
+		this.setSize(MAIN_FRAME_WIDTH, MAIN_FRAME_HEIGHT);
+		this.setLocationRelativeTo(null);
+		this.setVisible(true);
+		
+		components.focusInputTextField();
+	}
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\gui\GUIFrame.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\gui\HelpFrame.java
+	 */
+
+package edu.nus.comp.cs2103t.taskerino.gui;
+
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.logging.Level;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import edu.nus.comp.cs2103t.taskerino.common.Assist;
+import edu.nus.comp.cs2103t.taskerino.common.LoggerFactory;
+
+/**
+ * This class pop up a new JFrame which displays the a list of instructions
+ * that gives the user a general guideline of how to use Taskerino.
+ */
+public class HelpFrame {
+	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
+	private static final Assist assist = new Assist();
+	private static final String APP_NAME = "Taskerino";
+
+	private final JFrame frame;
+	private static final int HELP_FRAME_WIDTH = 750;
+	private static final int HELP_FRAME_HEIGHT = 600;
+
+	private String helpType;
+	private static final String HELP_ADD = "add";
+	private static final String HELP_DELETE = "delete";
+	private static final String HELP_CHANGE = "change";
+	private static final String HELP_COMPLETE = "complete";
+	private static final String HELP_SEARCH = "search";
+	private static final String HELP_GOTO = "goto";
+
+	private JPanel contentPanel = new JPanel();
+	private JLabel sessionTitle = new JLabel();
+	private JTextArea detailedDescription = new JTextArea();
+	private JButton exitButton = new JButton("Press any key to contunue.");
+	
+	private static final Font FONT_TITLE = new Font("SansSerif", Font.BOLD, 30);
+	private static final Font FONT_DESCRIPTION = new Font("SansSerif", Font.PLAIN, 16);
+	private static final Font FONT_BUTTON = new Font("SansSerif", Font.PLAIN, 14);
+
+
+	public HelpFrame(String helpType) {
+		this.helpType = helpType;
+
+		frame = new JFrame(APP_NAME);
+		frame.getContentPane().add(getContentPanel());
+		
+		KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        manager.addKeyEventDispatcher(new MyDispatcher());
+        
+		frame.pack();
+		frame.setSize(HELP_FRAME_WIDTH, HELP_FRAME_HEIGHT);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+		
+		exitButton.setFocusable(true);;
+
+	}
+
+	
+	private void setExitButton() {
+		exitButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				frame.dispose();
+			}
+		});
+	}
+
+
+	private void setDetailedDescription(String helpType) {
+		if (helpType == null || helpType.equals("")) {
+			// no specific helpType -> general help!
+			setGeneralHelpContent();
+		} else {
+			switch (helpType) {
+				case HELP_ADD:
+					setAddHelpContent();
+					break;
+				case HELP_DELETE:
+					setDeleteHelpContent();
+					break;
+				case HELP_CHANGE:
+					setChangeHelpContent();
+					break;
+				case HELP_COMPLETE:
+					setCompleteHelpContent();
+					break;
+				case HELP_SEARCH:
+					setSearchHelpContent();
+					break;
+				case HELP_GOTO:
+					setGotoHelpContent();
+					break;
+				default:
+					assert false : "HelpType: " + helpType;
+			}
+		}
+	}
+
+
+	/**
+	 * Set up content panel: <br>
+	 * 1. Set layout to GridBagLayout; <br>
+	 * 2. Specify dimension for each component; <br>
+	 * 3. Add Components into contentPanel.
+	 */
+	private void setPanelOverview() {
+		final String methodName = "setPanelOverview";
+		detailedDescription.setEditable(false);
+		detailedDescription.setLineWrap(true);
+		// set layout for contentPanel
+		GridBagLayout layout = new GridBagLayout();
+		GridBagConstraints gbc = new GridBagConstraints();
+
+		contentPanel.setLayout(layout);
+
+		//Add sessionTitle
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Add component sessionTitle to contentPanel.");
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.anchor = GridBagConstraints.CENTER;
+		contentPanel.add(sessionTitle, gbc);
+
+		//Add detailedDescription
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Add component detailedDescription to contentPanel.");
+		gbc.weightx = 1;
+		gbc.weighty = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 5;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.fill = GridBagConstraints.BOTH;
+		contentPanel.add(detailedDescription, gbc);
+
+		//Add exitButton
+		LoggerFactory.logp(Level.CONFIG, className, methodName, "Add component detailedDescription to contentPanel.");
+		gbc.weightx = 0;
+		gbc.weighty = 0;
+		gbc.gridx = 0;
+		gbc.gridy = 6;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.fill = GridBagConstraints.NONE;
+		contentPanel.add(exitButton, gbc);
+	}
+
+	
+/**********************************************************************************
+    Methods that set title and detailed descriptions based on input Command.
+**********************************************************************************/
+	
+	private void setGeneralHelpContent() {
+		ArrayList<String> contents = assist.generalHelp();
+		sessionTitle.setText(contents.get(0));
+		detailedDescription.setText(contents.get(1));
+	}
+
+	private void setGotoHelpContent() {
+		ArrayList<String> contents = assist.gotoHelp();
+		sessionTitle.setText(contents.get(0));
+		detailedDescription.setText(contents.get(1));
+	}
+
+	private void setSearchHelpContent() {
+		ArrayList<String> contents = assist.searchHelp();
+		sessionTitle.setText(contents.get(0));
+		detailedDescription.setText(contents.get(1));
+	}
+
+	private void setCompleteHelpContent() {
+		ArrayList<String> contents = assist.completeHelp();
+		sessionTitle.setText(contents.get(0));
+		detailedDescription.setText(contents.get(1));
+	}
+
+	private void setChangeHelpContent() {
+		ArrayList<String> contents = assist.changeHelp();
+		sessionTitle.setText(contents.get(0));
+		detailedDescription.setText(contents.get(1));
+	}
+
+	private void setDeleteHelpContent() {
+		ArrayList<String> contents = assist.deleteHelp();
+		sessionTitle.setText(contents.get(0));
+		detailedDescription.setText(contents.get(1));
+	}
+
+	private void setAddHelpContent() {
+		ArrayList<String> contents = assist.addHelp();
+		sessionTitle.setText(contents.get(0));
+		detailedDescription.setText(contents.get(1));
+	}
+
+
+	/**
+	 * A content panel to be added into a high level container. (JFrame)
+	 * 
+	 * @return contentPanel
+	 */
+	public Component getContentPanel() {
+		setDetailedDescription(helpType);
+		setExitButton();
+		setPanelOverview();
+		setFont();
+
+		return contentPanel;
+	}
+
+
+	/**
+	 * Set Fond size and style for all sub-panel.
+	 */
+	private void setFont() {
+		sessionTitle.setFont(FONT_TITLE);
+		detailedDescription.setFont(FONT_DESCRIPTION);
+		exitButton.setFont(FONT_BUTTON);
+	}
+
+
+	/**
+	 * Inner class to close the window when user press any key.
+	 */
+	private class MyDispatcher implements KeyEventDispatcher {
+        @Override
+        public boolean dispatchKeyEvent(KeyEvent e) {
+            if (e.getID() == KeyEvent.KEY_PRESSED) {
+				frame.dispose();
+            }
+            return false;
+        }
+    }
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\gui\HelpFrame.java
+
+
+
+
+
+	/**
+	 * origin: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\logic\Logic.java
+	 */
+
+	/**
+	 * Execute help command.
+	 */
+	public String help() {
+		String feedback = " ";
+		isHelpValid = true;
+		if (Data.getDescription() != null) {
+			String cmd = Data.getDescription().toLowerCase();
+			if (cmd.equals("add") || cmd.equals("delete") || cmd.equals("change") || cmd.equals("search") 
+					|| cmd.equals("complete") || cmd.equals("goto") || cmd.equals("")) {
+				isHelpValid = true;
+			} else {
+				isHelpValid = false;
+				feedback = "User command not recognized, please try again!";
+			}
+		}
+		return feedback;
+	}
+
+	public boolean isHelpValid() {
+		return isHelpValid;
+	}
+
+	/**
+	 * Update tasks in the selected tag file.
+	 */
+	public String gotoTag() {
+		String feedback = " ";
+		if (Data.getDescription() != null) {
+			String tag = Data.getDescription().toLowerCase();
+			if (tag.equals("all") || tag.equals("search") || tag.equals("completed") || tag.equals("uncompleted")) {
+				isTagValid = true;
+			} else {
+				isTagValid = false;
+				feedback = "User command not recognized, please try again!";
+			}
+		}
+		sortTasksByStatus();
+		return feedback;
+	}
+
+	public boolean isTagValid() {
+		return isTagValid;
+	}
+
+	/**
+	 * Initialize and modify completedTasks and incompletedTasks ArrayLists.
+	 */
+	public void sortTasksByStatus() {
+		Data.completedTasks.clear();
+		Data.uncompletedTasks.clear();
+		for (Task task: Data.task) {
+			if (task.getStatus()) {
+				Data.completedTasks.add(task);
+			} else {
+				Data.uncompletedTasks.add(task);
+			}
+		}
+	}
+
+	/**
+	 * Check for validity of start date and due date.
+	 */
+	public boolean isValidDate(DateAndTime startDate, DateAndTime dueDate) {
+		return (startDate.compareTo(dueDate) <= 0);
+	}
+
+	/**
+	 * Search for and return task result based on user input provided.
+	 * @return Task  
+	 */
+	private Task getModifiedTask() {
+		Task result = getTask(Data.taskIndexInList);
+
+		if (result != null) {
+			// user use valid index to access to task
+			return result;
+		} else {
+			// 1. user use description to access to task
+			// 2. user use invalid index to access to task
+			result = Data.getTask(Data.getDescription());
+			return result;
+		}
+	}
+
+
+	/**
+	 * Searches for task based on Task Index and returns the specific task.
+	 * @param int index of task in current ArrayList user in accessing to
+	 * @return Task or null if not found
+	 */	
+	private Task getTask(int index) {
+		ArrayList<Task> targetList;
+		try {
+			targetList = controller.getUserTasks();
+		} catch (NullPointerException e) {
+			// only occur when doing unit testing as GUIComponents is not initialized
+			targetList = Data.task;
+		}
+		
+		if (index < 0 || index >= targetList.size()) {
+			return null;
+		} else {
+			return targetList.get(index);
+		}
+	}	
+
+}
+
+	// End of segment: E:\NUS\Modules\2014-2015 SEM1\CS2103T\Project\main\Project\edu\nus\comp\cs2103t\taskerino\logic\Logic.java
+
+
+
+
+

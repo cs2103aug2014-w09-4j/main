@@ -72,13 +72,13 @@ public class GUIComponents {
 	private static Controller controller = Controller.getController();
 	private CommandHistory commandHistory = CommandHistory.getCommandHistory();
 
-	private static final Font FONT_CONTENT_TABLE_TITLE = new Font("SansSerif", Font.PLAIN, 15);
-	private static final Font FONT_CONTENT_TABLE = new Font("SansSerif", Font.PLAIN, 15);
-	private static final Font FONT_FEEDBACK = new Font("SansSerif", Font.PLAIN, 15);
-	private static final Font FONT_TAG_LABEL = new Font("SansSerif", Font.PLAIN, 15);
-	private static final Font FONT_TAG = new Font("SansSerif", Font.PLAIN, 15);
-	private static final Font FONT_INPUT_LABEL = new Font("SansSerif", Font.PLAIN, 15);
-	private static final Font FONT_INPUT_AREA = new Font("SansSerif", Font.PLAIN, 15);
+	private static final Font FONT_CONTENT_TABLE_TITLE = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_CONTENT_TABLE = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_FEEDBACK = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_TAG_LABEL = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_TAG = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_INPUT_LABEL = new Font("SansSerif", Font.PLAIN, 18);
+	private static final Font FONT_INPUT_AREA = new Font("SansSerif", Font.PLAIN, 18);
 
 	// panel that combines all components
 	private JPanel contentPanel = new JPanel();

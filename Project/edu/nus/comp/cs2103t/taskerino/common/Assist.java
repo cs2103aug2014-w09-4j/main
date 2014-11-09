@@ -49,12 +49,7 @@ public class Assist {
 													+ "1. To delete task using TASK NAME \n"
 													+ ">> delete <TASK NAME> \n\n"
 													+ "2. To delete task using TASK INDEX \n"
-													+ ">> delete <TASK INDEX> \n\n"
-													+ "Deleting start/due date from task \n\n"
-													+ "1. To delete START DATE of a task \n"
-													+ ">> delete start date from~ <TASK INDEX> \n\n"
-													+ "2. To delete DUE DATE of a task \n"
-													+ ">>delete due date from~ <TASK INDEX> \n\n";
+													+ ">> delete <TASK INDEX> \n";
 	private static final String MESSAGE_HELP_CHANGE = "\nChanges details of tasks. \n\n"
 													+ "Possible changes are: TASK NAME, START DATE and DUE DATE \n\n"
 													+ "Any changes are immediately saved into local file \"Tasks.txt\". \n\n"
@@ -72,16 +67,16 @@ public class Assist {
 													+ ">> complete <TASK INDEX> \n\n";
 	private static final String MESSAGE_HELP_SEARCH = "\nSearches for tasks that matches criteria and displays them. \n\n"
 													+ "1. searching for tasks containing a certain keyword \n"
-													+ ">> search <KEYWORD> \n\n"
-													+ "2. searching for tasks within a specific range of dates \n"
-													+ ">> search from~ <START DATE> to~ <DUE DATE> \n\n";
+													+ ">> search <KEYWORD> \n\n";
 	private static final String MESSAGE_HELP_GOTO = "\nChanges tasks displayed to those with the specified attached tag. \n\n"
 													+ "1. change tag to \"all\". \n"
 													+ ">> goto all \n\n"
 													+ "2. change tag to \"search\". \n"
 													+ ">> goto search \n\n"
 													+ "3. change tag to \"uncompleted\". \n"
-													+ ">> goto uncompleted \n\n";
+													+ ">> goto uncompleted \n\n"
+													+ "4. change tag to \"completed\". \n"
+													+ ">> goto completed \n\n";
 	
 	private static ArrayList<String> message;
 	
