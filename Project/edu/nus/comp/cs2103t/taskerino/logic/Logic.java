@@ -1,8 +1,6 @@
 //@author A0108310Y
 package edu.nus.comp.cs2103t.taskerino.logic;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import edu.nus.comp.cs2103t.taskerino.common.Command;
@@ -40,11 +38,7 @@ public class Logic {
 			newCommand.setDueDate(modifiedTask.getDueDate());
 			newCommand.setStartDate(modifiedTask.getStartDate());
 			newCommand.setNameOfTaskModified(modifiedTask.getTaskName());
-			if(modifiedTask.getStatus().equals("completed")) {
-				newCommand.setStatusOfTask(true);
-			} else {
-				newCommand.setStatusOfTask(false);
-			}
+			newCommand.setStatusOfTask(modifiedTask.getStatus());
 			newCommand.setIndexOfTaskModified(Data.task.indexOf(modifiedTask));
 			Data.commandList.add(newCommand);
 
@@ -167,6 +161,7 @@ public class Logic {
 			Command newCommand = new Command();
 			newCommand.setCommand("add");
 			newCommand.setTaskModified(newTask);
+			newCommand.setIndexOfTaskModified(Data.task.size() - 1);
 			Data.commandList.add(newCommand);	
 			return "Add task " + newTask.getTaskName() + " successfully";
 		} else {
@@ -178,18 +173,20 @@ public class Logic {
 	 * completeTask marks the task from the existing tasks list 
 	 * and return a String feedback to GUI class.
 	 */
-	public String completeTask() throws FileNotFoundException, UnsupportedEncodingException {
+	public String completeTask() {
 		Task toBeCompleted = getModifiedTask();
 		if (toBeCompleted == null) {
 			return "Task not found!";
 		}
 
-		toBeCompleted.setStatus(true);
 		Command newCommand = new Command();
 		newCommand.setCommand("complete");
 		newCommand.setTaskModified(toBeCompleted);
+		newCommand.setStatusOfTask(toBeCompleted.getStatus());
+		newCommand.setIndexOfTaskModified(Data.task.indexOf(toBeCompleted));
 		Data.commandList.add(newCommand);
-		
+
+		toBeCompleted.setStatus(true);
 		return "Complete task " + toBeCompleted.getTaskName() + " successfully.";
 	}
 
@@ -272,7 +269,9 @@ public class Logic {
 				return "Undo successful!";
 			}
 			else if(commandType.equals("complete")) {
-				Data.task.get(commandToUndo.getIndexOfTaskModified()).setStatus(false);
+				if (!commandToUndo.getStatusOfTask()) {
+					Data.task.get(commandToUndo.getIndexOfTaskModified()).setStatus(false);
+				}
 				Data.commandList.remove(indexOfCommandToUndo);
 				return "Undo successful!";
 			}
@@ -342,7 +341,7 @@ public class Logic {
 		Data.completedTasks.clear();
 		Data.uncompletedTasks.clear();
 		for (Task task: Data.task) {
-			if (task.getStatus().equalsIgnoreCase("completed")) {
+			if (task.getStatus()) {
 				Data.completedTasks.add(task);
 			} else {
 				Data.uncompletedTasks.add(task);

@@ -68,7 +68,11 @@ public class Task{
 		this.taskType = string;
 	}
 	
-	public String getStatus(){
+	public boolean getStatus(){
+		return this.status;
+	}
+	
+	public String getStringStatus(){
 		if(this.status == true) {
 			return "completed";
 		} else {

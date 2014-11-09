@@ -525,7 +525,7 @@ public class GUIComponents {
 			data[1] = userTasks.get(i).getTaskName();
 			data[2] = userTasks.get(i).getStartDate() != null ? "" + userTasks.get(i).getStartDate() : "";
 			data[3] = userTasks.get(i).getDueDate() != null ? "" + userTasks.get(i).getDueDate() : "";
-			data[4] = userTasks.get(i).getStatus();
+			data[4] = userTasks.get(i).getStringStatus();
 
 			dataModel.addRow(data);
 		}
