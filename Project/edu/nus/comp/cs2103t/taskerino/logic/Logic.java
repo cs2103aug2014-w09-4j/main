@@ -285,7 +285,7 @@ public class Logic {
 				return "Undo successful!";
 			}
 			else if(commandType.equals("change")) {
-				Task oldTask = new Task();
+				Task oldTask = new Task(true);
 				oldTask.setTaskName(commandToUndo.getNameOfTaskModified());
 				oldTask.setDueDate(commandToUndo.getDueDate());
 				oldTask.setStartDate(commandToUndo.getStartDate());

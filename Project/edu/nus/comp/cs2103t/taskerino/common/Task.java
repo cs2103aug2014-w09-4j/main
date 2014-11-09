@@ -17,6 +17,11 @@ public class Task{
 		this.setTaskIndex(currentIndex);
 	}
 	
+	public Task(boolean isTemp){
+		// create temp Task which does not increase indexCount
+		this.setTaskIndex(currentIndex);
+	}
+	
 	public Task(String description) {
 		currentIndex++;
 		this.setTaskIndex(currentIndex);
