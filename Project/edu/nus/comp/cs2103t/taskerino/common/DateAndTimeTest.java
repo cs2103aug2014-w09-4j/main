@@ -28,6 +28,8 @@ package edu.nus.comp.cs2103t.taskerino.common;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
+
 import org.junit.Test;
 
 //@author A0113742N
@@ -44,7 +46,10 @@ public class DateAndTimeTest {
 	public void testDefaultDateConstructor() {
 		DateAndTime testCase00 = new DateAndTime();
 		String testOutput = testCase00.toString();
-		String expectedOutput = "4/11/2014";
+
+		Calendar calendar = Calendar.getInstance();
+		String expectedOutput = calendar.get(Calendar.DATE) + "/" + (calendar.get(Calendar.MONTH) + 1) 
+				+ "/" + calendar.get(Calendar.YEAR);
 		assertEquals("Test for default date constructor.", testOutput, expectedOutput);
 	}
 	

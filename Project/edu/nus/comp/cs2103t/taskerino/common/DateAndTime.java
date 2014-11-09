@@ -135,6 +135,7 @@ public class DateAndTime implements Comparator<DateAndTime>, Comparable<DateAndT
 				} else {
 					isValidInput = (day >= 1 && day <= 28);
 				}
+				break;
 			default:
 			    assert false : "Month: " + this.getMonth() + " Day: " + day;
 		}
