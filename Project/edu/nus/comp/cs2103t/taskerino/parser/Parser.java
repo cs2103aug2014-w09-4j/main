@@ -437,16 +437,9 @@ public class Parser {
 
 				String task = m.group(2);
 				
-				try {
-					// task index input command
-					int index = Integer.parseInt(task) - 1;
-					Data.setTaskIndexInList(index);
-				} catch (NumberFormatException e) {
-					// task name input command
-					Data.setDescription(task.trim());
-				}
+				// task name input command
+				Data.setDescription(task.trim());
 				
-
 				return;
 			}				
 		}

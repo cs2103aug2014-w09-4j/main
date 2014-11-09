@@ -221,6 +221,8 @@ public class Data {
 		description = "";	
 		newDescription = "";
 		
+		taskIndexInList = -1;
+		
 		addType = "";	
 		changeType = "";	
 		
@@ -284,6 +286,7 @@ public class Data {
 	public static Task getTask(String description) {
 		int indexOfTask = searchTask(description);
 		if(indexOfTask != -1) {
+			taskIndexInList = indexOfTask;
 			return controller.getUserTasks().get(indexOfTask);
 		}
 		return null;

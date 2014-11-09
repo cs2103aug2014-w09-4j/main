@@ -197,6 +197,9 @@ public class Logic {
 	 */
 	public String searchTask() {
 		Data.searchedTasks.clear();
+		if (Data.getSearchedKeyWord() == null) {
+			return "No search results found.";
+		}
 		String description = Data.getSearchedKeyWord().toLowerCase();
 		int numberOfTasks = 0;
 		for(int i = 0; i < Data.task.size(); i++){
@@ -211,7 +214,7 @@ public class Logic {
 			}
 		}
 		if(numberOfTasks == 0){
-			return "Task with name: " + description + " not found!";
+			return "No search results found.";
 		} else if (numberOfTasks == 1){
 			return numberOfTasks + " task found with given description. ";
 		} else {

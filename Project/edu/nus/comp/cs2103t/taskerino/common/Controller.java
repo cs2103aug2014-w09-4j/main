@@ -52,6 +52,7 @@ public class Controller {
 	private static final String className = new Throwable() .getStackTrace()[0].getClassName();
 	private static final String INVALID_COMMAND_FEEDBACK = "User command not recognized, please try again!";
 
+	private String userCommand;
 	private static final String COMMAND_HELP = "help";
 	private static final String COMMAND_ADD = "add";
 	private static final String COMMAND_DELETE = "delete";
@@ -135,6 +136,9 @@ public class Controller {
 		final String methodName = "executeUserCommand";
 		boolean isParseSuccessful = false;
 		
+		// clear Data
+		Data.resetAll();
+		
 		// store user command if it is not empty
 		if (!userCommand.isEmpty()) {
 			LoggerFactory.logp(Level.INFO, className, methodName, "Store user command into commandHistory.");
@@ -169,9 +173,6 @@ public class Controller {
 
 		// reset CommandHistory pointer
 		CommandHistory.getCommandHistory().setPointerToLatestTask();
-		
-		// clear Data
-		Data.resetAll();
 	}
 	
 	
@@ -184,6 +185,7 @@ public class Controller {
 	private void execute(String command) throws FileNotFoundException, UnsupportedEncodingException {
 		final String methodName = "execute";
 		
+		userCommand = command;
 		switch (command.toLowerCase()) {
 			case COMMAND_HELP:
 				LoggerFactory.logp(Level.INFO, className, methodName, "Execute help command.");
@@ -283,6 +285,45 @@ public class Controller {
 				return Data.uncompletedTasks;
 			default:
 				return Data.task;
+		}
+	}
+
+
+	/**
+	 * Reset GUI taskTable focus depending on user's command.
+	 */
+	public void resetGUIFocus() {
+		switch (userCommand) {
+			case COMMAND_ADD:
+				// return to tag ALL and set focus to newly added row
+				GUIComponents.setSelectedItem(TAG_ALL);
+				GUIComponents.setTaskTableFocus(Data.task.size() - 1);
+				break;
+			
+			case COMMAND_DELETE:
+				setDeleteFocus();
+				break;
+				
+			case COMMAND_CHANGE : case COMMAND_COMPLETE:
+				GUIComponents.setTaskTableFocus(Data.getTaskIndexInList());
+				break;
+		}
+	}
+
+
+	/**
+	 * Set focus for GUI TaskTable for delete command: <br>
+	 * 1. Focus on next row of task if exists. <br>
+	 * 2. Else focus on previous row of task if exists. <br> 
+	 * 3. Otherwise don't set focus.
+	 */
+	private void setDeleteFocus() {
+		int index = Data.getTaskIndexInList();
+		int size = getUserTasks().size();
+		if (index == size) {
+			GUIComponents.setTaskTableFocus(index - 1);
+		} else if (index < size && index >= 0) {
+			GUIComponents.setTaskTableFocus(index);
 		}
 	}
 

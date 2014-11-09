@@ -360,6 +360,7 @@ public class GUIComponents {
 				
 				// refresh userTaskTable
 				updateTaskTable();
+				controller.resetGUIFocus();
 			}
 		});
 		
@@ -591,7 +592,13 @@ public class GUIComponents {
 				}
 				
 				// impossible to select non-existent rows, can safely set feedback here
-				String outputFeedBack = "Delete tasks with indices: ";
+				String outputFeedBack;
+				if (selectedRowIndices.length == 1) {
+					outputFeedBack = "Delete tasks with index: ";
+				} else {
+					outputFeedBack = "Delete tasks with indices: ";
+				}
+				
 				for (int i=0; i<selectedRowIndices.length; i++) {
 					outputFeedBack += (selectedRowIndices[i] + 1) + " ";
 				}
